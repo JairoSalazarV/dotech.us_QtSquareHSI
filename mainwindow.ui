@@ -1120,15 +1120,11 @@
    <addaction name="separator"/>
    <addaction name="actionRestore_Original"/>
    <addaction name="actionRect"/>
-   <addaction name="actionHorizontalLine"/>
-   <addaction name="actionVerticalLine"/>
-   <addaction name="openLine"/>
    <addaction name="actionApplyThreshold"/>
    <addaction name="actionLoadRegOfInteres"/>
    <addaction name="actionLoadSquareRectangle"/>
    <addaction name="actionSquareUsable"/>
    <addaction name="actionSaveCanvas"/>
-   <addaction name="actionExportPixelsSelected"/>
    <addaction name="separator"/>
    <addaction name="actionClear"/>
   </widget>

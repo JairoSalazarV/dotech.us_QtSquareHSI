@@ -688,6 +688,8 @@ private slots:
 
     void functionTakeComposedSquarePicture();
 
+    void on_actionAbout_this_triggered();
+
 private:
     Ui::MainWindow *ui;
     //QLabel *status;

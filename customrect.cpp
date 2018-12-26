@@ -45,9 +45,9 @@ QAction *customRect::showContMenuLine(QPoint pos){
     submenu3->addAction( "Square aperture" );
     submenu3->addAction( "Square usable" );
     submenu3->addAction( "Region of interes" );
-    submenu3->addAction( "Slide" );
-    submenu3->addAction( "Slide diffraction" );
-    submenu3->addAction( "Video Slide diffraction" );
+    //submenu3->addAction( "Slide" );
+    //submenu3->addAction( "Slide diffraction" );
+    //submenu3->addAction( "Video Slide diffraction" );
 
     xmenu->addSeparator();
     QMenu* submenu4 = xmenu->addMenu( "Modify" );

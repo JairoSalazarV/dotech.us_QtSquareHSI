@@ -91,6 +91,8 @@
 
 #include <formhypercubeanalysis.h>
 
+#include <QDesktopServices>
+
 
 structSettings *lstSettings = (structSettings*)malloc(sizeof(structSettings));
 
@@ -176,10 +178,10 @@ MainWindow::MainWindow(QWidget *parent) :
     // Set layout into spectometer
     //*****************************************************************
     QFormLayout *layout = new QFormLayout;
-    ui->tab_5->setLayout(layout);
+    //ui->tab_5->setLayout(layout);
 
-    if(_USE_CAM)ui->sbSpecUsb->setValue(1);
-    else ui->sbSpecUsb->setValue(0);
+    //if(_USE_CAM)ui->sbSpecUsb->setValue(1);
+    //else ui->sbSpecUsb->setValue(0);
 
     //*****************************************************************
     //Enable-Disable buttoms
@@ -2437,7 +2439,7 @@ void MainWindow::funcBeginRect(QMouseEvent* e){
 void MainWindow::funcEndRect(QMouseEvent* e, GraphicsView *tmpCanvas){
     calStruct.x2 = e->x();
     calStruct.y2 = e->y();
-    ui->pbSpecCut->setEnabled(true);
+    //ui->pbSpecCut->setEnabled(true);
     qDeleteAll(tmpCanvas->scene()->items());
     int x1, y1, x2, y2, w, h;
     x1 = (calStruct.x1<=e->x())?calStruct.x1:e->x();
@@ -2535,13 +2537,13 @@ void MainWindow::funcUpdateColorSensibilities(){
 
     //Move slides
     //..
-    ui->slideRedLen->setMaximum(tmpImg.width());
-    ui->slideGreenLen->setMaximum(tmpImg.width());
-    ui->slideBlueLen->setMaximum(tmpImg.width());
+    //ui->slideRedLen->setMaximum(tmpImg.width());
+    //ui->slideGreenLen->setMaximum(tmpImg.width());
+    //ui->slideBlueLen->setMaximum(tmpImg.width());
 
-    ui->slideRedLen->setValue(xR);
-    ui->slideGreenLen->setValue(xG);
-    ui->slideBlueLen->setValue(xB);
+    //ui->slideRedLen->setValue(xR);
+    //ui->slideGreenLen->setValue(xG);
+    //ui->slideBlueLen->setValue(xB);
 
     //qDebug() << "c" << c << "maxR:"<<maxR<<" maxG:"<<maxG<<" maxB:"<<maxB;
     //qDebug() << "c" << c << "xR:"<<xR<<" xG:"<<xG<<" xB:"<<xB;
@@ -2553,6 +2555,7 @@ void MainWindow::funcUpdateColorSensibilities(){
     int tmpPoint1, tmpPoint2, tmpHeight;
     //tmpHeight = _GRAPH_HEIGHT;
     tmpHeight = tmpImg.height();
+    /*
     for(c=1;c<tmpImg.width();c++){
         if( ui->chbRed->isChecked() ){
             tmpPoint1 = tmpHeight-Red[c-1];
@@ -2572,12 +2575,13 @@ void MainWindow::funcUpdateColorSensibilities(){
             canvasSpec->scene()->addLine( c, tmpPoint1, c+1, tmpPoint2, QPen(QColor("#0000FF")) );
         }        
     }
+    */
 }
 
 void MainWindow::funcDrawLines(int flag, int xR, int xG, int xB){
     //Draw lines
     //..
-
+    /*
     ui->slideRedLen->setEnabled(true);
     ui->slideGreenLen->setEnabled(true);
     ui->slideBlueLen->setEnabled(true);
@@ -2597,11 +2601,11 @@ void MainWindow::funcDrawLines(int flag, int xR, int xG, int xB){
     ui->slideRedLen->setValue(xR);
     ui->slideGreenLen->setValue(xG);
     ui->slideBlueLen->setValue(xB);
-
+    */
 }
 
 void MainWindow::on_pbSpecCut_clicked()
-{
+{   /*
     //Prepare variables
     //..
     int w, h, W, H;
@@ -2662,13 +2666,13 @@ void MainWindow::on_pbSpecCut_clicked()
 
     ui->pbViewBack->setEnabled(true);
     ui->pbSnapCal->setEnabled(true);
-
+    */
 
 
 }
 
 void MainWindow::on_slideRedLen_sliderReleased()
-{
+{/*
     int x1, x2, x3;
     x1 = ui->slideRedLen->value();
     x2 = ui->slideGreenLen->value();
@@ -2676,11 +2680,13 @@ void MainWindow::on_slideRedLen_sliderReleased()
     funcUpdateColorSensibilities();
     funcDrawLines(1,x1,x2,x3);
     qDebug() << "Slide released";
+    */
 }
 
 
 void MainWindow::on_slideBlueLen_sliderReleased()
 {
+    /*
     int x1, x2, x3;
     x1 = ui->slideRedLen->value();
     x2 = ui->slideGreenLen->value();
@@ -2688,10 +2694,11 @@ void MainWindow::on_slideBlueLen_sliderReleased()
     funcUpdateColorSensibilities();
     funcDrawLines(1,x1,x2,x3);
     qDebug() << "Slide released";
+    */
 }
 
 void MainWindow::on_slideGreenLen_sliderReleased()
-{
+{/*
     int x1, x2, x3;
     x1 = ui->slideRedLen->value();
     x2 = ui->slideGreenLen->value();
@@ -2699,6 +2706,7 @@ void MainWindow::on_slideGreenLen_sliderReleased()
     funcUpdateColorSensibilities();
     funcDrawLines(1,x1,x2,x3);
     qDebug() << "Slide released";
+    */
 }
 
 
@@ -3030,7 +3038,7 @@ void MainWindow::funcUpdateImgView(QImage *tmpImg){
 */
 
 void MainWindow::on_pbSpecLoadSnap_clicked()
-{
+{/*
     //Select image
     //..
     auxQstring = QFileDialog::getOpenFileName(
@@ -3079,7 +3087,7 @@ void MainWindow::on_pbSpecLoadSnap_clicked()
 
     pix.save("./snapshots/tmpThumb.png");
 
-
+    */
 }
 
 void MainWindow::on_actionRect_triggered()
@@ -11953,4 +11961,9 @@ void MainWindow::functionTakeComposedSquarePicture()
 
     //progBarUpdateLabel("",0);
     mouseCursorReset();
+}
+
+void MainWindow::on_actionAbout_this_triggered()
+{
+    QDesktopServices::openUrl(QUrl("https://dotechmx.wordpress.com/category/his-diy/square/", QUrl::TolerantMode));
 }

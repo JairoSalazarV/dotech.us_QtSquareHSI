@@ -43,7 +43,7 @@
    </property>
    <property name="icon">
     <iconset resource="lstImgs.qrc">
-     <normaloff>:/new/icons/imagenInte/dialog-apply.svg</normaloff>:/new/icons/imagenInte/dialog-apply.svg</iconset>
+     <normaloff>:/new/icons/imagenInte/dialog-ok-apply.png</normaloff>:/new/icons/imagenInte/dialog-ok-apply.png</iconset>
    </property>
   </widget>
  </widget>
