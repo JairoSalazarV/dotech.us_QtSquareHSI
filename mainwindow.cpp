@@ -1,28 +1,3 @@
-/*
-
-    ->Jun/05/2017 Ready to get one shot snapshot
-
-    //----------------------------------------
-    //Merge branch into master
-    //----------------------------------------
-    git checkout seotweaks
-    git merge -s ours master
-    git checkout master
-    git merge seotweaks
-
-    ->June/13/2017 Remote Terminal Command Execution Added
-
-    //----------------------------------------
-    //WORK TO DO
-    //----------------------------------------
-    //Integrate sensitivities at hypercube building
-
-*/
-
-
-
-
-
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -35,9 +10,7 @@
 #include <fstream>
 #include <math.h>
 
-//#include <netinet/in.h>
 #include <QDebug>
-//#include <QPixmap>
 #include <QFileInfo>
 #include <QFileDialog>
 #include <QGraphicsPixmapItem>
@@ -58,40 +31,6 @@
 
 #include <lstcustoms.h>
 
-//OpenCV
-/*
-#include <opencv2/imgproc/imgproc.hpp>
-#include <opencv2/highgui/highgui.hpp>
-#include <opencv2/videoio.hpp>
-#include <opencv2/opencv.hpp>
-*/
-
-/*
-#include <opencv2/highgui/highgui_c.h>
-#include <opencv2/videoio/videoio_c.h>
-
-#include <opencv2/video/tracking_c.h>
-#include <opencv2/opencv.hpp>
-#include <opencv2/core/core.hpp>
-#include <highgui.h>
-#include <cv.h>
-#include <opencv2/core/core_c.h>
-#include <imgproc.hpp>
-#include "opencv/cv.h"
-#include "opencv/highgui.h"
-#include "opencv2/opencv.hpp"
-#include "opencv2/core/core.hpp"
-#include "/usr/local/include/opencv2/videoio/videoio_c.h"
-*/
-
-/*
-#include <opencv2/core/core.hpp>
-#include <opencv2/highgui/highgui.hpp>
-//#include <opencv2/videoio.hpp>
-*/
-
-
-
 
 #include <hypCamAPI.h>
 
@@ -105,8 +44,6 @@
 #include <gencalibxml.h>
 #include <rotationfrm.h>
 #include <recparamfrm.h>
-//#include <generatehypercube.h>
-//#include <validatecalibration.h>
 #include <selwathtocheck.h>
 
 #include <chosewavetoextract.h>
@@ -168,23 +105,15 @@ GraphicsView *canvasAux;
 
 customLine *globalCanvHLine;
 customLine *globalCanvVLine;
-//customLine *globalTmpLine;
-
-//QString imgPath = "/media/jairo/56A3-A5C4/DatosAVIRIS/CrearHSI/MyDatasets/Philips/HojasFotoVsHojasBiomasaJun2016/200Id/CROPED/100.tif";
-//QString impPath = "./imgResources/CIE.png";
 
 QList<QPair<int,int>> *lstBorder;
 QList<QPair<int,int>> *lstSelPix;
 QList<QPair<int,int>> *lstPixSelAux;
 
-//int tmpRect[4];
 calcAndCropSnap calStruct;
 bool globaIsRotated;
 
 qint64 numFrames;
-//QList<QImage> lstFrames;
-
-
 
 QThread* progBarThread;
 
@@ -214,6 +143,7 @@ MainWindow::MainWindow(QWidget *parent) :
     funcValidateMinimalStatus();
     //=================================================================
     //=================================================================
+
     funcObtSettings( lstSettings );
     progBarThread = new QThread(this);
 
@@ -308,8 +238,8 @@ int MainWindow::funcValidateMinimalStatus()
     //-------------------------------------------------------
     QList<QString> lstFolders;
     lstFolders << "./SYNC" << "./tmpImages" << "./tmpImages/frames"
-               << "./settings" << "./settings/Calib" << "./settings/Calib/images/"
-               //<< "./XML" << "./XML/camPerfils"
+               << "./settings" << "./settings/Calib" << "./settings/Calib/images/" << "./settings/lastPaths/"
+               << "./XML" << "./XML/camPerfils"
                << "./tmpImages/frames/tmp"
                << _PATH_TMP_HYPCUBES;
 
@@ -328,6 +258,64 @@ int MainWindow::funcValidateMinimalStatus()
         saveFile(_PATH_HALOGEN_FUNCTION,halogenFunction);
     }
 
+
+    //-------------------------------------------------------
+    // Raspicam Settings
+    //-------------------------------------------------------
+    if( !fileExists(_PATH_STARTING_SETTINGS) )
+    {
+        QString settingsContain;
+        settingsContain.append("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n");
+        settingsContain.append("<settings>\n");
+        settingsContain.append("\t<version>0.1</version>\n");
+        settingsContain.append("\t<tcpPort>51717</tcpPort>\n");
+        settingsContain.append("</settings>\n");
+        saveFile(_PATH_STARTING_SETTINGS,settingsContain.trimmed());
+    }
+
+
+    //-------------------------------------------------------
+    // Last Image Selected
+    //-------------------------------------------------------
+    if( !fileExists(_PATH_LAST_USED_IMG_FILENAME) )
+    {
+        QImage newImg(100,100,QImage::Format_ARGB32);
+        for(int x=0; x<100; x++)
+        {
+            for(int y=0; y<100; y++)
+            {
+                newImg.setPixel(x,y,qRgb(0,0,0));
+            }
+        }
+        newImg.save(_PATH_DISPLAY_IMAGE);
+        saveFile(_PATH_LAST_USED_IMG_FILENAME,_PATH_DISPLAY_IMAGE);
+    }
+
+    //-------------------------------------------------------
+    // Raspicam Settings
+    //-------------------------------------------------------
+    if( !fileExists(_PATH_RASPICAM_SETTINGS) )
+    {
+        funcShowMsg("Alert!","Creating Default _PATH_RASPICAM_SETTINGS",this);
+        QString fileContain;
+        fileContain.append("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>");
+        fileContain.append("<settings>");
+        fileContain.append("    <AWB>auto</AWB>");
+        fileContain.append("    <Exposure>auto</Exposure>");
+        fileContain.append("    <Denoise>1</Denoise>");
+        fileContain.append("    <ColorBalance>1</ColorBalance>");
+        fileContain.append("    <TriggeringTimeSecs>3</TriggeringTimeSecs>");
+        fileContain.append("    <ShutterSpeedMs>0</ShutterSpeedMs>");
+        fileContain.append("    <SquareShutterSpeedMs>0</SquareShutterSpeedMs>");
+        fileContain.append("    <TimelapseDurationSecs>5</TimelapseDurationSecs>");
+        fileContain.append("    <TimelapseInterval_ms>900</TimelapseInterval_ms>");
+        fileContain.append("    <VideoDurationSecs>10</VideoDurationSecs>");
+        fileContain.append("    <ISO>0</ISO>");
+        fileContain.append("    <CameraMp>5</CameraMp>");
+        fileContain.append("    <Flipped>1</Flipped>");
+        fileContain.append("</settings>");
+        saveFile(_PATH_RASPICAM_SETTINGS,fileContain);
+    }
 
     return _OK;
 }
