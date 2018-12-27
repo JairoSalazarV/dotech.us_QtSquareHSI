@@ -4682,10 +4682,17 @@ void MainWindow::on_actionSquareUsable_triggered()
     //Region of interes
     //..
     squareAperture *rectSquare = (squareAperture*)malloc(sizeof(squareAperture));
-    if( !funGetSquareXML( _PATH_SQUARE_USABLE, rectSquare ) )
+    if( fileExists(_PATH_SQUARE_USABLE) )
     {
-        funcShowMsg("ERROR","Loading _PATH_SQUARE_USABLE");
-        return (void)false;
+        funGetSquareXML( _PATH_SQUARE_USABLE, rectSquare );
+    }
+    else
+    {
+        rectSquare->rectW = static_cast<int>(static_cast<double>(globalEditImg->width()) * 0.05);
+        rectSquare->rectX = static_cast<int>(static_cast<double>(globalEditImg->width()) * 0.5)  - rectSquare->rectW;
+        rectSquare->rectY = static_cast<int>(static_cast<double>(globalEditImg->height()) * 0.5) - rectSquare->rectW;
+        rectSquare->rectW = rectSquare->rectW * 2;
+        rectSquare->rectH = rectSquare->rectW;
     }
 
     selWathToCheck *checkCalib = new selWathToCheck(globalEditImg,this);
@@ -4696,7 +4703,6 @@ void MainWindow::on_actionSquareUsable_triggered()
                                 rectSquare->rectH,
                                 Qt::magenta
                             );
-
 }
 
 void MainWindow::on_actionChoseWavelength_triggered()

@@ -29,8 +29,6 @@ selWathToCheck::selWathToCheck(QImage* origEditImg, QWidget *parent) :
 
     daCalib = &doubAxisCalib;
     funcGetCalibration(daCalib);
-    //funcPrintCalibration(daCalib);
-
 
     ui->douubleSpinWave->setMinimum(daCalib->minWavelength);
     ui->douubleSpinWave->setMaximum(daCalib->maxWavelength);
@@ -70,6 +68,7 @@ void selWathToCheck::fillLabelImg(QString imgPath){
 
 void selWathToCheck::on_pbCentroids_clicked()
 {
+
     showGV();
     //Centroides
     if( ui->checkBoxCentroids->isChecked() )
