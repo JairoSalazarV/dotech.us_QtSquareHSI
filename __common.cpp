@@ -2604,7 +2604,7 @@ int funcLetUserDefineFile(
     return _OK;
 }
 
-void funcShowMsg_Timeout(QString title, QString msg, QMessageBox::Icon iconSelected, QWidget *parent, int ms)
+void funcShowMsg_Timeout(QString title, QString msg, QWidget *parent, QMessageBox::Icon iconSelected, int ms)
 {
     QMessageBox *msgBox         = new QMessageBox(iconSelected,title,msg,NULL);
     QTimer *msgBoxCloseTimer    = new QTimer(parent);

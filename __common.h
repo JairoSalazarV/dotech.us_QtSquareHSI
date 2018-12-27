@@ -241,7 +241,7 @@
                                 QWidget* parent=Q_NULLPTR
                             );
 
-    void funcShowMsg_Timeout(QString title, QString msg, QMessageBox::Icon=QMessageBox::NoIcon, QWidget *parent=Q_NULLPTR, int ms=1800);
+    void funcShowMsg_Timeout(QString title, QString msg, QWidget *parent=Q_NULLPTR, QMessageBox::Icon=QMessageBox::NoIcon, int ms=1800);
 
     void funcShowMsgERROR_Timeout(QString msg, QWidget *parent=Q_NULLPTR, int ms=1800);
 
