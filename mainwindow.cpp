@@ -241,7 +241,7 @@ int MainWindow::funcValidateMinimalStatus()
     QList<QString> lstFolders;
     lstFolders << "./SYNC" << "./tmpImages" << "./tmpImages/frames"
                << "./settings" << "./settings/Calib" << "./settings/Calib/images/" << "./settings/lastPaths/"
-               << "./settings/Wavelengths/"
+               << "./settings/Wavelengths/" << "./settings/Calib/responses"
                << "./XML" << "./XML/camPerfils"
                << "./tmpImages/frames/tmp"
                << _PATH_TMP_HYPCUBES;
