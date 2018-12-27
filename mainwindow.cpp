@@ -300,24 +300,46 @@ int MainWindow::funcValidateMinimalStatus()
     {
         funcShowMsg("Alert!","Creating Default _PATH_RASPICAM_SETTINGS",this);
         QString fileContain;
-        fileContain.append("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>");
-        fileContain.append("<settings>");
-        fileContain.append("    <AWB>auto</AWB>");
-        fileContain.append("    <Exposure>auto</Exposure>");
-        fileContain.append("    <Denoise>1</Denoise>");
-        fileContain.append("    <ColorBalance>1</ColorBalance>");
-        fileContain.append("    <TriggeringTimeSecs>3</TriggeringTimeSecs>");
-        fileContain.append("    <ShutterSpeedMs>0</ShutterSpeedMs>");
-        fileContain.append("    <SquareShutterSpeedMs>0</SquareShutterSpeedMs>");
-        fileContain.append("    <TimelapseDurationSecs>5</TimelapseDurationSecs>");
-        fileContain.append("    <TimelapseInterval_ms>900</TimelapseInterval_ms>");
-        fileContain.append("    <VideoDurationSecs>10</VideoDurationSecs>");
-        fileContain.append("    <ISO>0</ISO>");
-        fileContain.append("    <CameraMp>5</CameraMp>");
-        fileContain.append("    <Flipped>1</Flipped>");
+        fileContain.append("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n");
+        fileContain.append("<settings>\n");
+        fileContain.append("\t<AWB>auto</AWB>\n");
+        fileContain.append("\t<Exposure>auto</Exposure>\n");
+        fileContain.append("\t<Denoise>1</Denoise>\n");
+        fileContain.append("\t<ColorBalance>1</ColorBalance>\n");
+        fileContain.append("\t<TriggeringTimeSecs>3</TriggeringTimeSecs>\n");
+        fileContain.append("\t<ShutterSpeedMs>0</ShutterSpeedMs>\n");
+        fileContain.append("\t<SquareShutterSpeedMs>0</SquareShutterSpeedMs>\n");
+        fileContain.append("\t<TimelapseDurationSecs>5</TimelapseDurationSecs>\n");
+        fileContain.append("\t<TimelapseInterval_ms>900</TimelapseInterval_ms>\n");
+        fileContain.append("\t<VideoDurationSecs>10</VideoDurationSecs>\n");
+        fileContain.append("\t<ISO>0</ISO>\n");
+        fileContain.append("\t<CameraMp>5</CameraMp>\n");
+        fileContain.append("\t<Flipped>1</Flipped>\n");
         fileContain.append("</settings>");
         saveFile(_PATH_RASPICAM_SETTINGS,fileContain);
     }
+
+    //-------------------------------------------------------
+    // IP
+    //-------------------------------------------------------
+    if( !fileExists(_PATH_LAST_IP) )
+    {
+        funcShowMsg("Alert!","Creating Default _PATH_LAST_IP",this);
+        QString lastIPContain("172.24.1.1");
+        saveFile(_PATH_LAST_IP,lastIPContain);
+    }
+
+    //-------------------------------------------------------
+    // PORT
+    //-------------------------------------------------------
+    if( !fileExists(_PATH_PORT_TO_CONNECT) )
+    {
+        funcShowMsg("Alert!","Creating Default _PATH_PORT_TO_CONNECT",this);
+        saveFile(_PATH_PORT_TO_CONNECT,"51717");
+    }
+
+
+
 
     return _OK;
 }
@@ -4995,7 +5017,6 @@ QImage MainWindow::obtainImageFile( std::string fileToObtain, QString txtBar )
     }
     else
     {
-
         int fileLen;
         u_int8_t* fileReceived = funcQtReceiveFile( fileToObtain, &fileLen, txtBar );
 
@@ -5006,7 +5027,6 @@ QImage MainWindow::obtainImageFile( std::string fileToObtain, QString txtBar )
 
         if( saveBinFile_From_u_int8_T(_PATH_IMAGE_RECEIVED,fileReceived,fileLen) )
             img = QImage(_PATH_IMAGE_RECEIVED);
-
         progBarUpdateLabel("",0);
         ui->progBar->setVisible(false);
         ui->progBar->setValue(0);

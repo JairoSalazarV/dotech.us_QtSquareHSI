@@ -85,8 +85,6 @@ int funcRaspFileExists( std::string fileName )
     //RETURN
     //          -1:error during the process | 0:File does not exists | 1:file exists
 
-
-
     //Connect to socket
     int socketID = funcRaspSocketConnect();
     if( socketID == -1 )
@@ -98,7 +96,6 @@ int funcRaspFileExists( std::string fileName )
     //
     //Check if file exist
     //
-
     //Prepare request
     int n;
     strReqFileInfo *reqFileInfo = (strReqFileInfo*)malloc(sizeof(strReqFileInfo));
@@ -108,9 +105,6 @@ int funcRaspFileExists( std::string fileName )
     reqFileInfo->fileNameLen    = fileName.size();
 
     memcpy( &reqFileInfo->fileName[0], fileName.c_str(), fileName.size() );
-
-    //printf("Size(%d) Filename: %s\n",fileName.size(),reqFileInfo->fileName);
-    //fflush(stdout);
 
     //Send request
     int tmpFrameLen = sizeof(strReqFileInfo);//IdMsg + lenInfo + fileLen + padding
