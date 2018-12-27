@@ -9,11 +9,6 @@
 customRect::customRect(QPoint p1, QPoint p2, QImage* originalImage)
 {
     setRect(p1.x(),p1.y(),p2.x(),p2.y());
-    //this->parameters.x = p1.x();
-    //this->parameters.y = p1.y();
-    //this->parameters.w = abs(p1.x()-p2.x());
-    //this->parameters.h = abs(p1.y()-p2.y());
-    //setPen(pen);
     setFlag(QGraphicsItem::ItemIsFocusable);
     setAcceptHoverEvents(true);
     setAcceptTouchEvents(true);
@@ -42,9 +37,11 @@ QAction *customRect::showContMenuLine(QPoint pos){
 
     xmenu->addSeparator();
     QMenu* submenu3 = xmenu->addMenu( "Save as" );
+
+    submenu3->addAction( "Region of interes" );
     submenu3->addAction( "Square aperture" );
     submenu3->addAction( "Square usable" );
-    submenu3->addAction( "Region of interes" );
+
     //submenu3->addAction( "Slide" );
     //submenu3->addAction( "Slide diffraction" );
     //submenu3->addAction( "Video Slide diffraction" );

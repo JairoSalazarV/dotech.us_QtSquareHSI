@@ -3612,10 +3612,12 @@ int func_DirExistOrCreateIt( const QList<QString> &lstFolders , QWidget* parent 
     {
         if( !QDir( lstFolders.at(i) ).exists() )
         {
-            QString tmpMsg;
-            tmpMsg.append("Create Folder ");
-            tmpMsg.append(lstFolders.at(i));
-            tmpMsg.append("?");
+            //QString tmpMsg;
+            //tmpMsg.append("Create Folder ");
+            //tmpMsg.append(lstFolders.at(i));
+            //Z tmpMsg.append("?");
+            QDir().mkdir( lstFolders.at(i) );
+            /*
             if( funcShowMsgYesNo("Folder not Found",tmpMsg,parent) )
             {
                 QDir().mkdir( lstFolders.at(i) );
@@ -3623,7 +3625,7 @@ int func_DirExistOrCreateIt( const QList<QString> &lstFolders , QWidget* parent 
             else
             {
                 return _ERROR;
-            }
+            }*/
         }
     }
     return _OK;
