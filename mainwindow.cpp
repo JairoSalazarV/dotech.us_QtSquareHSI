@@ -1,5 +1,4 @@
 /*
- * 3) Dejar, Máximo límite inferior y Mínimo límite superior
  * 5) Que los límite puedan ser fijados manualmente
 */
 

@@ -328,8 +328,8 @@ strAllLinReg genCalibXML::calcAllLinReg(lstCalibFileNames *centroids, int x1, in
 
     //Offset
     double offsetX, offsetY;
-    offsetX                     = (double)x1 - centroids->source.split(",").at(0).toFloat(0);
-    offsetY                     = (double)y1 - centroids->source.split(",").at(1).toFloat(0);
+    offsetX                     = (double)x1 - centroids->source.split(",").at(0).toFloat();
+    offsetY                     = (double)y1 - centroids->source.split(",").at(1).toFloat();
 
     //qDebug() << "offsetX: " << offsetX;
     //qDebug() << "offsetY: " << offsetY;
@@ -337,21 +337,21 @@ strAllLinReg genCalibXML::calcAllLinReg(lstCalibFileNames *centroids, int x1, in
 
     //Horizontal
     //..
-    pointsX[0] = offsetX + (double)centroids->redLeft.split(",").at(0).toInt(0);
-    pointsX[1] = offsetX + (double)centroids->greenLeft.split(",").at(0).toInt(0);
-    pointsX[2] = offsetX + (double)centroids->blueLeft.split(",").at(0).toInt(0);
-    pointsX[3] = offsetX + (double)centroids->source.split(",").at(0).toInt(0);
-    pointsX[4] = offsetX + (double)centroids->redRight.split(",").at(0).toInt(0);
-    pointsX[5] = offsetX + (double)centroids->greenRight.split(",").at(0).toInt(0);
-    pointsX[6] = offsetX + (double)centroids->blueRight.split(",").at(0).toInt(0);
+    pointsX[0] = offsetX + (double)centroids->redLeft.split(",").at(0).toInt();
+    pointsX[1] = offsetX + (double)centroids->greenLeft.split(",").at(0).toInt();
+    pointsX[2] = offsetX + (double)centroids->blueLeft.split(",").at(0).toInt();
+    pointsX[3] = offsetX + (double)centroids->source.split(",").at(0).toInt();
+    pointsX[4] = offsetX + (double)centroids->redRight.split(",").at(0).toInt();
+    pointsX[5] = offsetX + (double)centroids->greenRight.split(",").at(0).toInt();
+    pointsX[6] = offsetX + (double)centroids->blueRight.split(",").at(0).toInt();
 
-    pointsY[0] = offsetY + (double)centroids->redLeft.split(",").at(1).toInt(0);
-    pointsY[1] = offsetY + (double)centroids->greenLeft.split(",").at(1).toInt(0);
-    pointsY[2] = offsetY + (double)centroids->blueLeft.split(",").at(1).toInt(0);
-    pointsY[3] = offsetY + (double)centroids->source.split(",").at(1).toInt(0);
-    pointsY[4] = offsetY + (double)centroids->redRight.split(",").at(1).toInt(0);
-    pointsY[5] = offsetY + (double)centroids->greenRight.split(",").at(1).toInt(0);
-    pointsY[6] = offsetY + (double)centroids->blueRight.split(",").at(1).toInt(0);
+    pointsY[0] = offsetY + (double)centroids->redLeft.split(",").at(1).toInt();
+    pointsY[1] = offsetY + (double)centroids->greenLeft.split(",").at(1).toInt();
+    pointsY[2] = offsetY + (double)centroids->blueLeft.split(",").at(1).toInt();
+    pointsY[3] = offsetY + (double)centroids->source.split(",").at(1).toInt();
+    pointsY[4] = offsetY + (double)centroids->redRight.split(",").at(1).toInt();
+    pointsY[5] = offsetY + (double)centroids->greenRight.split(",").at(1).toInt();
+    pointsY[6] = offsetY + (double)centroids->blueRight.split(",").at(1).toInt();
 
     linearRegresion horB = funcLinearRegression( pointsX, pointsY, 7 );
     linRegRes.horizA = horB.a;
@@ -359,21 +359,21 @@ strAllLinReg genCalibXML::calcAllLinReg(lstCalibFileNames *centroids, int x1, in
 
     //Vertical
     //..
-    pointsX[0] = offsetY + (double)centroids->redDown.split(",").at(1).toInt(0);
-    pointsX[1] = offsetY + (double)centroids->greenDown.split(",").at(1).toInt(0);
-    pointsX[2] = offsetY + (double)centroids->blueDown.split(",").at(1).toInt(0);
-    pointsX[3] = offsetY + (double)centroids->source.split(",").at(1).toInt(0);
-    pointsX[4] = offsetY + (double)centroids->redUp.split(",").at(1).toInt(0);
-    pointsX[5] = offsetY + (double)centroids->greenUp.split(",").at(1).toInt(0);
-    pointsX[6] = offsetY + (double)centroids->blueUp.split(",").at(1).toInt(0);
+    pointsX[0] = offsetY + (double)centroids->redDown.split(",").at(1).toInt();
+    pointsX[1] = offsetY + (double)centroids->greenDown.split(",").at(1).toInt();
+    pointsX[2] = offsetY + (double)centroids->blueDown.split(",").at(1).toInt();
+    pointsX[3] = offsetY + (double)centroids->source.split(",").at(1).toInt();
+    pointsX[4] = offsetY + (double)centroids->redUp.split(",").at(1).toInt();
+    pointsX[5] = offsetY + (double)centroids->greenUp.split(",").at(1).toInt();
+    pointsX[6] = offsetY + (double)centroids->blueUp.split(",").at(1).toInt();
 
-    pointsY[0] = offsetX + (double)centroids->redDown.split(",").at(0).toInt(0);
-    pointsY[1] = offsetX + (double)centroids->greenDown.split(",").at(0).toInt(0);
-    pointsY[2] = offsetX + (double)centroids->blueDown.split(",").at(0).toInt(0);
-    pointsY[3] = offsetX + (double)centroids->source.split(",").at(0).toInt(0);
-    pointsY[4] = offsetX + (double)centroids->redUp.split(",").at(0).toInt(0);
-    pointsY[5] = offsetX + (double)centroids->greenUp.split(",").at(0).toInt(0);
-    pointsY[6] = offsetX + (double)centroids->blueUp.split(",").at(0).toInt(0);
+    pointsY[0] = offsetX + (double)centroids->redDown.split(",").at(0).toInt();
+    pointsY[1] = offsetX + (double)centroids->greenDown.split(",").at(0).toInt();
+    pointsY[2] = offsetX + (double)centroids->blueDown.split(",").at(0).toInt();
+    pointsY[3] = offsetX + (double)centroids->source.split(",").at(0).toInt();
+    pointsY[4] = offsetX + (double)centroids->redUp.split(",").at(0).toInt();
+    pointsY[5] = offsetX + (double)centroids->greenUp.split(",").at(0).toInt();
+    pointsY[6] = offsetX + (double)centroids->blueUp.split(",").at(0).toInt();
     linearRegresion verB = funcLinearRegression( pointsX, pointsY, 7 );
     linRegRes.vertA = verB.a;
     linRegRes.vertB = verB.b;
@@ -381,56 +381,66 @@ strAllLinReg genCalibXML::calcAllLinReg(lstCalibFileNames *centroids, int x1, in
     //Wavelength horizontal
     //..
     QString redWavelength, greenWavelength, blueWavelength;
-    redWavelength = readFileParam(_PATH_SETTINGS_RED_WAVELEN);
+    redWavelength   = readFileParam(_PATH_SETTINGS_RED_WAVELEN);
     greenWavelength = readFileParam(_PATH_SETTINGS_GREEN_WAVELEN);
-    blueWavelength = readFileParam(_PATH_SETTINGS_BLUE_WAVELEN);
+    blueWavelength  = readFileParam(_PATH_SETTINGS_BLUE_WAVELEN);
 
 
     double auxL, auxR, aux;
-    aux  = centroids->source.split(",").at(0).toFloat(0);
+    aux  = centroids->source.split(",").at(0).toFloat();    // SourceX
     //Delta blue X
     //auxL = (double)abs(aux - centroids->blueLeft.split(",").at(0).toFloat(0));
-    auxL = (double)fabs( aux - centroids->blueLeft.split(",").at(0).toFloat(0) );
+    auxL = (double)fabs( aux - centroids->blueLeft.split(",").at(0).toFloat() ); //SourceX - blueX_L
 
 
-    auxR = (double)fabs(aux - centroids->blueRight.split(",").at(0).toFloat(0));
-    pointsX[0] = blueWavelength.toDouble(0);
-    pointsY[0] = (auxL+auxR) / 2.0;
+    auxR = (double)fabs(aux - centroids->blueRight.split(",").at(0).toFloat()); //SourceX - blueX_R
+    pointsX[0] = blueWavelength.toDouble();//Preset Blue Wavelength
+    pointsY[0] = (auxL+auxR) / 2.0;//Distance to blue
     //Delta green X
-    auxL = (double)fabs(aux - centroids->greenLeft.split(",").at(0).toFloat(0));
-    auxR = (double)fabs(aux - centroids->greenRight.split(",").at(0).toFloat(0));
-    pointsX[1] = greenWavelength.toDouble(0);
-    pointsY[1] = (auxL+auxR) / 2.0;
+    auxL = (double)fabs(aux - centroids->greenLeft.split(",").at(0).toFloat());
+    auxR = (double)fabs(aux - centroids->greenRight.split(",").at(0).toFloat());
+    pointsX[1] = greenWavelength.toDouble();//Preset Green Wavelength
+    pointsY[1] = (auxL+auxR) / 2.0;//Distance to Green
     //Delta red X
-    auxL = (double)fabs(aux - centroids->redLeft.split(",").at(0).toFloat(0));
-    auxR = (double)fabs(aux - centroids->redRight.split(",").at(0).toFloat(0));
-    pointsX[2] = redWavelength.toDouble(0);
-    pointsY[2] = (auxL+auxR) / 2.0;
+    auxL = (double)fabs(aux - centroids->redLeft.split(",").at(0).toFloat());
+    auxR = (double)fabs(aux - centroids->redRight.split(",").at(0).toFloat());
+    pointsX[2] = redWavelength.toDouble();//Preset Red Wavelength
+    pointsY[2] = (auxL+auxR) / 2.0;//Distance to Red
     //Delta source X
-    pointsX[3] = 0.0;
-    pointsY[3] = 0.0;
+    pointsX[3] = 0.0;//Wave Origin
+    pointsY[3] = 0.0;//Distance to Source
+
+    //qDebug() << "pointsX[0]: " << pointsX[0] << "pointsX[1]: " << pointsX[1] << "pointsX[2]: " << pointsX[2];
+    //qDebug() << "pointsY[0]: " << pointsY[0] << "pointsY[1]: " << pointsY[1] << "pointsY[2]: " << pointsY[2];
+
+
     linearRegresion waveXB = funcLinearRegression( pointsX, pointsY, 4 );
     linRegRes.waveHorizA = waveXB.a;
     linRegRes.waveHorizB = waveXB.b;
+
+    //qDebug() << "linRegRes.waveHorizA: " << linRegRes.waveHorizA;
+    //qDebug() << "linRegRes.waveHorizB: " << linRegRes.waveHorizB;
+
+    //exit(0);
 
     //Wavelength vertical
     //..
     double auxU, auxD;
     aux         = centroids->source.split(",").at(1).toFloat(0);
     //Delta blue X
-    auxU        = (double)fabs(aux - centroids->blueUp.split(",").at(1).toFloat(0));
-    auxD        = (double)fabs(aux - centroids->blueDown.split(",").at(1).toFloat(0));
-    pointsX[0]  = blueWavelength.toDouble(0);
+    auxU        = (double)fabs(aux - centroids->blueUp.split(",").at(1).toFloat());
+    auxD        = (double)fabs(aux - centroids->blueDown.split(",").at(1).toFloat());
+    pointsX[0]  = blueWavelength.toDouble();
     pointsY[0]  = (auxU+auxD) / 2.0;
     //Delta green X
-    auxU        = (double)fabs(aux - centroids->greenUp.split(",").at(1).toFloat(0));
-    auxD        = (double)fabs(aux - centroids->greenDown.split(",").at(1).toFloat(0));
-    pointsX[1]  = greenWavelength.toDouble(0);
+    auxU        = (double)fabs(aux - centroids->greenUp.split(",").at(1).toFloat());
+    auxD        = (double)fabs(aux - centroids->greenDown.split(",").at(1).toFloat());
+    pointsX[1]  = greenWavelength.toDouble();
     pointsY[1]  = (auxU+auxD) / 2.0;
     //Delta red X
-    auxU        = (double)fabs(aux - centroids->redUp.split(",").at(1).toFloat(0));
-    auxD        = (double)fabs(aux - centroids->redDown.split(",").at(1).toFloat(0));
-    pointsX[2]  = redWavelength.toDouble(0);
+    auxU        = (double)fabs(aux - centroids->redUp.split(",").at(1).toFloat());
+    auxD        = (double)fabs(aux - centroids->redDown.split(",").at(1).toFloat());
+    pointsX[2]  = redWavelength.toDouble();
     pointsY[2]  = (auxU+auxD) / 2.0;
     //Delta source X
     pointsX[3]  = 0.0;
@@ -441,53 +451,64 @@ strAllLinReg genCalibXML::calcAllLinReg(lstCalibFileNames *centroids, int x1, in
 
     //Delta horizontal
     //..
-    aux  = centroids->source.split(",").at(0).toFloat(0);
+    aux  = centroids->source.split(",").at(0).toFloat();                        //SourceX
     //Delta blue X
-    auxL = (double)fabs(aux - centroids->blueLeft.split(",").at(0).toFloat(0));
-    auxR = (double)fabs(aux - centroids->blueRight.split(",").at(0).toFloat(0));
-    pointsY[0] = blueWavelength.toDouble(0);
-    pointsX[0] = (auxL+auxR) / 2.0;
+    auxL = (double)fabs(aux - centroids->blueLeft.split(",").at(0).toFloat());  //SourceX - blueLeft_X
+    auxR = (double)fabs(aux - centroids->blueRight.split(",").at(0).toFloat()); //SourceX - blueRight_X
+    pointsY[0] = blueWavelength.toDouble();                                     //Preset blueWavelength
+    pointsX[0] = (auxL+auxR) / 2.0;                                             //AVG Distance to Blue
     //Delta green X
-    auxL = (double)fabs(aux - centroids->greenLeft.split(",").at(0).toFloat(0));
-    auxR = (double)fabs(aux - centroids->greenRight.split(",").at(0).toFloat(0));
-    pointsY[1] = greenWavelength.toDouble(0);
+    auxL = (double)fabs(aux - centroids->greenLeft.split(",").at(0).toFloat());
+    auxR = (double)fabs(aux - centroids->greenRight.split(",").at(0).toFloat());
+    pointsY[1] = greenWavelength.toDouble();
     pointsX[1] = (auxL+auxR) / 2.0;
     //Delta red X
-    auxL = (double)fabs(aux - centroids->redLeft.split(",").at(0).toFloat(0));
-    auxR = (double)fabs(aux - centroids->redRight.split(",").at(0).toFloat(0));
-    pointsY[2] = redWavelength.toDouble(0);
+    auxL = (double)fabs(aux - centroids->redLeft.split(",").at(0).toFloat());
+    auxR = (double)fabs(aux - centroids->redRight.split(",").at(0).toFloat());
+    pointsY[2] = redWavelength.toDouble();
     pointsX[2] = (auxL+auxR) / 2.0;
     //Delta source X
-    pointsX[3] = 0.0;
     pointsY[3] = 0.0;
+    pointsX[3] = 0.0;
     linearRegresion deltaXB = funcLinearRegression( pointsX, pointsY, 4 );
     linRegRes.deltaHorizA = deltaXB.a;
     linRegRes.deltaHorizB = deltaXB.b;
 
     //Delta vertical
     //..
-    aux         = centroids->source.split(",").at(1).toFloat(0);
+    aux         = centroids->source.split(",").at(1).toFloat();
     //Delta blue X
-    auxU        = (double)fabs(aux - centroids->blueUp.split(",").at(1).toDouble(0));
-    auxD        = (double)fabs(aux - centroids->blueDown.split(",").at(1).toDouble(0));
-    pointsY[0]  = blueWavelength.toDouble(0);;
+    auxU        = (double)fabs(aux - centroids->blueUp.split(",").at(1).toDouble());
+    auxD        = (double)fabs(aux - centroids->blueDown.split(",").at(1).toDouble());
+    pointsY[0]  = blueWavelength.toDouble();
     pointsX[0]  = (auxU+auxD) / 2.0;
     //Delta green X
-    auxU        = (double)fabs(aux - centroids->greenUp.split(",").at(1).toDouble(0));
-    auxD        = (double)fabs(aux - centroids->greenDown.split(",").at(1).toDouble(0));
-    pointsY[1]  = greenWavelength.toDouble(0);
+    auxU        = (double)fabs(aux - centroids->greenUp.split(",").at(1).toDouble());
+    auxD        = (double)fabs(aux - centroids->greenDown.split(",").at(1).toDouble());
+    pointsY[1]  = greenWavelength.toDouble();
     pointsX[1]  = (auxU+auxD) / 2.0;
     //Delta red X
-    auxU        = (double)fabs(aux - centroids->redUp.split(",").at(1).toDouble(0));
-    auxD        = (double)fabs(aux - centroids->redDown.split(",").at(1).toDouble(0));
-    pointsY[2]  = redWavelength.toDouble(0);
+    auxU        = (double)fabs(aux - centroids->redUp.split(",").at(1).toDouble());
+    auxD        = (double)fabs(aux - centroids->redDown.split(",").at(1).toDouble());
+    pointsY[2]  = redWavelength.toDouble();
     pointsX[2]  = (auxU+auxD) / 2.0;
     //Delta source X
     pointsY[3]  = 0.0;
     pointsX[3]  = 0.0;
+
+    //qDebug() << "pointsX[0]: " << pointsX[0] << "pointsY[0]: " << pointsY[0];
+    //qDebug() << "pointsX[1]: " << pointsX[1] << "pointsY[1]: " << pointsY[1];
+    //qDebug() << "pointsX[2]: " << pointsX[2] << "pointsY[2]: " << pointsY[2];
+    //qDebug() << "pointsX[3]: " << pointsX[3] << "pointsY[3]: " << pointsY[3];
+
+
     linearRegresion deltaYB = funcLinearRegression( pointsX, pointsY, 4 );
     linRegRes.deltaVertA = deltaYB.a;
     linRegRes.deltaVertB = deltaYB.b;
+
+    //qDebug() << "linRegRes.deltaVertA: " << linRegRes.deltaVertA;
+    //qDebug() << "linRegRes.deltaVertB: " << linRegRes.deltaVertB;
+
 
     return linRegRes;
 }
@@ -504,28 +525,28 @@ strLimits genCalibXML::getLimitsFromHDD(){
 
     //qDebug() << "Aquí711";
     aux = readAllFile(_PATH_LIMIT_R);
-    limits.rightInf = aux.split(",").at(2).toInt(0);
-    limits.rightSup = aux.split(",").at(0).toInt(0);
+    limits.rightInf = aux.split(",").at(2).toInt();
+    limits.rightSup = aux.split(",").at(0).toInt();
 
     //qDebug() << "Aquí712";
     aux = readAllFile(_PATH_LIMIT_U);
-    limits.upInf = aux.split(",").at(2).toInt(0);
-    limits.upSup = aux.split(",").at(0).toInt(0);
+    limits.upInf = aux.split(",").at(2).toInt();
+    limits.upSup = aux.split(",").at(0).toInt();
 
     //qDebug() << "Aquí713";
     aux = readAllFile(_PATH_LIMIT_L);
-    limits.leftInf = aux.split(",").at(2).toInt(0);
-    limits.leftSup = aux.split(",").at(0).toInt(0);
+    limits.leftInf = aux.split(",").at(2).toInt();
+    limits.leftSup = aux.split(",").at(0).toInt();
 
     //qDebug() << "Aquí714";
     aux = readAllFile(_PATH_LIMIT_D);
-    limits.downInf = aux.split(",").at(2).toInt(0);
-    limits.downSup = aux.split(",").at(0).toInt(0);
+    limits.downInf = aux.split(",").at(2).toInt();
+    limits.downSup = aux.split(",").at(0).toInt();
 
     //qDebug() << "Aquí715";
     aux = readAllFile(_PATH_LIMIT_S_HALOGEN);
-    limits.sourceX = aux.split(",").at(0).toInt(0);
-    limits.sourceY = aux.split(",").at(1).toInt(0);
+    limits.sourceX = aux.split(",").at(0).toInt();
+    limits.sourceY = aux.split(",").at(1).toInt();
     //qDebug() << "Aquí716";
     return limits;
 
@@ -545,22 +566,41 @@ QVector2D genCalibXML::getWavelengthFrontiers()
     //..
     //Min
     //qDebug() << "Aquí73";
+    //qDebug() << "limits.sourceX: " << limits.sourceX;
+    //qDebug() << "limits.rightInf: " << limits.rightInf;
+    //qDebug() << "linRegRes.deltaHorizB: " << linRegRes.deltaHorizB ;
+    //qDebug() << "linRegRes.deltaHorizA: " << linRegRes.deltaHorizA;
+
     waveRight   = linRegRes.deltaHorizA + ( linRegRes.deltaHorizB * (double)abs(limits.sourceX - limits.rightInf) );
-    waveUp      = linRegRes.deltaVertA + ( linRegRes.deltaVertB * (double)abs(limits.sourceY - limits.upInf) );
+    waveUp      = linRegRes.deltaVertA  + ( linRegRes.deltaVertB  * (double)abs(limits.sourceY - limits.upInf) );
     waveLeft    = linRegRes.deltaHorizA + ( linRegRes.deltaHorizB * (double)abs(limits.sourceX - limits.leftInf) );
-    waveDown    = linRegRes.deltaVertA + ( linRegRes.deltaVertB * (double)abs(limits.sourceY - limits.downInf) );
-    waveLimInf  = (waveRight > waveUp)?waveRight:waveUp;
-    waveLimInf  = (waveLimInf > waveLeft)?waveLimInf:waveLeft;
-    waveLimInf  = (waveLimInf > waveDown)?waveLimInf:waveDown;
+    waveDown    = linRegRes.deltaVertA  + ( linRegRes.deltaVertB  * (double)abs(limits.sourceY - limits.downInf) );
+    //waveLimInf  = (waveRight > waveUp)?waveRight:waveUp;
+    //waveLimInf  = (waveLimInf > waveLeft)?waveLimInf:waveLeft;
+    //waveLimInf  = (waveLimInf > waveDown)?waveLimInf:waveDown;
+    waveLimInf  = (waveRight < waveUp)?waveRight:waveUp;
+    waveLimInf  = (waveLimInf < waveLeft)?waveLimInf:waveLeft;
+    waveLimInf  = (waveLimInf < waveDown)?waveLimInf:waveDown;
     //Max
     //qDebug() << "Aquí74";
+    //qDebug() << "linRegRes.deltaHorizA: " << linRegRes.deltaHorizA;
+    //qDebug() << "linRegRes.deltaHorizB: " << linRegRes.deltaHorizB;
+    //qDebug() << "limits.sourceX: " << limits.sourceX;
+    //qDebug() << "limits.rightSup: " << limits.rightSup;
     waveRight   = linRegRes.deltaHorizA + ( linRegRes.deltaHorizB * (double)abs(limits.sourceX - limits.rightSup) );
     waveUp      = linRegRes.deltaVertA + ( linRegRes.deltaVertB * (double)abs(limits.sourceY - limits.upSup) );
     waveLeft    = linRegRes.deltaHorizA + ( linRegRes.deltaHorizB * (double)abs(limits.sourceX - limits.leftSup) );
     waveDown    = linRegRes.deltaVertA + ( linRegRes.deltaVertB * (double)abs(limits.sourceY - limits.downSup) );
+
     waveLimSup  = (waveRight < waveUp)?waveRight:waveUp;
     waveLimSup  = (waveLimSup < waveLeft)?waveLimSup:waveLeft;
     waveLimSup  = (waveLimSup < waveDown)?waveLimSup:waveDown;
+
+    //qDebug() << "2 waveRight: " << waveRight;
+    //qDebug() << "2 waveUp: " << waveUp;
+    //qDebug() << "2 waveLeft: " << waveLeft;
+    //qDebug() << "2 waveDown: " << waveDown;
+
     //qDebug() << "Aquí75";
     //Set and return
     //..
@@ -606,7 +646,7 @@ void genCalibXML::on_pbGenCal_clicked()
             return (void)false;
         }
         //Calculates the position expected in the received image
-        qDebug() << "camRes->width: " << camRes->width;
+       // qDebug() << "camRes->width: " << camRes->width;
         int auxSqX, auxSqY, auxSqW, auxSqH, auxBigX, auxBigY;
         auxSqX  = round((float)camRes->width  * ((float)sqApert->rectX / (float)sqApert->canvasW));
         auxSqY  = round((float)camRes->height * ((float)sqApert->rectY / (float)sqApert->canvasH));
@@ -671,7 +711,7 @@ void genCalibXML::on_pbGenCal_clicked()
         //..
         QString Sr, Sg, Sb;
         lstDoubleAxisCalibration daCalibGenCal;        
-        daCalibGenCal.LR = getAllLR();
+        daCalibGenCal.LR            = getAllLR();
         daCalibGenCal.maxNumBands   = spectralResolution.x();
         daCalibGenCal.minSpecRes    = spectralResolution.y();
         daCalibGenCal.minWavelength = waveLim.x();
@@ -1126,13 +1166,13 @@ QVector2D genCalibXML::calcSpectralResolution()
     minPixel    = round(LR.waveHorizA + (LR.waveHorizB * waveLim.x()));
     maxPixel    = round(LR.waveHorizA + (LR.waveHorizB * waveLim.y()));
     deltaHoriz  = abs(minPixel-maxPixel);
-    qDebug() << "Pixel Horiz range: " << minPixel << " to " << maxPixel;
+    //qDebug() << "Pixel Horiz range: " << minPixel << " to " << maxPixel;
 
     //Vertical number of pixels
     minPixel    = round(LR.waveVertA + (LR.waveVertB * waveLim.x()));
     maxPixel    = round(LR.waveVertA + (LR.waveVertB * waveLim.y()));
     deltaVert   = abs(minPixel-maxPixel);
-    qDebug() << "Pixel Vert range: " << minPixel << " to " << maxPixel;
+    //qDebug() << "Pixel Vert range: " << minPixel << " to " << maxPixel;
 
     qDebug() << "Wave range: " << waveLim.x() << " to " << waveLim.y();
 
