@@ -1,3 +1,10 @@
+/*
+ * 3) Dejar, Máximo límite inferior y Mínimo límite superior
+ * 5) Que los límite puedan ser fijados manualmente
+*/
+
+
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -3901,6 +3908,9 @@ void MainWindow::on_actionGenHypercube_triggered()
         qDebug() << time;
         //Inform to the user
         funcShowMsg(" ", "Hypercube exported successfully\n\n"+time);
+
+        QString exportedHypcbes(_PATH_TMP_HYPCUBES);
+        funcUpdateSpectralPixels(&exportedHypcbes);
     }
     //exit(2);
 
@@ -6662,7 +6672,6 @@ void MainWindow::on_actionsquareSettings_triggered()
 
 void MainWindow::on_pbSelectFolder_clicked()
 {
-    int l, r, c;
     //---------------------------------------
     //Get directory
     //---------------------------------------
@@ -6672,11 +6681,18 @@ void MainWindow::on_pbSelectFolder_clicked()
         qDebug() << "Dir not selected";
         return (void)false;
     }
+    funcUpdateSpectralPixels(&pathSource);
+
+}
+
+void MainWindow::funcUpdateSpectralPixels(QString* pathSource)
+{
+    int l, r, c;
 
     //---------------------------------------
     //List files in directory
     //---------------------------------------
-    lstImages = funcListFilesInDirSortByNumberName(pathSource);
+    lstImages = funcListFilesInDirSortByNumberName(*pathSource);
     if( lstImages.size() == 0 )
     {
         funcShowMsg("ERROR","Invalid directory");
@@ -6720,7 +6736,7 @@ void MainWindow::on_pbSelectFolder_clicked()
     //---------------------------------------
     //Display first photo
     //---------------------------------------
-    if( graphViewSmall == NULL )
+    if( graphViewSmall == nullptr )
     {
         graphViewSmall = new GraphicsView(this);
         connect( graphViewSmall, SIGNAL( signalMouseMove(QMouseEvent*) ),this, SLOT( funcMouseMoveReaction(QMouseEvent*) ));
@@ -6746,7 +6762,7 @@ void MainWindow::on_pbSelectFolder_clicked()
     ui->slideChangeImage->setMinimum(1);
     ui->slideChangeImage->setToolTip(QString::number(1));
     ui->slideChangeImage->setMaximum(lstImages.size());
-    ui->slideChangeImage->setMaximumWidth( tmpImg.width() );    
+    ui->slideChangeImage->setMaximumWidth( tmpImg.width() );
     ui->labelCubeImageName->setText( "(1/" + QString::number(lstImages.size()) + ") " + lstImages.at(0).fileName() );
     ui->slideChangeImage->setEnabled(true);
     ui->graphViewPlot->move(20,tmpImg.height()+115);
@@ -11844,7 +11860,8 @@ void MainWindow::resizeEvent(QResizeEvent* event)
    //globalBackEditImg       = new QImage();
    //*globalBackEditImg      = *globalEditImg;
    //updatePreviewImage(globalBackEditImg);
-   updateDisplayImage(globalBackEditImg);
+   //*globalEditImg = diffImage;
+   updateDisplayImage(globalEditImg);
 
 }
 

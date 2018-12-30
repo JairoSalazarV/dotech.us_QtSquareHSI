@@ -510,6 +510,8 @@ void showAnCalChrRes::drawCenter(int x, int y, Qt::GlobalColor color){
     globalHLine = globalTmpLine;
     //qDebug() << "globalHLine_x: " << globalHLine->x();
     //qDebug() << "globalHLine_y: " << globalHLine->y();
+    globalVLine->parameters.orientation = _VERTICAL;
+    globalHLine->parameters.orientation = _HORIZONTAL;
 }
 
 void showAnCalChrRes::addLine2CanvasInPos(bool vertical, int pos, Qt::GlobalColor color){
@@ -578,9 +580,9 @@ void showAnCalChrRes::on_pbSaveAnalysis_clicked()
         //Centroid
         //----------------------------------------------------
         int xPos, yPos;
-        xPos = globalCalStruct.X1 + globalVLine->x();
-        yPos = globalCalStruct.Y1 + globalHLine->y();
-
+        xPos = globalCalStruct.X1 + static_cast<int>(globalVLine->x()) + static_cast<int>(globalVLine->line().x1());
+        yPos = globalCalStruct.Y1 + static_cast<int>(globalHLine->y()) + static_cast<int>(globalHLine->line().y1());
+        //Pos = globalCalStruct.X1 + globalRedLine->x()   + globalRedLine->line().x1();
         coordinates.append(QString::number(xPos));
         coordinates.append(",");
         coordinates.append(QString::number(yPos));
@@ -593,9 +595,9 @@ void showAnCalChrRes::on_pbSaveAnalysis_clicked()
         int rPos=0, gPos=0, bPos=0;
         if(globalIsHoriz)
         {
-            rPos = globalCalStruct.X1 + globalRedLine->x()   + globalRedLine->line().x1();   //Rectangle Corner + Initial Position + Movement
-            gPos = globalCalStruct.X1 + globalGreenLine->x() + globalGreenLine->line().x1(); //Rectangle Corner + Initial Position + Movement
-            bPos = globalCalStruct.X1 + globalBlueLine->x()  + globalBlueLine->line().x1();  //Rectangle Corner + Initial Position + Movement
+            rPos = globalCalStruct.X1 + static_cast<int>(globalRedLine->x())   + static_cast<int>(globalRedLine->line().x1());   //Rectangle Corner + Initial Position + Movement
+            gPos = globalCalStruct.X1 + static_cast<int>(globalGreenLine->x()) + static_cast<int>(globalGreenLine->line().x1()); //Rectangle Corner + Initial Position + Movement
+            bPos = globalCalStruct.X1 + static_cast<int>(globalBlueLine->x())  + static_cast<int>(globalBlueLine->line().x1());  //Rectangle Corner + Initial Position + Movement
             //rPos = globalCalStruct.X1 + globalRedLine->x();
             //gPos = globalCalStruct.X1 + globalGreenLine->x();
             //bPos = globalCalStruct.X1 + globalBlueLine->x();

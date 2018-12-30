@@ -63,6 +63,8 @@ public slots:
 
     void funcDrawSpectralPixelIntoSmall(int x, int y);
 
+    void funcUpdateSpectralPixels(QString* pathSource);
+
     void funcMouseMoveReaction(QMouseEvent* e);
 
     void funcLoadImageIntoGaphView( QGraphicsView* canvas, QString filePath );
