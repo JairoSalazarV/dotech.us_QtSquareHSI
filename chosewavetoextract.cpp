@@ -38,7 +38,7 @@ void choseWaveToExtract::refreshOptChoi()
     //----------------------------------------------
     //Clear tables
     //----------------------------------------------
-    while (ui->tableOptions->rowCount() > 0)
+    while(ui->tableOptions->rowCount() > 0)
     {
         ui->tableOptions->removeRow(0);
     }
@@ -51,30 +51,47 @@ void choseWaveToExtract::refreshOptChoi()
     //Fill tables
     //----------------------------------------------
     QString options, choises;
-    options = readAllFile(_PATH_WAVE_OPTIONS);
-    choises = readAllFile(_PATH_WAVE_CHOISES);
-    QList<QString> lstOptions   = options.split(",");
-    QList<QString> lstChoises   = choises.split(",");
+    options = readAllFile(_PATH_WAVE_OPTIONS).trimmed();
+    choises = readAllFile(_PATH_WAVE_CHOISES).trimmed();
+
+    QList<QString> lstOptions;
+    QList<QString> lstChoises;
+    if(!options.isEmpty()) lstOptions = options.split(",");
+    if(!choises.isEmpty()) lstChoises = choises.split(",");
+
+
     QList<float> lstOptNumber;
     QList<float> lstChoisesNumber;
     int i;
-    for(i=1;i<lstOptions.size();i++)
-        lstOptNumber.append(lstOptions.at(i).toFloat());
-    for(i=1;i<lstChoises.size();i++)
-        lstChoisesNumber.append(lstChoises.at(i).toFloat());
-
-    std::sort(lstOptNumber.begin(), lstOptNumber.end());
-    std::sort(lstChoisesNumber.begin(), lstChoisesNumber.end());
-
-    Q_FOREACH(const float option, lstOptNumber)
+    //qDebug() << "lstOptions.at(size-1): " << lstOptions.at(lstOptions.size()-1);
+    if(!options.isEmpty())
     {
-        insertRow(QString::number(option),ui->tableOptions);
+        for(i=0;i<lstOptions.size();i++)
+            lstOptNumber.append(lstOptions.at(i).toFloat());
+
+        std::sort(lstOptNumber.begin(), lstOptNumber.end());
+
+        Q_FOREACH(const float option, lstOptNumber)
+        {
+            insertRow(QString::number(option),ui->tableOptions);
+        }
     }
 
-    Q_FOREACH(const float choise, lstChoisesNumber)
+
+    if(!choises.isEmpty())
     {
-        insertRow(QString::number(choise),ui->tableChoises);
+        for(i=0;i<lstChoises.size();i++)
+            lstChoisesNumber.append(lstChoises.at(i).toFloat());
+
+        std::sort(lstChoisesNumber.begin(), lstChoisesNumber.end());
+
+        Q_FOREACH(const float choise, lstChoisesNumber)
+        {
+            //qDebug() << "lstChoises.size(): " << lstChoises.size();
+            insertRow(QString::number(choise),ui->tableChoises);
+        }
     }
+
 }
 
 void choseWaveToExtract::iniOptsAndChois(bool allOptions)
@@ -83,7 +100,7 @@ void choseWaveToExtract::iniOptsAndChois(bool allOptions)
     tmpWave = daCalib.minWavelength;
     QString options;
     options.append(QString::number(tmpWave));
-    while( tmpWave < daCalib.maxWavelength - daCalib.minSpecRes )
+    while( tmpWave < daCalib.maxWavelength )
     {
         tmpWave += daCalib.minSpecRes;
         options.append("," + QString::number(tmpWave));
@@ -129,14 +146,20 @@ void choseWaveToExtract::switchSelected( QTableWidget *tableOrig, QTableWidget *
 void choseWaveToExtract::fromTablesToFiles()
 {
     QString options, choises;
+    int auxCounter = 0;
     while (ui->tableOptions->rowCount() > 0)
     {
-        options.append("," + ui->tableOptions->item(0,0)->text());
+        if(auxCounter==0)auxCounter++;
+        else options.append(",");
+        options.append(ui->tableOptions->item(0,0)->text());
         ui->tableOptions->removeRow(0);
     }
+    auxCounter = 0;
     while (ui->tableChoises->rowCount() > 0)
     {
-        choises.append("," + ui->tableChoises->item(0,0)->text());
+        if(auxCounter==0)auxCounter++;
+        else choises.append(",");
+        choises.append(ui->tableChoises->item(0,0)->text());
         ui->tableChoises->removeRow(0);
     }
     saveFile(_PATH_WAVE_OPTIONS,options);

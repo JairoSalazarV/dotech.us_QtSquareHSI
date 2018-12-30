@@ -847,9 +847,10 @@ void genCalibXML::clearWavelengthChoised()
     lstDoubleAxisCalibration daCalib;
     funcGetCalibration(&daCalib);
     tmpWave = daCalib.minWavelength;
+    //qDebug() << "daCalib.minWavelength: " << daCalib.minWavelength;
     QString options;
     options.append(QString::number(tmpWave));
-    while( tmpWave < daCalib.maxWavelength - daCalib.minSpecRes )
+    while( tmpWave <= daCalib.maxWavelength - daCalib.minSpecRes )
     {
         tmpWave += daCalib.minSpecRes;
         options.append("," + QString::number(tmpWave));

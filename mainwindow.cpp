@@ -6747,7 +6747,7 @@ void MainWindow::funcUpdateSpectralPixels(QString* pathSource)
     else
     {
         graphViewSmall->scene()->clear();
-        qDebug() << "Removiendo";
+        //qDebug() << "Removiendo";
     }
     funcLoadImageIntoGaphView(graphViewSmall,lstImages.at(0).absoluteFilePath());
 
