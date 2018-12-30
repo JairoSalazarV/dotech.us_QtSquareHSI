@@ -189,7 +189,7 @@ void choseWaveToExtract::addByStep()
     tmpWave = static_cast<double>( daCalib.minWavelength );
     //QString options;
     int row;
-    qDebug() << "daCalib.maxWavelength : " << daCalib.maxWavelength ;
+    //qDebug() << "daCalib.maxWavelength : " << daCalib.maxWavelength ;
     double actualWave;
     while( tmpWave < static_cast<double>( daCalib.maxWavelength ) )
     {
