@@ -1,9 +1,3 @@
-/*
- * 5) Que los límite puedan ser fijados manualmente
-*/
-
-
-
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -356,6 +350,10 @@ int MainWindow::funcValidateMinimalStatus()
         saveFile(_PATH_SETTINGS_BLUE_WAVELEN,"615");
     if( !fileExists(_PATH_SETTINGS_EM_ITERATIONS) )
         saveFile(_PATH_SETTINGS_EM_ITERATIONS,"20");
+    if( !fileExists(_PATH_SETTINGS_LOWER_LIMIT) )
+        saveFile(_PATH_SETTINGS_LOWER_LIMIT,"1");
+    if( !fileExists(_PATH_SETTINGS_UPPER_LIMIT) )
+        saveFile(_PATH_SETTINGS_UPPER_LIMIT,"1");
 
 
     return _OK;

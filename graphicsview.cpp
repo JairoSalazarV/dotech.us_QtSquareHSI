@@ -334,11 +334,11 @@ void GraphicsView::funcDisplayWavelength(QMouseEvent *e)
     QString tmpParam;
     double wavelengthRed, wavelengthGreen, wavelengthBlue;
     tmpParam = readFileParam(_PATH_SETTINGS_RED_WAVELEN);
-    wavelengthRed   = tmpParam.toDouble(0);
+    wavelengthRed   = tmpParam.toDouble();
     tmpParam        = readFileParam(_PATH_SETTINGS_GREEN_WAVELEN);
-    wavelengthGreen = tmpParam.toDouble(0);
+    wavelengthGreen = tmpParam.toDouble();
     tmpParam        = readFileParam(_PATH_SETTINGS_BLUE_WAVELEN);
-    wavelengthBlue  = tmpParam.toDouble(0);
+    wavelengthBlue  = tmpParam.toDouble();
 
     //......................................
     //Calculate Linear Regression

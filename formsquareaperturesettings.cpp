@@ -12,16 +12,22 @@ formSquareApertureSettings::formSquareApertureSettings(QWidget *parent) :
     QString tmpParam;
 
     tmpParam = readFileParam(_PATH_SETTINGS_RED_WAVELEN);
-    ui->doubleSpinBoxRed->setValue(tmpParam.toDouble(0));
+    ui->doubleSpinBoxRed->setValue(tmpParam.toDouble());
 
     tmpParam = readFileParam(_PATH_SETTINGS_GREEN_WAVELEN);
-    ui->doubleSpinBoxGreen->setValue(tmpParam.toDouble(0));
+    ui->doubleSpinBoxGreen->setValue(tmpParam.toDouble());
 
     tmpParam = readFileParam(_PATH_SETTINGS_BLUE_WAVELEN);
-    ui->doubleSpinBoxBlue->setValue(tmpParam.toDouble(0));
+    ui->doubleSpinBoxBlue->setValue(tmpParam.toDouble());
 
     tmpParam = readFileParam(_PATH_SETTINGS_EM_ITERATIONS);
-    ui->spinBoxEMIterations->setValue(tmpParam.toInt(0));
+    ui->spinBoxEMIterations->setValue(tmpParam.toInt());
+
+    tmpParam = readFileParam(_PATH_SETTINGS_LOWER_LIMIT);
+    ui->spinBoxLowerLimit->setValue(tmpParam.toInt());
+
+    tmpParam = readFileParam(_PATH_SETTINGS_UPPER_LIMIT);
+    ui->spinBoxUpperLimit->setValue(tmpParam.toInt());
 
 }
 
@@ -38,5 +44,7 @@ void formSquareApertureSettings::on_buttonBox_accepted()
         saveFile(_PATH_SETTINGS_GREEN_WAVELEN,QString::number(ui->doubleSpinBoxGreen->value()));
         saveFile(_PATH_SETTINGS_BLUE_WAVELEN,QString::number(ui->doubleSpinBoxBlue->value()));
         saveFile(_PATH_SETTINGS_EM_ITERATIONS,QString::number(ui->spinBoxEMIterations->value()));
+        saveFile(_PATH_SETTINGS_LOWER_LIMIT,QString::number(ui->spinBoxLowerLimit->value()));
+        saveFile(_PATH_SETTINGS_UPPER_LIMIT,QString::number(ui->spinBoxUpperLimit->value()));
     }
 }

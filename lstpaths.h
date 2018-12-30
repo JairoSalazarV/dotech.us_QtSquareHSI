@@ -26,6 +26,8 @@
     #define _PATH_SETTINGS_GREEN_WAVELEN    "./settings/Wavelengths/GreenWavelength.hypcam"
     #define _PATH_SETTINGS_BLUE_WAVELEN     "./settings/Wavelengths/BlueWavelength.hypcam"
     #define _PATH_SETTINGS_EM_ITERATIONS    "./settings/Wavelengths/EMIterations.hypcam"
+    #define _PATH_SETTINGS_LOWER_LIMIT      "./settings/Wavelengths/lowerLimt.hypcam"
+    #define _PATH_SETTINGS_UPPER_LIMIT      "./settings/Wavelengths/upperLimit.hypcam"
 
     #define _PATH_CALBKG                    "./settings/Calib/backgroundPath.hypcam"
     #define _PATH_CALIB                     "./settings/Calib/"

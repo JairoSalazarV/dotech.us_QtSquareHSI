@@ -554,6 +554,13 @@ strLimits genCalibXML::getLimitsFromHDD(){
 
 QVector2D genCalibXML::getWavelengthFrontiers()
 {
+    //Get Predefined Limits
+    double setLowerLimit, setUpperLimit;
+    setLowerLimit = readAllFile(_PATH_SETTINGS_LOWER_LIMIT).trimmed().toDouble();
+    setUpperLimit = readAllFile(_PATH_SETTINGS_UPPER_LIMIT).trimmed().toDouble();
+
+
+    //---------------------------------------------------------
     QVector2D fontier;
     //qDebug() << "Aquí71";
     strLimits limits = getLimitsFromHDD();
@@ -578,9 +585,16 @@ QVector2D genCalibXML::getWavelengthFrontiers()
     //waveLimInf  = (waveRight > waveUp)?waveRight:waveUp;
     //waveLimInf  = (waveLimInf > waveLeft)?waveLimInf:waveLeft;
     //waveLimInf  = (waveLimInf > waveDown)?waveLimInf:waveDown;
-    waveLimInf  = (waveRight < waveUp)?waveRight:waveUp;
-    waveLimInf  = (waveLimInf < waveLeft)?waveLimInf:waveLeft;
-    waveLimInf  = (waveLimInf < waveDown)?waveLimInf:waveDown;
+    if(setLowerLimit==1.0)
+    {
+        waveLimInf  = (waveRight < waveUp)?waveRight:waveUp;
+        waveLimInf  = (waveLimInf < waveLeft)?waveLimInf:waveLeft;
+        waveLimInf  = (waveLimInf < waveDown)?waveLimInf:waveDown;
+    }
+    else
+    {
+        waveLimInf  = static_cast<float>(setLowerLimit);
+    }
     //Max
     //qDebug() << "Aquí74";
     //qDebug() << "linRegRes.deltaHorizA: " << linRegRes.deltaHorizA;
@@ -592,9 +606,16 @@ QVector2D genCalibXML::getWavelengthFrontiers()
     waveLeft    = linRegRes.deltaHorizA + ( linRegRes.deltaHorizB * (double)abs(limits.sourceX - limits.leftSup) );
     waveDown    = linRegRes.deltaVertA + ( linRegRes.deltaVertB * (double)abs(limits.sourceY - limits.downSup) );
 
-    waveLimSup  = (waveRight < waveUp)?waveRight:waveUp;
-    waveLimSup  = (waveLimSup < waveLeft)?waveLimSup:waveLeft;
-    waveLimSup  = (waveLimSup < waveDown)?waveLimSup:waveDown;
+    if(setUpperLimit==1.0)
+    {
+        waveLimSup  = (waveRight < waveUp)?waveRight:waveUp;
+        waveLimSup  = (waveLimSup < waveLeft)?waveLimSup:waveLeft;
+        waveLimSup  = (waveLimSup < waveDown)?waveLimSup:waveDown;
+    }
+    else
+    {
+        waveLimSup  = static_cast<float>(setUpperLimit);
+    }
 
     //qDebug() << "2 waveRight: " << waveRight;
     //qDebug() << "2 waveUp: " << waveUp;
@@ -686,9 +707,12 @@ void genCalibXML::on_pbGenCal_clicked()
         //..
         QString minWavelength, maxWavelength;
         QVector2D waveLim;
+        minWavelength.clear();
+        maxWavelength.clear();
         waveLim = getWavelengthFrontiers();
         minWavelength = QString::number(waveLim.x());
         maxWavelength = QString::number(waveLim.y());
+
         //qDebug() << "Aquí8";
         //Square aperture as percentage
         //..
