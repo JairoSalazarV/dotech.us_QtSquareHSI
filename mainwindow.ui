@@ -2010,7 +2010,7 @@
   </action>
   <action name="actionApply_Region_of_Interes">
    <property name="text">
-    <string>Apply Region of Interes</string>
+    <string>Apply Region of Interest</string>
    </property>
   </action>
  </widget>

@@ -38,7 +38,7 @@ QAction *customRect::showContMenuLine(QPoint pos){
     xmenu->addSeparator();
     QMenu* submenu3 = xmenu->addMenu( "Save as" );
 
-    submenu3->addAction( "Region of interes" );
+    submenu3->addAction( "Region of interest" );
     submenu3->addAction( "Square aperture" );
     submenu3->addAction( "Square usable" );
 
@@ -215,7 +215,7 @@ void customRect::mousePressEvent(QGraphicsSceneMouseEvent *event){
             saveSquareAs(_PATH_SQUARE_USABLE);
         }
 
-        if(a->text()=="Region of interes"){
+        if(a->text()=="Region of interest"){
             //Call the centroid
             //..
             saveSquareAs(_PATH_REGION_OF_INTERES);

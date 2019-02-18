@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Chose wavelength to extract</string>
+   <string>Choose wavelengths to export</string>
   </property>
   <widget class="QTableWidget" name="tableOptions">
    <property name="geometry">
@@ -39,7 +39,7 @@
    </property>
    <column>
     <property name="text">
-     <string>Choises</string>
+     <string>Choices</string>
     </property>
    </column>
   </widget>

@@ -4798,12 +4798,32 @@ void MainWindow::on_actionShow_hypercube_triggered()
         return (void)NULL;
     }
 
-    //Generates hypercube
-    //..
+    //
+    // Change Mouse Status
+    //
+    mouseCursorWait();
+
+    //
+    // Generates hypercube
+    //
     extractsHyperCube(originFileName);
 
-    funcShowMsg("Hypercube extracted successfully",_PATH_TMP_HYPCUBES);
 
+    //
+    // Displays Exported Hypercube
+    //
+    QString exportedHypcbes(_PATH_TMP_HYPCUBES);
+    funcUpdateSpectralPixels(&exportedHypcbes);
+
+    //
+    // Change Mouse Status
+    //
+    mouseCursorReset();
+
+    //
+    // Notofies Successfull
+    //
+    funcShowMsg("Hypercube extracted successfully",_PATH_TMP_HYPCUBES);
 
 }
 
