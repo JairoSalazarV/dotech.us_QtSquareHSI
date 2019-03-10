@@ -407,7 +407,8 @@
         u_int8_t      FullPhoto;              // 1: No Cut | 0: Require cut
         u_int8_t      ColorBalance;           // 0v1: ColorBalance efx
         u_int8_t      CameraMp;               // 5: 5Mp | 8:8Mp
-        u_int8_t      Flipped;                // 1: Horizontal Flipped | 0:Not flipped
+        u_int8_t      Flipped;                // 1: Vertical Flipped    | 0:Not flipped
+        u_int8_t      horizontalFlipped;      // 1: Horizontal Flipped  | 0:Not flipped
     }structRaspcamSettings;
 
     typedef struct squareAperture{

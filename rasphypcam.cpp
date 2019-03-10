@@ -388,6 +388,11 @@ std::string *genCommand(strReqImg *reqImg, const std::string& fileName)
         tmpCommand->append(" -vf ");
     }
 
+    //HORIZONTAL FLIPPED
+    if( reqImg->raspSett.horizontalFlipped ){
+        tmpCommand->append(" -hf ");
+    }
+
     printf("tmpCommand: %s\n",tmpCommand->c_str());
     return tmpCommand;
 }

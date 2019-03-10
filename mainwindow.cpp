@@ -320,6 +320,7 @@ int MainWindow::funcValidateMinimalStatus()
         fileContain.append("\t<ISO>0</ISO>\n");
         fileContain.append("\t<CameraMp>5</CameraMp>\n");
         fileContain.append("\t<Flipped>1</Flipped>\n");
+        fileContain.append("\t<horizontalFlipped>1</horizontalFlipped>\n");
         fileContain.append("</settings>");
         saveFile(_PATH_RASPICAM_SETTINGS,fileContain);
     }
@@ -737,6 +738,10 @@ void MainWindow::funcIniCamParam( structRaspcamSettings *raspcamSettings )
     //FLIPPED
     if( raspcamSettings->Flipped )ui->cbFlipped->setChecked(true);
     else ui->cbFlipped->setChecked(false);
+
+    //HORIZONTAL FLIPPED
+    if( raspcamSettings->horizontalFlipped )ui->cbFlippedHorizontal->setChecked(true);
+    else ui->cbFlippedHorizontal->setChecked(false);
 
 
 }
@@ -1679,9 +1684,11 @@ void MainWindow::on_slideISO_valueChanged(int value)
 
 void MainWindow::on_pbSaveRaspParam_clicked()
 {
-    if( ui->txtCamParamXMLName->text().isEmpty() ){
+    if( ui->txtCamParamXMLName->text().isEmpty() )
+    {
         funcShowMsg("Lack","Type the scenario's name");
-    }else{
+    }else
+    {
 
         QString tmpName = ui->txtCamParamXMLName->text();
         tmpName.replace(".xml","");
@@ -1689,20 +1696,26 @@ void MainWindow::on_pbSaveRaspParam_clicked()
         qDebug() << tmpName;
 
         bool saveFile = false;
-        if( QFileInfo::exists( "./XML/camPerfils/" + tmpName + ".xml" ) ){
-            if( funcShowMsgYesNo("Alert","Replace existent file?") ){
+        if( QFileInfo::exists( "./XML/camPerfils/" + tmpName + ".xml" ) )
+        {
+            if( funcShowMsgYesNo("Alert","Replace existent file?") )
+            {
                 QFile file( "./XML/camPerfils/" + tmpName + ".xml" );
                 file.remove();
                 saveFile = true;
             }
-        }else{
+        }else
+        {
             saveFile = true;
         }
 
-        if( saveFile ){
-            if( saveRaspCamSettings( tmpName ) ){
+        if( saveFile )
+        {
+            if( saveRaspCamSettings( tmpName ) )
+            {
                 funcShowMsg("Success","File stored successfully");
-            }else{
+            }else
+            {
                 funcShowMsg("ERROR","Saving raspcamsettings");
             }
         }
@@ -1734,7 +1747,8 @@ bool MainWindow::saveRaspCamSettings( QString tmpName ){
     //Prepare file contain
     //----------------------------------------------
     QString newFileCon = "";
-    QString flipped = (ui->cbFlipped->isChecked())?"1":"0";
+    QString flipped             = (ui->cbFlipped->isChecked())?"1":"0";
+    QString horizontalFlipped   = (ui->cbFlippedHorizontal->isChecked())?"1":"0";
     QString denoiseFlag = (ui->cbDenoise->isChecked())?"1":"0";
     QString colbalFlag = (ui->cbColorBalance->isChecked())?"1":"0";
     newFileCon.append("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n");
@@ -1752,6 +1766,7 @@ bool MainWindow::saveRaspCamSettings( QString tmpName ){
     newFileCon.append("    <ISO>"+ QString::number( ui->slideISO->value() ) +"</ISO>\n");
     newFileCon.append("    <CameraMp>"+ QString::number( tmpResInMp ) +"</CameraMp>\n");
     newFileCon.append("    <Flipped>"+ flipped +"</Flipped>\n");
+    newFileCon.append("    <horizontalFlipped>"+ horizontalFlipped +"</horizontalFlipped>\n");
     newFileCon.append("</settings>");
 
     //----------------------------------------------
@@ -6431,6 +6446,7 @@ int MainWindow::takeRemoteSnapshot( QString fileDestiny, bool squareArea )
     reqImg->imgCols                             = camRes->width;//2592 | 640
     reqImg->imgRows                             = camRes->height;//1944 | 480
     reqImg->raspSett.Flipped                    = (ui->cbFlipped->isChecked())?1:0;
+    reqImg->raspSett.horizontalFlipped          = (ui->cbFlippedHorizontal->isChecked())?1:0;
 
     //--------------------------------------
     //Create Command
@@ -7530,6 +7546,13 @@ QString MainWindow::genRemoteVideoCommand(QString remoteVideo,bool ROI)
         tmpCommand.append(" -vf " );
     }
 
+    //.................................
+    //Horizontal Flipped
+    //.................................
+    if( ui->cbFlippedHorizontal->isChecked() ){
+        tmpCommand.append(" -hf " );
+    }
+
 
     return tmpCommand;
 }
@@ -7665,6 +7688,13 @@ QString MainWindow::genTimelapseCommand(QString folder,bool setROI)
         tmpCommand.append(" -vf " );
     }
 
+    //.................................
+    //Horizontal Flipped
+    //.................................
+    if( ui->cbFlippedHorizontal->isChecked() ){
+        tmpCommand.append(" -hf " );
+    }
+
 
     return tmpCommand;
 }
@@ -7776,6 +7806,13 @@ QString MainWindow::genSubareaRaspistillCommand( QString remoteFilename, QString
     //.................................
     if( ui->cbFlipped->isChecked() ){
         tmpCommand.append(" -vf " );
+    }
+
+    //.................................
+    //Horizontal Flipped
+    //.................................
+    if( ui->cbFlippedHorizontal->isChecked() ){
+        tmpCommand.append(" -hf " );
     }
 
 

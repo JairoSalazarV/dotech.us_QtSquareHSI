@@ -850,6 +850,8 @@ bool funcGetRaspParamFromXML( structRaspcamSettings *raspcamSettings, QString fi
                 raspcamSettings->CameraMp = xmlReader->readElementText().toInt(0);
             if( xmlReader->name()=="Flipped" )
                 raspcamSettings->Flipped = xmlReader->readElementText().toInt(0);
+            if( xmlReader->name()=="horizontalFlipped" )
+                raspcamSettings->horizontalFlipped = xmlReader->readElementText().toInt(0);
         }
     }
     if(xmlReader->hasError()) {
@@ -918,7 +920,7 @@ void funcObtSettings( structSettings *lstSettings ){
                 lstSettings->version = xmlReader->readElementText().toFloat();
             }
             if( xmlReader->name()=="tcpPort" ){
-                lstSettings->tcpPort = xmlReader->readElementText().toInt(0);
+                lstSettings->tcpPort = xmlReader->readElementText().toInt();
             }
         }
     }
