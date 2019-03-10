@@ -402,6 +402,8 @@ private slots:
 
     bool generatesHypcube(int numIterations, QString fileName);
 
+    double funcGetSpectralResponse(double r, double g, double b, double rLambda, double gLambda, double bLambda);
+
     double *demosaiseF2D(double *f, int L, int H, int W);
     double *demosaiseF3D(double *f, int L, int H, int W);
 

@@ -1006,29 +1006,6 @@
      <attribute name="title">
       <string>Pixels</string>
      </attribute>
-     <widget class="QPushButton" name="pbSelectFolder">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>20</x>
-        <y>10</y>
-        <width>31</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select Directory&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-      <property name="icon">
-       <iconset resource="lstImgs.qrc">
-        <normaloff>:/new/icons/imagenInte/folder-icon.png</normaloff>:/new/icons/imagenInte/folder-icon.png</iconset>
-      </property>
-     </widget>
      <widget class="QGraphicsView" name="graphViewPlot">
       <property name="geometry">
        <rect>

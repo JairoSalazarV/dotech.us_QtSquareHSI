@@ -1,3 +1,7 @@
+// /home/jairo/Descargas/linuxdeployqt-continuous-x86_64.AppImage /home/jairo/Documentos/DESARROLLOS/dotech.us_RELEASES/QtSquareHSI/HypCam -appimage
+
+
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -3887,6 +3891,10 @@ void MainWindow::on_actionGenHypercube_triggered()
     {
         return (void)NULL;
     }
+    fileName.replace(".hypercube","");
+    fileName.append(".hypercube");
+
+
 
 
     QTime timeStamp;
@@ -3988,11 +3996,14 @@ bool MainWindow::generatesHypcube(int numIterations, QString fileName){
     max = -1;
     pixByImage = daCalib.squareUsableW * daCalib.squareUsableH;    
     i=0;
+    double tmpVector[3];
     for(l=0; l<hypL;l++)
     {
         for(j=0; j<pixByImage; j++)
         {
-            F[i]    = (fRed[i]+fGreen[i]+fBlue[i]) / (Sr.at(l)+Sg.at(l)+Sb.at(l));
+            //F[i]    = (fRed[i]+fGreen[i]+fBlue[i]) / (Sr.at(l)+Sg.at(l)+Sb.at(l));
+            //F[i]    = fRed[i]+fGreen[i]+fBlue[i];
+            F[i]    = funcGetSpectralResponse(fRed[i],fGreen[i],fBlue[i],Sr.at(l),Sg.at(l),Sb.at(l));
             if(min>F[i])
             {
                 min     = F[i];
@@ -4077,6 +4088,30 @@ bool MainWindow::generatesHypcube(int numIterations, QString fileName){
 
 
     return true;
+
+}
+
+double MainWindow::funcGetSpectralResponse(double r,double g,double b,double rLambda,double gLambda,double bLambda)
+{
+    /*
+    double val = 1;
+    if(r>=g && r>=b)
+    {
+        val = rLambda / (rLambda+gLambda+bLambda);
+    }
+    if(g>=r && g>=b)
+    {
+        val = gLambda / (rLambda+gLambda+bLambda);
+    }
+    if(b>=r && b>=g)
+    {
+        val = bLambda / (rLambda+gLambda+bLambda);
+    }*/
+
+
+    //return (r+g+b) / (rLambda+gLambda+bLambda);
+
+    return (r+g+b);
 
 }
 
@@ -6753,6 +6788,8 @@ void MainWindow::funcUpdateSpectralPixels(QString* pathSource)
     //---------------------------------------
     //Display first photo
     //---------------------------------------
+    //qDebug() << "Current: " << ui->pbExpPixs->currentIndex();
+    ui->pbExpPixs->setCurrentIndex(3);
     if( graphViewSmall == nullptr )
     {
         graphViewSmall = new GraphicsView(this);
@@ -11978,12 +12015,20 @@ void MainWindow::functionTakeComposedSquarePicture()
                         return (void)false;
                     }
                     //Get usable area coordinates
-                    if( !rectangleInPixelsFromSquareXML( _PATH_SQUARE_APERTURE, squareApertArea ) )
+                    if( !rectangleInPixelsFromSquareXML( _PATH_SQUARE_APERTURE, _PATH_REGION_OF_INTERES, squareApertArea ) )
                     {
                         funcShowMsg("ERROR","Loading Usable Area in Pixels: _PATH_SQUARE_USABLE");
                         return (void)false;
                     }
+                    //Move coordinates in reference to "Region of Interest"
+                    //squareApertArea->rectX -= aperture->rectX;
+                    //squareApertArea->rectY -= aperture->rectY;
 
+                    //
+                    // Crop taken images
+                    //
+                    diffImage       = diffImage.copy(QRect( aperture->rectX, aperture->rectY, aperture->rectW, aperture->rectH ));
+                    apertureImage   = apertureImage.copy(QRect( aperture->rectX, aperture->rectY, aperture->rectW, aperture->rectH ));
 
                     //
                     //Copy square aperture into diffraction image
@@ -11999,7 +12044,7 @@ void MainWindow::functionTakeComposedSquarePicture()
                     //
                     //Cut Resultant Image
                     //
-                    diffImage       = diffImage.copy(QRect( aperture->rectX, aperture->rectY, aperture->rectW, aperture->rectH ));
+                    //diffImage       = diffImage.copy(QRect( aperture->rectX, aperture->rectY, aperture->rectW, aperture->rectH ));
                     //apertureImage   = apertureImage.copy(QRect( squareApertArea->rectX, squareApertArea->rectY, squareApertArea->rectW, squareApertArea->rectH ));
 
                     /*

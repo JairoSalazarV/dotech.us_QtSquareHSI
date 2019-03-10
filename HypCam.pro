@@ -2,6 +2,7 @@
 #
 # Project created by QtCreator 2016-05-17T10:41:15
 #
+# /home/jairo/Descargas/linuxdeployqt-continuous-x86_64.AppImage /home/jairo/Documentos/DESARROLLOS/dotech.us_RELEASES/QtSquareHSI/HypCam -appimage
 #-------------------------------------------------
 
 QT  += core gui
