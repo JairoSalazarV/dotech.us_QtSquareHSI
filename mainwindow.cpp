@@ -6861,6 +6861,12 @@ void MainWindow::funcUpdateSpectralPixels(QString* pathSource)
     //---------------------------------------
     funcDrawPlotLimits();
 
+    //---------------------------------------
+    //Update Slide
+    //---------------------------------------
+    ui->slideChangeImage->setValue(1);
+    ui->slideChangeImage->update();
+
 }
 
 void MainWindow::funcDrawSpectralPixelIntoSmall(int x, int y)
