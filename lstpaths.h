@@ -84,8 +84,9 @@
     #define _PATH_SLIDE_MAX_WAVELENGTH              "./settings/Calib/slideMaxWavelength.hypcam"
     #define _PATH_SLIDE_MIN_WAVELENGTH              "./settings/Calib/slideMinWavelength.hypcam"
 
-    #define _PATH_DEFA_CALIB                "./settings/Calib/"
-    #define _PATH_CALIB_LAST_OPEN           "./settings/Calib/lastCalibPathOpen.hypcam"
+    #define _PATH_DEFA_CALIB                        "./settings/Calib/"
+    #define _PATH_CALIB_LAST_OPEN                   "./settings/Calib/lastCalibPathOpen.hypcam"
+    #define _PATH_DEFAULT_SENSITIVITIES_IMG         "./tmpImages/defaultHalogenSensitivities.png"
 
     #define _PATH_IMG_FILTERED              "./tmpImages/Filtered/"
     #define _PATH_CUSTOM_GV_DEFAULT         "./tmpImages/customGraphicView.png"

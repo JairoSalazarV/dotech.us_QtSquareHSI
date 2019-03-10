@@ -694,6 +694,8 @@ private slots:
 
     void on_actionAbout_this_triggered();
 
+    void on_pbHyperRefresh_clicked();
+
 private:
     Ui::MainWindow *ui;
     //QLabel *status;

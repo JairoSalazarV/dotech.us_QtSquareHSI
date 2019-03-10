@@ -810,7 +810,9 @@ void genCalibXML::on_pbGenCal_clicked()
             newFileCon.append("    <Sg>"    + Sg                                                + "</Sg>\n");
             newFileCon.append("    <Sb>"    + Sb                                                + "</Sb>\n");
 
-
+            newFileCon.append("    Sr = ["    + Sr                                                + "];\n");
+            newFileCon.append("    Sg = ["    + Sg                                                + "];\n");
+            newFileCon.append("    Sb = ["    + Sb                                                + "];\n");
 
 
         newFileCon.append("</calib>\n");
@@ -886,8 +888,8 @@ void genCalibXML::calculateAndSaveSensitivities(lstDoubleAxisCalibration *daCali
     //..
     double actWave;
     strDiffProj diffProj;    
-    QImage img( _PATH_DISPLAY_IMAGE );
-    QImage imgMod( _PATH_DISPLAY_IMAGE );
+    QImage img( _PATH_DEFAULT_SENSITIVITIES_IMG );
+    QImage imgMod( _PATH_DEFAULT_SENSITIVITIES_IMG );
     QRgb tmpPix;
     int r, c, tmpX, tmpY, numWaves, range;
     numWaves = 0;

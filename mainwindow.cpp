@@ -2042,6 +2042,9 @@ void MainWindow::updateDisplayImage(QImage* tmpImg)
     //Update Edit View
     updateImageCanvasEdit(tmpImg);
 
+    //Save Image
+    tmpImg->save(_PATH_DISPLAY_IMAGE);
+
     mouseCursorReset();
 
 }
@@ -3498,6 +3501,12 @@ void MainWindow::on_actionLoadCanvas_triggered()
     //Update Thumb and Edit Canvas
     updateDisplayImage(globalEditImg);
 
+    //
+    //Update Displayed Image Path
+    //
+    //saveFile(_PATH_DISPLAY_IMAGE,auxQstring);
+    //qDebug() << "auxQstring: " << auxQstring;
+
     //Save Image to Display Path
     //mouseCursorWait();
     //globalEditImg->save(_PATH_DISPLAY_IMAGE);
@@ -3586,6 +3595,7 @@ void MainWindow::updateImageCanvasEdit(QImage* origImg)
     canvasCalib->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
     canvasCalib->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
     canvasCalib->update();
+
 }
 
 void MainWindow::on_actionApplyThreshold_triggered()
@@ -4108,25 +4118,32 @@ bool MainWindow::generatesHypcube(int numIterations, QString fileName){
 
 double MainWindow::funcGetSpectralResponse(double r,double g,double b,double rLambda,double gLambda,double bLambda)
 {
-    /*
-    double val = 1;
-    if(r>=g && r>=b)
-    {
-        val = rLambda / (rLambda+gLambda+bLambda);
-    }
-    if(g>=r && g>=b)
-    {
-        val = gLambda / (rLambda+gLambda+bLambda);
-    }
-    if(b>=r && b>=g)
-    {
-        val = bLambda / (rLambda+gLambda+bLambda);
-    }*/
 
+    double val = 1;
+    if(rLambda>=gLambda && rLambda>=bLambda)
+    {
+        val = r;
+    }
+    else
+    {
+        if(gLambda>=rLambda && gLambda>=bLambda)
+        {
+            val = g;
+        }
+        else
+        {
+            if(bLambda>=rLambda && bLambda>=gLambda)
+            {
+                val = b;
+            }
+        }
+    }
+
+    return val;
 
     //return (r+g+b) / (rLambda+gLambda+bLambda);
 
-    return (r+g+b);
+    //return (r+g+b);
 
 }
 
@@ -12119,4 +12136,10 @@ void MainWindow::functionTakeComposedSquarePicture()
 void MainWindow::on_actionAbout_this_triggered()
 {
     QDesktopServices::openUrl(QUrl("https://dotechmx.wordpress.com/category/his-diy/square/", QUrl::TolerantMode));
+}
+
+void MainWindow::on_pbHyperRefresh_clicked()
+{
+    QString exportedHypcbes(_PATH_TMP_HYPCUBES);
+    funcUpdateSpectralPixels(&exportedHypcbes);
 }

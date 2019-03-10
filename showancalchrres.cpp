@@ -648,6 +648,12 @@ void showAnCalChrRes::on_pbSaveAnalysis_clicked()
     //----------------------------------------------------
     //Save
     //----------------------------------------------------
+    //Save Source Halogen Origin Image
+    if(ui->txtQuadFilename->text().compare("sourceHalogen")==0)
+    {
+        QImage tmp(_PATH_DISPLAY_IMAGE);
+        tmp.save(_PATH_DEFAULT_SENSITIVITIES_IMG);
+    }
     //Save coordinates
     if(saveFile(fileName,coordinates)){
         //Save canvas background path
