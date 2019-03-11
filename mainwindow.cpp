@@ -3982,6 +3982,7 @@ bool MainWindow::generatesHypcube(int numIterations, QString fileName){
         }
         else
         {
+            /*
             if( SQUARE_BICUBIC_ITERATIONS > 0 )
             {
                 //Da otra pasada
@@ -3991,7 +3992,7 @@ bool MainWindow::generatesHypcube(int numIterations, QString fileName){
                     fGreen  = demosaiseF3D(fGreen,hypL,hypH,hypW);
                     fBlue   = demosaiseF3D(fBlue,hypL,hypH,hypW);
                 }
-            }
+            }*/
         }
     }
 
@@ -4044,6 +4045,17 @@ bool MainWindow::generatesHypcube(int numIterations, QString fileName){
     }
     printf("min(%lf,%d) max(%lf,%d)\n",min,minPos,max,maxPos);
     fflush(stdout);
+
+    //---------------------------------------------
+    //Denoise Hypercube
+    //---------------------------------------------
+    if( SQUARE_BICUBIC_ITERATIONS > 0 )
+    {
+        for( i=0; i<SQUARE_BICUBIC_ITERATIONS; i++ )
+        {
+            F    = demosaiseF3D(F,hypL,hypH,hypW);
+        }
+    }
 
     //---------------------------------------------
     //Save hypercube
