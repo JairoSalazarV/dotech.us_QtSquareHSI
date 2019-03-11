@@ -4985,7 +4985,7 @@ void MainWindow::extractsHyperCube(QString originFileName)
         }
 
         //qDebug() << "tmpMax: " << tmpMax;
-
+        /*
         if( SQUARE_BICUBIC_ITERATIONS > 1 )
         {
             tmpFileName =   _PATH_TMP_HYPCUBES +
@@ -5001,6 +5001,12 @@ void MainWindow::extractsHyperCube(QString originFileName)
                           QString::number(waves.at(l)) +
                           ".png";
         }
+        */
+
+        tmpFileName = _PATH_TMP_HYPCUBES +
+                      QString::number(waves.at(l)) +
+                      ".png";
+
         tmpImg.save(tmpFileName);
         tmpImg.fill(Qt::black);
         //hypercube.append(tmpImg);
