@@ -3489,7 +3489,7 @@ QList<double> getNormedFunction( QString fileName )
     irradiation.removeAt(0);
     for(i=0;i<irradiation.count();i++)
     {
-        function.append((irradiation.at(i).toDouble(0) / max)*0.75 );
+        function.append((irradiation.at(i).toDouble(0) / max)*0.5 );
         //printf("%.4f,",function.at(i));
     }
     return function;

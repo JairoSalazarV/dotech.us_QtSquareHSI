@@ -1040,6 +1040,11 @@ void genCalibXML::calculateAndSaveSensitivities(lstDoubleAxisCalibration *daCali
         sensitiv[0][i]      = response[0][i] / halogenFunction.at(idWave+i);
         sensitiv[1][i]      = response[1][i] / halogenFunction.at(idWave+i);
         sensitiv[2][i]      = response[2][i] / halogenFunction.at(idWave+i);
+
+        //sensitiv[0][i]      = response[0][i];
+        //sensitiv[1][i]      = response[1][i];
+        //sensitiv[2][i]      = response[2][i];
+
         sensitivityMaxRed   = (sensitiv[0][i]>sensitivityMaxRed)?sensitiv[0][i]:sensitivityMaxRed;
         sensitivityMaxGreen = (sensitiv[1][i]>sensitivityMaxGreen)?sensitiv[1][i]:sensitivityMaxGreen;
         sensitivityMaxBlue  = (sensitiv[2][i]>sensitivityMaxBlue)?sensitiv[2][i]:sensitivityMaxBlue;
