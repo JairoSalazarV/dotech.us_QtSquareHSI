@@ -4118,33 +4118,31 @@ bool MainWindow::generatesHypcube(int numIterations, QString fileName){
 
 double MainWindow::funcGetSpectralResponse(double r,double g,double b,double rLambda,double gLambda,double bLambda)
 {
-
     double val = 1;
     if(rLambda>=gLambda && rLambda>=bLambda)
     {
+        //val = r * (1+ ((1-rLambda)*3.0));
         val = r;
     }
     else
     {
         if(gLambda>=rLambda && gLambda>=bLambda)
         {
+            //val = g * (1+ ((1-gLambda)*3.0));
             val = g;
         }
         else
         {
             if(bLambda>=rLambda && bLambda>=gLambda)
             {
+                //val = b * (1+ ((1-bLambda)*3.0));
                 val = b;
             }
         }
     }
-
     return val;
-
     //return (r+g+b) / (rLambda+gLambda+bLambda);
-
     //return (r+g+b);
-
 }
 
 
