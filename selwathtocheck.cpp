@@ -549,6 +549,8 @@ void selWathToCheck::drawAllCalculatedCentoides()
     int sourceX, sourceY;
     sourceX = fileContain.split(",").at(0).toInt() - daCalib->squareUsableX;
     sourceY = fileContain.split(",").at(1).toInt() - daCalib->squareUsableY;
+    //qDebug() << "daCalib->squareUsableX: " << daCalib->squareUsableX << " sourceX: " << sourceX;
+    //qDebug() << "daCalib->squareUsableY: " << daCalib->squareUsableY << " sourceY: " << sourceY;
     //sourceX = sourceX - daCalib->squareUsableX;
     //sourceY = sourceY - daCalib->squareUsableY;
 
@@ -558,6 +560,7 @@ void selWathToCheck::drawAllCalculatedCentoides()
     diffProj.x          = sourceX;
     diffProj.y          = sourceY;
     calcDiffProj( &diffProj, daCalib );
+    //qDebug() << "Calculated-> sourceX: " << diffProj.x << " sourceY: " << diffProj.y;
     QImage img( _PATH_DISPLAY_IMAGE );
     drawCentroid(diffProj.x,diffProj.y,Qt::magenta,&img);
 
@@ -625,6 +628,7 @@ void selWathToCheck::drawCentroid(QString file, Qt::GlobalColor color, QImage *i
     int x, y;
     x = fileContain.split(",").at(0).toInt(0);
     y = fileContain.split(",").at(1).toInt(0);
+    //qDebug() << "Pre-> x: " << x << " y: " << y;
     QGraphicsLineItem *horLine = new QGraphicsLineItem(
                                                             (qreal)(x-len),
                                                             (qreal)y,
@@ -649,7 +653,6 @@ void selWathToCheck::drawCentroid(QString file, Qt::GlobalColor color, QImage *i
         img->setPixelColor(x,r,color);
     for( c=x-len; c<x+len; c++ )
         img->setPixelColor(c,y,color);
-
 }
 
 

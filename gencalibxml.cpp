@@ -810,9 +810,11 @@ void genCalibXML::on_pbGenCal_clicked()
             newFileCon.append("    <Sg>"    + Sg                                                + "</Sg>\n");
             newFileCon.append("    <Sb>"    + Sb                                                + "</Sb>\n");
 
+            newFileCon.append("    <!-- \n");
             newFileCon.append("    Sr = ["    + Sr                                                + "];\n");
             newFileCon.append("    Sg = ["    + Sg                                                + "];\n");
             newFileCon.append("    Sb = ["    + Sb                                                + "];\n");
+            newFileCon.append("    --> \n");
 
 
         newFileCon.append("</calib>\n");

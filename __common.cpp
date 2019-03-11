@@ -1621,12 +1621,16 @@ QList<QFileInfo> funcFilterFilelist(QList<QFileInfo> lstFiles, QString suffix)
 
 void calcDiffProj(strDiffProj *diffProj, lstDoubleAxisCalibration *daCalib)
 {
+
+    diffProj->x += 2;
+    diffProj->y -= 3;
+
     //int offsetX, offsetY;
     int origX, origY;
 
     origX   = diffProj->x + daCalib->squareUsableX;
     origY   = diffProj->y + daCalib->squareUsableY;
-
+    //qDebug() << "origX: " << origX << " origY: " << origY;
 
 
     //offsetX = abs( daCalib->squareUsableX - origX );
@@ -1636,6 +1640,9 @@ void calcDiffProj(strDiffProj *diffProj, lstDoubleAxisCalibration *daCalib)
     int jumpX, jumpY;
     jumpX = floor(daCalib->LR.waveHorizA + (daCalib->LR.waveHorizB * diffProj->wavelength));
     jumpY = floor(daCalib->LR.waveVertA + (daCalib->LR.waveVertB * diffProj->wavelength));
+
+    //qDebug() << "origX: " << diffProj->x << " origY: " << diffProj->y;
+    //qDebug() << "jumpX: " << jumpX << " jumpY: " << jumpY;
 
     //Right
     diffProj->ry = floor(daCalib->LR.horizA + (daCalib->LR.horizB * (double)(origX + jumpX))) + diffProj->y;
@@ -1652,6 +1659,9 @@ void calcDiffProj(strDiffProj *diffProj, lstDoubleAxisCalibration *daCalib)
     //Fits the original "y"
     diffProj->y  = floor(daCalib->LR.horizA + (daCalib->LR.horizB * (double)origX)) + diffProj->y;
     diffProj->x  = floor(daCalib->LR.vertA + (daCalib->LR.vertB * (double)origY)) + diffProj->x;
+
+
+
 
     diffProj->rx = diffProj->x + jumpX;
     diffProj->lx = diffProj->x - jumpX;
