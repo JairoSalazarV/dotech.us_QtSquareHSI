@@ -97,7 +97,6 @@
 
 #include <QDesktopServices>
 
-
 structSettings *lstSettings = (structSettings*)malloc(sizeof(structSettings));
 
 structCamSelected *camSelected = (structCamSelected*)malloc(sizeof(structCamSelected));
@@ -125,6 +124,8 @@ QThread* progBarThread;
 
 
 int*** tmpHypercube;
+static QList<QImage> lstHypercubeImgs;
+int tmpMaxHypcubeVal;
 static QList<QFileInfo> lstImages;
 GraphicsView* graphViewSmall;
 const int frameX    = 40;       //left and right
@@ -4974,11 +4975,12 @@ void MainWindow::extractsHyperCube(QString originFileName)
         {
             for( col=0; col<W; col++ )
             {
-                tmp = hypItems.at(i).toDouble(0);
-                if(true)//Normalize in reference to the Waveband
+                tmpVal     = hypItems.at(i).toDouble();
+                //tmpVal = tmp;
+                /*
+                if(false)//Normalize in reference to the Waveband
                 {
-                    tmpVal  = (tmp<=0.0)?0:round( (tmp/max[l]) * 255.0 );
-                    //tmpVal  = (tmp<=0.0)?0:round( (tmp/max[L]) * 255.0 );
+                    tmpVal  = (tmp<=0.0)?0:round( (tmp/max[l]) * 255.0 );   
                     if(tmp==max[L])
                     {
                         qDebug() << "tmpVal=" << tmpVal << " " << tmp << " " << "max[L] = " << max[L];
@@ -4986,8 +4988,18 @@ void MainWindow::extractsHyperCube(QString originFileName)
                 }
                 else
                 {
-                    tmpVal = tmp;
+                    if(false)//Normalize in reference to the Hypercube
+                    {
+                        tmpVal  = (tmp<=0.0)?0:round( (tmp/max[L]) * 255.0 );
+                    }
+                    else
+                    {
+                        tmpVal = tmp;
+                    }
+
                 }
+                */
+
                 //tmpImg.setPixelColor(QPoint(col,row),qGray(tmpVal,tmpVal,tmpVal));
                 tmpImg.setPixelColor(QPoint(col,row),qRgb(tmpVal,tmpVal,tmpVal));
 
@@ -6807,14 +6819,17 @@ void MainWindow::funcUpdateSpectralPixels(QString* pathSource)
     //---------------------------------------
     //Validate imagery in Dir
     //---------------------------------------
-    QImage tmpImg(lstImages.at(0).absoluteFilePath());
+    QImage tmpImg;
+    tmpImg  = QImage(lstImages.at(0).absoluteFilePath());
     int W, H, L;
     W = tmpImg.width();
     H = tmpImg.height();
     L = lstImages.size();
-    for( l=1; l<L; l++ )
+    for( l=0; l<L; l++ )
     {
-        tmpImg = QImage(lstImages.at(l).absoluteFilePath());
+        //qDebug() << "Llegot 1, size: " << lstImages.size() << " l: " << l << " - " << lstImages.at(l).absoluteFilePath();
+        QImage tmpImg(lstImages.at(l).absoluteFilePath());
+        lstHypercubeImgs.append( tmpImg );
         if( tmpImg.width() != W || tmpImg.height() != H )
         {
             funcShowMsg("ERROR","Dir selected contains image with different size");
@@ -6826,17 +6841,53 @@ void MainWindow::funcUpdateSpectralPixels(QString* pathSource)
     //Create Cube from HDD
     //---------------------------------------
     tmpHypercube = (int***)funcAllocInteger3DMatrixMemo( H, W, L, tmpHypercube );
+    int lstMaxVals[L+1];
+    lstMaxVals[L] = 0;
     for( l=0; l<L; l++ )
     {
-        tmpImg = QImage(lstImages.at(l).absoluteFilePath());
+        lstMaxVals[l] = 0;
+        //qDebug() << "Llegot 6, size: " << lstHypercubeImgs.size() << " l: " << l << " " << lstImages.at(l).absoluteFilePath();
+        tmpImg = lstHypercubeImgs.at(l);
+        //qDebug() << "Llegot 7, size: " << lstHypercubeImgs.size() << " l: " << l << " " << lstImages.at(l).absoluteFilePath();
         for( r=0; r<H; r++ )
         {
             for( c=0; c<W; c++ )
             {
                 tmpHypercube[r][c][l]    = qRed(tmpImg.pixel(c,r));
+                if( tmpHypercube[r][c][l] > tmpMaxHypcubeVal )
+                    tmpMaxHypcubeVal  = tmpHypercube[r][c][l];
+
             }
         }
     }
+
+    /*
+    //---------------------------------------
+    //Normalize if required
+    //---------------------------------------
+    if(ui->RadioLoadHypcube_2->isChecked() || ui->RadioLoadHypcube_3->isChecked() )
+    {
+        for( l=0; l<L; l++ )
+        {
+            for( r=0; r<H; r++ )
+            {
+                for( c=0; c<W; c++ )
+                {
+                    if( ui->RadioLoadHypcube_2->isChecked() )
+                    {
+                        tmpHypercube[r][c][l]   = round(((float)tmpHypercube[r][c][l] / (float)lstMaxVals[l])*255.0);
+                    }
+                    if( ui->RadioLoadHypcube_3->isChecked() )
+                    {
+                        tmpHypercube[r][c][l]   = round(((float)tmpHypercube[r][c][l] / (float)lstMaxVals[L])*255.0);
+                    }
+                    //qDebug() << "antes: " <<
+                    tmpImg.setPixel(c,r,tmpHypercube[r][c][l]);
+                }
+            }
+        }
+    }*/
+
 
     //---------------------------------------
     //Display first photo
@@ -6859,7 +6910,8 @@ void MainWindow::funcUpdateSpectralPixels(QString* pathSource)
         graphViewSmall->scene()->clear();
         //qDebug() << "Removiendo";
     }
-    funcLoadImageIntoGaphView(graphViewSmall,lstImages.at(0).absoluteFilePath());
+    //QPixmap tmpPixmap(lstImages.at(0).absoluteFilePath());
+    //funcLoadImageIntoGaphView(graphViewSmall,tmpPixmap);
 
 
     //---------------------------------------
@@ -6969,11 +7021,48 @@ void MainWindow::funcLoadImageIntoGaphView( QGraphicsView* canvas, QString fileP
     canvas->update();
 }
 
+void MainWindow::funcLoadImageIntoGaphView( QGraphicsView* canvas, QPixmap* pixMap )
+{
+    //QPixmap pixMap(filePath);
+    QGraphicsScene *scene = new QGraphicsScene(0,0,pixMap->width(),pixMap->height());
+    scene->setBackgroundBrush(QBrush(Qt::black));
+    canvas->setBackgroundBrush(*pixMap);
+    canvas->setScene(scene);
+    canvas->resize(pixMap->width(),pixMap->height());
+    canvas->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
+    canvas->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
+    canvas->update();
+}
+
 void MainWindow::on_slideChangeImage_valueChanged(int value)
 {
     ui->slideChangeImage->setToolTip( QString::number(value) );    
     ui->labelCubeImageName->setText( "("+ QString::number(value) +"/" + QString::number(lstImages.size()) + ") " + lstImages.at(value-1).fileName() );
-    funcLoadImageIntoGaphView(graphViewSmall,lstImages.at(value-1).absoluteFilePath());
+
+    //Update Image
+    QPixmap tmpPixmap = QPixmap::fromImage(lstHypercubeImgs.at(value-1));
+    funcLoadImageIntoGaphView(graphViewSmall,&tmpPixmap);
+}
+
+void MainWindow::funcNormalizePixelmap(QImage *image, double maxValue)
+{
+    int x, y;
+    QColor tmpPixel;
+    for(y=0; y<image->height(); y++)
+    {
+        for(x=0; x<image->width(); x++)
+        {
+            tmpPixel  = image->pixelColor(x,y);
+            //tmpPixel.setRed( round((tmpPixel.redF()/maxValue)*255.0) );
+            //tmpPixel.setGreen(round((tmpPixel.greenF()/maxValue)*255.0) );
+            //tmpPixel.setBlue( round((tmpPixel.blueF()/maxValue)*255.0) );
+            tmpPixel.setRed(tmpPixel.red() * 3);
+            tmpPixel.setGreen(tmpPixel.green() * 3);
+            tmpPixel.setBlue(tmpPixel.blue() * 3);
+            image->setPixelColor(x,y,tmpPixel);
+        }
+    }
+
 }
 
 void MainWindow::funcDrawPlotLimits()

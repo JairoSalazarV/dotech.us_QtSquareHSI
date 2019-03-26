@@ -68,6 +68,7 @@ public slots:
     void funcMouseMoveReaction(QMouseEvent* e);
 
     void funcLoadImageIntoGaphView( QGraphicsView* canvas, QString filePath );
+    void funcLoadImageIntoGaphView(QGraphicsView* canvas, QPixmap *pixMap );
 
     std::string funcRemoteTerminalCommand(
                                                     std::string command,
@@ -509,6 +510,8 @@ private slots:
     void on_slideChangeImage_valueChanged(int value);
 
     void funcDrawPlotLimits();
+
+    void funcNormalizePixelmap(QImage* image, double maxValue);
 
     void on_actionvideoToFrames_triggered();
 

@@ -31,7 +31,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>3</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -1067,6 +1067,57 @@
       <property name="icon">
        <iconset resource="lstImgs.qrc">
         <normaloff>:/new/icons/imagenInte/refresh.png</normaloff>:/new/icons/imagenInte/refresh.png</iconset>
+      </property>
+     </widget>
+     <widget class="QRadioButton" name="RadioLoadHypcube">
+      <property name="geometry">
+       <rect>
+        <x>80</x>
+        <y>10</y>
+        <width>51</width>
+        <height>26</height>
+       </rect>
+      </property>
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Megapixels&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="text">
+       <string>Raw</string>
+      </property>
+     </widget>
+     <widget class="QRadioButton" name="RadioLoadHypcube_2">
+      <property name="geometry">
+       <rect>
+        <x>146</x>
+        <y>10</y>
+        <width>61</width>
+        <height>26</height>
+       </rect>
+      </property>
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Megapixels&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="text">
+       <string>Band</string>
+      </property>
+     </widget>
+     <widget class="QRadioButton" name="RadioLoadHypcube_3">
+      <property name="geometry">
+       <rect>
+        <x>220</x>
+        <y>10</y>
+        <width>61</width>
+        <height>26</height>
+       </rect>
+      </property>
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Megapixels&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="text">
+       <string>Cube</string>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
       </property>
      </widget>
     </widget>
