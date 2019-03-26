@@ -6868,6 +6868,7 @@ void MainWindow::funcUpdateSpectralPixels(QString* pathSource)
     //---------------------------------------
     //Normalize if required
     //---------------------------------------
+    int auxBefore;
     if(ui->RadioLoadHypcube_2->isChecked() || ui->RadioLoadHypcube_3->isChecked() )
     {
         for( l=0; l<L; l++ )
@@ -6877,12 +6878,12 @@ void MainWindow::funcUpdateSpectralPixels(QString* pathSource)
             {
                 for( c=0; c<W; c++ )
                 {
-                    if( ui->RadioLoadHypcube_2->isChecked() )
+                    if( ui->RadioLoadHypcube_2->isChecked() && lstMaxVals[l] > 0 )
                     {
+                        auxBefore = tmpHypercube[r][c][l];
                         tmpHypercube[r][c][l]   = round(((float)tmpHypercube[r][c][l] / (float)lstMaxVals[l])*255.0);
-                        //qDebug() << "l: " << l << " val: " << lstMaxVals[l];
                     }
-                    if( ui->RadioLoadHypcube_3->isChecked() )
+                    if( ui->RadioLoadHypcube_3->isChecked() && lstMaxVals[L] > 0 )
                     {
                         tmpHypercube[r][c][l]   = round(((float)tmpHypercube[r][c][l] / (float)lstMaxVals[L])*255.0);
                         //qDebug() << "L: " << lstMaxVals[L];
