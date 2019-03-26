@@ -811,9 +811,24 @@ void genCalibXML::on_pbGenCal_clicked()
             newFileCon.append("    <Sb>"    + Sb                                                + "</Sb>\n");
 
             newFileCon.append("    <!-- \n");
-            newFileCon.append("    Sr = ["    + Sr                                                + "];\n");
-            newFileCon.append("    Sg = ["    + Sg                                                + "];\n");
-            newFileCon.append("    Sb = ["    + Sb                                                + "];\n");
+            newFileCon.append("    clear; close all;clc;\n");
+            newFileCon.append("    waveMin   = "     + minWavelength                            + ";\n");
+            newFileCon.append("    waveMax   = "     + maxWavelength                            + ";\n");
+            newFileCon.append("    waveRes   = "     + minSpecRes                               + ";\n");
+            newFileCon.append("    Sr        = ["    + Sr                                       + "];\n");
+            newFileCon.append("    Sg        = ["    + Sg                                       + "];\n");
+            newFileCon.append("    Sb        = ["    + Sb                                       + "];\n");
+            newFileCon.append("    wavebands = waveMin:waveRes:waveMax;\n");
+            newFileCon.append("    figure, hold on;\n");
+            newFileCon.append("    plot(wavebands,Sr,'r');\n");
+            newFileCon.append("    plot(wavebands,Sg,'g');\n");
+            newFileCon.append("    plot(wavebands,Sb,'b');\n");
+            newFileCon.append("    title(\"Square HSI Sensor's Sensitivities\");\n");
+            newFileCon.append("    xlabel(\"Wavelength (nm)\");\n");
+            newFileCon.append("    ylabel(\"Normalized Sensitivity\");\n");
+            newFileCon.append("    axis([waveMin waveMax 0 1]);\n");
+            newFileCon.append("    legend(\"Red Sensor\",\"Green Sensor\",\"Blue Sensor\");\n");
+
             newFileCon.append("    --> \n");
 
 

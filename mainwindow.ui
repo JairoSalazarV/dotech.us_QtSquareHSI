@@ -457,7 +457,7 @@
       <widget class="QSpinBox" name="spinBoxVideoDuration">
        <property name="geometry">
         <rect>
-         <x>158</x>
+         <x>174</x>
          <y>282</y>
          <width>101</width>
          <height>29</height>
@@ -476,7 +476,7 @@
        </property>
        <property name="geometry">
         <rect>
-         <x>158</x>
+         <x>174</x>
          <y>135</y>
          <width>159</width>
          <height>29</height>
@@ -488,12 +488,12 @@
         <rect>
          <x>10</x>
          <y>212</y>
-         <width>91</width>
+         <width>121</width>
          <height>19</height>
         </rect>
        </property>
        <property name="text">
-        <string>Shuter Speed</string>
+        <string>Shutter Speed</string>
        </property>
       </widget>
       <widget class="QLabel" name="label_3">
@@ -512,7 +512,7 @@
       <widget class="QSpinBox" name="spinBoxShuterSpeed">
        <property name="geometry">
         <rect>
-         <x>158</x>
+         <x>174</x>
          <y>208</y>
          <width>101</width>
          <height>29</height>
@@ -545,13 +545,13 @@
         </rect>
        </property>
        <property name="text">
-        <string>Square Shuter Speed</string>
+        <string>Square Shutter Speed</string>
        </property>
       </widget>
       <widget class="QSpinBox" name="spinBoxSquareShuterSpeed">
        <property name="geometry">
         <rect>
-         <x>158</x>
+         <x>174</x>
          <y>244</y>
          <width>101</width>
          <height>29</height>
@@ -604,7 +604,7 @@
       <widget class="QComboBox" name="cbExposure">
        <property name="geometry">
         <rect>
-         <x>158</x>
+         <x>174</x>
          <y>171</y>
          <width>159</width>
          <height>29</height>
@@ -614,7 +614,7 @@
       <widget class="QGroupBox" name="groupResolution">
        <property name="geometry">
         <rect>
-         <x>160</x>
+         <x>176</x>
          <y>13</y>
          <width>131</width>
          <height>61</height>
@@ -704,7 +704,7 @@
       <widget class="QLabel" name="labelSquareShuterSpeed_8">
        <property name="geometry">
         <rect>
-         <x>264</x>
+         <x>280</x>
          <y>286</y>
          <width>41</width>
          <height>19</height>
@@ -720,7 +720,7 @@
       <widget class="QLabel" name="labelSquareShuterSpeed_9">
        <property name="geometry">
         <rect>
-         <x>264</x>
+         <x>280</x>
          <y>249</y>
          <width>41</width>
          <height>19</height>
@@ -736,7 +736,7 @@
       <widget class="QLabel" name="labelSquareShuterSpeed_10">
        <property name="geometry">
         <rect>
-         <x>264</x>
+         <x>280</x>
          <y>213</y>
          <width>41</width>
          <height>19</height>

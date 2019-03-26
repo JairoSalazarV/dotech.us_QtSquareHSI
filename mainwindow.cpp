@@ -4975,10 +4975,14 @@ void MainWindow::extractsHyperCube(QString originFileName)
             for( col=0; col<W; col++ )
             {
                 tmp = hypItems.at(i).toDouble(0);
-                if(true)//Normalize
+                if(true)//Normalize in reference to the Waveband
                 {
-                    //tmpVal  = (tmp<=0.0)?0:round( (tmp/max[l]) * 255.0 );
-                    tmpVal  = (tmp<=0.0)?0:round( (tmp/max[L]) * 255.0 );
+                    tmpVal  = (tmp<=0.0)?0:round( (tmp/max[l]) * 255.0 );
+                    //tmpVal  = (tmp<=0.0)?0:round( (tmp/max[L]) * 255.0 );
+                    if(tmp==max[L])
+                    {
+                        qDebug() << "tmpVal=" << tmpVal << " " << tmp << " " << "max[L] = " << max[L];
+                    }
                 }
                 else
                 {
