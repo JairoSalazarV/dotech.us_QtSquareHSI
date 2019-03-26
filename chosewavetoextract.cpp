@@ -179,37 +179,40 @@ void choseWaveToExtract::on_pbAddAll_clicked()
     }
     else
     {
-        addByStep();
+        addByStep(ui->spinBoxStep->value());
     }
 }
 
-void choseWaveToExtract::addByStep()
+void choseWaveToExtract::addByStep(int stepLength)
 {
+    int nextRow;
+    nextRow     = ui->tableOptions->rowCount() - 1;
+    while(nextRow >= 0)
+    {
+        ui->tableOptions->setCurrentCell(nextRow,0);
+        ui->pbAdd->click();
+        nextRow -= stepLength;
+    }
+
+    /*
     double tmpWave;
     tmpWave = static_cast<double>( daCalib.minWavelength );
-    //QString options;
     int row;
-    //qDebug() << "daCalib.maxWavelength : " << daCalib.maxWavelength ;
     double actualWave;
     while( tmpWave < static_cast<double>( daCalib.maxWavelength ) )
     {
         row = 0;
-
-        //qDebug() << "tmpWave: " << tmpWave;
         ui->tableOptions->selectRow(row);
-        //qDebug() << "ui->tableOptions->item(row,0)->text().toDouble(0) 0: " << ui->tableOptions->item(row,0)->text().toDouble(0);
         while( (actualWave = ui->tableOptions->item(row,0)->text().toDouble()) <= tmpWave )
         {
-            //qDebug() << "ui->tableOptions->item(row,0)->text().toDouble(0): " << ui->tableOptions->item(row,0)->text().toDouble(0);
             row++;
         }
         row = (row-1>=0)?(row-1):0;
         ui->tableOptions->setCurrentCell(row,0);
         ui->pbAdd->click();
-        //tmpWave += (daCalib.minSpecRes * ui->spinBoxStep->value());
         tmpWave = actualWave + (daCalib.minSpecRes * ui->spinBoxStep->value());
-        //qDebug() << "tmpWave: " << tmpWave;
     }
+    */
     refreshOptChoi();
 }
 

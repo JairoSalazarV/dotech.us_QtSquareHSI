@@ -22,7 +22,7 @@ public:
 
 private slots:
 
-    void addByStep();
+    void addByStep(int stepLength);
 
     void on_pbAdd_clicked();
 
