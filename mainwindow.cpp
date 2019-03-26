@@ -125,7 +125,7 @@ QThread* progBarThread;
 
 int*** tmpHypercube;
 static QList<QImage> lstHypercubeImgs;
-int tmpMaxHypcubeVal;
+//int tmpMaxHypcubeVal;
 static QList<QFileInfo> lstImages;
 GraphicsView* graphViewSmall;
 const int frameX    = 40;       //left and right
@@ -6817,7 +6817,8 @@ void MainWindow::funcUpdateSpectralPixels(QString* pathSource)
     }
 
     //---------------------------------------
-    //Validate imagery in Dir
+    //Validate imagery in Dir (HDD) and Copu
+    //into Memory
     //---------------------------------------
     QImage tmpImg;
     tmpImg  = QImage(lstImages.at(0).absoluteFilePath());
@@ -6825,6 +6826,7 @@ void MainWindow::funcUpdateSpectralPixels(QString* pathSource)
     W = tmpImg.width();
     H = tmpImg.height();
     L = lstImages.size();
+    lstHypercubeImgs.clear();
     for( l=0; l<L; l++ )
     {
         //qDebug() << "Llegot 1, size: " << lstImages.size() << " l: " << l << " - " << lstImages.at(l).absoluteFilePath();
@@ -6838,7 +6840,7 @@ void MainWindow::funcUpdateSpectralPixels(QString* pathSource)
     }
 
     //---------------------------------------
-    //Create Cube from HDD
+    //Create Cube from Memory
     //---------------------------------------
     tmpHypercube = (int***)funcAllocInteger3DMatrixMemo( H, W, L, tmpHypercube );
     int lstMaxVals[L+1];
@@ -6854,14 +6856,15 @@ void MainWindow::funcUpdateSpectralPixels(QString* pathSource)
             for( c=0; c<W; c++ )
             {
                 tmpHypercube[r][c][l]    = qRed(tmpImg.pixel(c,r));
-                if( tmpHypercube[r][c][l] > tmpMaxHypcubeVal )
-                    tmpMaxHypcubeVal  = tmpHypercube[r][c][l];
+                if( tmpHypercube[r][c][l] > lstMaxVals[l] )
+                    lstMaxVals[l]  = tmpHypercube[r][c][l];
+                if( tmpHypercube[r][c][l] > lstMaxVals[L] )
+                    lstMaxVals[L]  = tmpHypercube[r][c][l];
 
             }
         }
     }
 
-    /*
     //---------------------------------------
     //Normalize if required
     //---------------------------------------
@@ -6869,6 +6872,7 @@ void MainWindow::funcUpdateSpectralPixels(QString* pathSource)
     {
         for( l=0; l<L; l++ )
         {
+            tmpImg = lstHypercubeImgs.at(l);
             for( r=0; r<H; r++ )
             {
                 for( c=0; c<W; c++ )
@@ -6876,17 +6880,20 @@ void MainWindow::funcUpdateSpectralPixels(QString* pathSource)
                     if( ui->RadioLoadHypcube_2->isChecked() )
                     {
                         tmpHypercube[r][c][l]   = round(((float)tmpHypercube[r][c][l] / (float)lstMaxVals[l])*255.0);
+                        //qDebug() << "l: " << l << " val: " << lstMaxVals[l];
                     }
                     if( ui->RadioLoadHypcube_3->isChecked() )
                     {
                         tmpHypercube[r][c][l]   = round(((float)tmpHypercube[r][c][l] / (float)lstMaxVals[L])*255.0);
+                        //qDebug() << "L: " << lstMaxVals[L];
                     }
-                    //qDebug() << "antes: " <<
-                    tmpImg.setPixel(c,r,tmpHypercube[r][c][l]);
+                    tmpImg.setPixelColor(QPoint(c,r),qRgb(tmpHypercube[r][c][l],tmpHypercube[r][c][l],tmpHypercube[r][c][l]));
+                    //tmpImg.setPixel(c,r,tmpHypercube[r][c][l]);
                 }
             }
+            lstHypercubeImgs.replace(l,tmpImg);
         }
-    }*/
+    }
 
 
     //---------------------------------------
