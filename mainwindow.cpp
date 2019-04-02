@@ -6895,8 +6895,11 @@ void MainWindow::funcUpdateSpectralPixels(QString* pathSource)
     int auxBefore;
     int maxNormedVal = 0;
     float tmpMinValL, tmpMaxValL;
-    if(ui->RadioLoadHypcube_2->isChecked() || ui->RadioLoadHypcube_3->isChecked() )
-    {
+    if(
+            ui->RadioLoadHypcube_2->isChecked() ||
+            ui->RadioLoadHypcube_3->isChecked() ||
+            ui->spinBoxAmplifyFactor->value() > 1.0
+    ){
         for( l=0; l<L; l++ )
         {
             tmpImg = lstHypercubeImgs.at(l);
@@ -6922,7 +6925,13 @@ void MainWindow::funcUpdateSpectralPixels(QString* pathSource)
                         //tmpHypercube[r][c][l] = round( ((double)tmpHypercube[r][c][l] - lambdaMean) / lstStdVals[L]);
 
                     }
+
+                    tmpHypercube[r][c][l]   = round((double)tmpHypercube[r][c][l] *
+                                                    ui->spinBoxAmplifyFactor->value() );
+                    tmpHypercube[r][c][l]   = (tmpHypercube[r][c][l]>255)?255:tmpHypercube[r][c][l];
+
                     tmpImg.setPixelColor(QPoint(c,r),qRgb(tmpHypercube[r][c][l],tmpHypercube[r][c][l],tmpHypercube[r][c][l]));
+
 
 
                     if(maxNormedVal < tmpHypercube[r][c][l])
@@ -12307,4 +12316,6 @@ void MainWindow::on_pbHyperRefresh_clicked()
 {
     QString exportedHypcbes(_PATH_TMP_HYPCUBES);
     funcUpdateSpectralPixels(&exportedHypcbes);
+
+    ui->slideChangeImage->valueChanged( ui->slideChangeImage->value() );
 }

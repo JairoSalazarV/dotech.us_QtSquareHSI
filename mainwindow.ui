@@ -1120,6 +1120,38 @@
        <bool>true</bool>
       </property>
      </widget>
+     <widget class="QDoubleSpinBox" name="spinBoxAmplifyFactor">
+      <property name="geometry">
+       <rect>
+        <x>360</x>
+        <y>9</y>
+        <width>91</width>
+        <height>29</height>
+       </rect>
+      </property>
+      <property name="minimum">
+       <double>1.000000000000000</double>
+      </property>
+      <property name="maximum">
+       <double>255.000000000000000</double>
+      </property>
+      <property name="value">
+       <double>1.000000000000000</double>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelAmplify">
+      <property name="geometry">
+       <rect>
+        <x>300</x>
+        <y>12</y>
+        <width>63</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Amplify</string>
+      </property>
+     </widget>
     </widget>
    </widget>
    <widget class="QProgressBar" name="progBar">
