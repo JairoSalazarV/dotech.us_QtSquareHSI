@@ -6844,7 +6844,12 @@ void MainWindow::funcUpdateSpectralPixels(QString* pathSource)
     //---------------------------------------
     tmpHypercube = (int***)funcAllocInteger3DMatrixMemo( H, W, L, tmpHypercube );
     int lstMaxVals[L+1];
+    int lstMinVals[L+1];
     lstMaxVals[L] = 0;
+    for( l=0; l<=L; l++ )
+    {
+        lstMinVals[l] = 255;
+    }
     for( l=0; l<L; l++ )
     {
         lstMaxVals[l] = 0;
@@ -6856,19 +6861,40 @@ void MainWindow::funcUpdateSpectralPixels(QString* pathSource)
             for( c=0; c<W; c++ )
             {
                 tmpHypercube[r][c][l]    = qRed(tmpImg.pixel(c,r));
-                if( tmpHypercube[r][c][l] > lstMaxVals[l] )
-                    lstMaxVals[l]  = tmpHypercube[r][c][l];
-                if( tmpHypercube[r][c][l] > lstMaxVals[L] )
-                    lstMaxVals[L]  = tmpHypercube[r][c][l];
-
+                lstMaxVals[l] = ( tmpHypercube[r][c][l] > lstMaxVals[l] )?tmpHypercube[r][c][l]:lstMaxVals[l];
+                lstMaxVals[L] = ( tmpHypercube[r][c][l] > lstMaxVals[L] )?tmpHypercube[r][c][l]:lstMaxVals[L];
+                lstMinVals[l] = ( tmpHypercube[r][c][l] < lstMinVals[l] )?tmpHypercube[r][c][l]:lstMinVals[l];
+                lstMinVals[L] = ( tmpHypercube[r][c][l] < lstMinVals[L] )?tmpHypercube[r][c][l]:lstMinVals[L];
             }
         }
     }
+    //qDebug() << "lstMinVals[1]: " << lstMinVals[1] << " lstMaxVals[1]: " << lstMaxVals[1];
+
+    /*
+    //---------------------------------------
+    //Get the mean and std
+    //---------------------------------------
+    double lambdaMean   = 0.0;
+    for( l=0; l<L; l++ )
+    {
+        lambdaMean      = lambdaMean + lstMaxVals[l];
+    }
+    lambdaMean          = lambdaMean / (double)L;
+
+    double lstStdVals[L+1];
+    for( l=0; l<L; l++ )
+    {
+        lstStdVals[l]   = sqrt( (lstStdVals[l]-lambdaMean) / (double)(L-1) );
+        lstStdVals[L] = ( lstStdVals[l] < lstStdVals[L] )?lstStdVals[l]:lstStdVals[L];
+    }
+    */
 
     //---------------------------------------
     //Normalize if required
     //---------------------------------------
     int auxBefore;
+    int maxNormedVal = 0;
+    float tmpMinValL, tmpMaxValL;
     if(ui->RadioLoadHypcube_2->isChecked() || ui->RadioLoadHypcube_3->isChecked() )
     {
         for( l=0; l<L; l++ )
@@ -6880,21 +6906,37 @@ void MainWindow::funcUpdateSpectralPixels(QString* pathSource)
                 {
                     if( ui->RadioLoadHypcube_2->isChecked() && lstMaxVals[l] > 0 )
                     {
-                        auxBefore = tmpHypercube[r][c][l];
-                        tmpHypercube[r][c][l]   = round(((float)tmpHypercube[r][c][l] / (float)lstMaxVals[l])*255.0);
+                        auxBefore   = tmpHypercube[r][c][l];
+                        tmpMinValL  = lstMinVals[l];
+                        tmpMaxValL  = lstMaxVals[l];
+                        tmpHypercube[r][c][l]   = round((((float)tmpHypercube[r][c][l] - tmpMinValL) / (tmpMaxValL-tmpMinValL))*255.0);
                     }
                     if( ui->RadioLoadHypcube_3->isChecked() && lstMaxVals[L] > 0 )
                     {
-                        tmpHypercube[r][c][l]   = round(((float)tmpHypercube[r][c][l] / (float)lstMaxVals[L])*255.0);
+
+                        tmpMinValL  = lstMinVals[L];
+                        tmpMaxValL  = lstMaxVals[L];
+                        tmpHypercube[r][c][l]   = round((((float)tmpHypercube[r][c][l] - tmpMinValL) / (tmpMaxValL-tmpMinValL))*255.0);
                         //qDebug() << "L: " << lstMaxVals[L];
+
+                        //tmpHypercube[r][c][l] = round( ((double)tmpHypercube[r][c][l] - lambdaMean) / lstStdVals[L]);
+
                     }
                     tmpImg.setPixelColor(QPoint(c,r),qRgb(tmpHypercube[r][c][l],tmpHypercube[r][c][l],tmpHypercube[r][c][l]));
-                    //tmpImg.setPixel(c,r,tmpHypercube[r][c][l]);
+
+
+                    if(maxNormedVal < tmpHypercube[r][c][l])
+                    {
+                        maxNormedVal = tmpHypercube[r][c][l];
+                    }
+
                 }
             }
             lstHypercubeImgs.replace(l,tmpImg);
         }
     }
+
+    //qDebug() << "maxNormedVal: " << maxNormedVal;
 
 
     //---------------------------------------
