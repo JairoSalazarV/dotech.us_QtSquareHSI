@@ -3975,25 +3975,27 @@ bool MainWindow::generatesHypcube(int numIterations, QString fileName){
     //---------------------------------------------
     if(true)
     {
-        if(false)
+        if(true)
         {
-            fRed    = demosaiseF2D(fRed,hypL,hypH,hypW);
-            fGreen  = demosaiseF2D(fGreen,hypL,hypH,hypW);
-            fBlue   = demosaiseF2D(fBlue,hypL,hypH,hypW);
+            for( i=0; i<SQUARE_BICUBIC_ITERATIONS; i++ )
+            //for( i=0; i<5; i++ )
+            {
+                fRed    = demosaiseF2D(fRed,hypL,hypH,hypW);
+                fGreen  = demosaiseF2D(fGreen,hypL,hypH,hypW);
+                fBlue   = demosaiseF2D(fBlue,hypL,hypH,hypW);
+            }
         }
         else
         {
-            /*
             if( SQUARE_BICUBIC_ITERATIONS > 0 )
             {
-                //Da otra pasada
                 for( i=0; i<SQUARE_BICUBIC_ITERATIONS; i++ )
                 {
                     fRed    = demosaiseF3D(fRed,hypL,hypH,hypW);
                     fGreen  = demosaiseF3D(fGreen,hypL,hypH,hypW);
                     fBlue   = demosaiseF3D(fBlue,hypL,hypH,hypW);
                 }
-            }*/
+            }
         }
     }
 
@@ -4050,13 +4052,14 @@ bool MainWindow::generatesHypcube(int numIterations, QString fileName){
     //---------------------------------------------
     //Denoise Hypercube
     //---------------------------------------------
+    /*
     if( SQUARE_BICUBIC_ITERATIONS > 0 )
     {
         for( i=0; i<SQUARE_BICUBIC_ITERATIONS; i++ )
         {
             F    = demosaiseF3D(F,hypL,hypH,hypW);
         }
-    }
+    }*/
 
     //---------------------------------------------
     //Save hypercube
