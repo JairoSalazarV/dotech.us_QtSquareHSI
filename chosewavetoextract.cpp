@@ -99,12 +99,14 @@ void choseWaveToExtract::iniOptsAndChois(bool allOptions)
     float tmpWave;
     tmpWave = daCalib.minWavelength;
     QString options;
+    options.clear();
     options.append(QString::number(tmpWave));
     while( tmpWave < daCalib.maxWavelength )
     {
         tmpWave += daCalib.minSpecRes;
         options.append("," + QString::number(tmpWave));
     }
+    //qDebug() << "lst-> tmpWave: " << tmpWave << " options: " << options;
 
     if(allOptions)
     {
@@ -186,13 +188,21 @@ void choseWaveToExtract::on_pbAddAll_clicked()
 void choseWaveToExtract::addByStep(int stepLength)
 {
     int nextRow;
+
+
     nextRow     = ui->tableOptions->rowCount() - 1;
-    while(nextRow >= 0)
+    while(nextRow > 0)
     {
         ui->tableOptions->setCurrentCell(nextRow,0);
         ui->pbAdd->click();
         nextRow -= stepLength;
     }
+
+    // First Row
+    nextRow     = 0;
+    ui->tableOptions->setCurrentCell(nextRow,0);
+    ui->pbAdd->click();
+    nextRow -= stepLength;
 
     /*
     double tmpWave;
