@@ -3973,9 +3973,9 @@ bool MainWindow::generatesHypcube(int numIterations, QString fileName){
     //---------------------------------------------
     //Demosaicing hypercube
     //---------------------------------------------
-    if(true)
+    if(false)
     {
-        if(true)
+        if(false)
         {
             for( i=0; i<SQUARE_BICUBIC_ITERATIONS; i++ )
             //for( i=0; i<5; i++ )
@@ -4052,14 +4052,16 @@ bool MainWindow::generatesHypcube(int numIterations, QString fileName){
     //---------------------------------------------
     //Denoise Hypercube
     //---------------------------------------------
-    /*
-    if( SQUARE_BICUBIC_ITERATIONS > 0 )
+    if(true)
     {
-        for( i=0; i<SQUARE_BICUBIC_ITERATIONS; i++ )
+        if( SQUARE_BICUBIC_ITERATIONS > 0 )
         {
-            F    = demosaiseF3D(F,hypL,hypH,hypW);
+            for( i=0; i<SQUARE_BICUBIC_ITERATIONS; i++ )
+            {
+                F    = demosaiseF3D(F,hypL,hypH,hypW);
+            }
         }
-    }*/
+    }
 
     //---------------------------------------------
     //Save hypercube

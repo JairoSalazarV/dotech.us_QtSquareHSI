@@ -61,7 +61,7 @@
     #define _ERROR_FILE_NOTEXISTS           "~FileDoesNotExists"
     #define _ERROR_FILE                     "~UnknowError"
 
-    #define SQUARE_BICUBIC_ITERATIONS       3        //Apply Bicubic k times
+    #define SQUARE_BICUBIC_ITERATIONS       1        //Apply Bicubic k times
 
     #define _FRAME_EXTENSION                ".png"
     #define _FRAME_RECEIVED_EXTENSION       "RGB888"

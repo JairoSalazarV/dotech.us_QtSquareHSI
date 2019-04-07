@@ -149,6 +149,7 @@ void choseWaveToExtract::fromTablesToFiles()
 {
     QString options, choises;
     int auxCounter = 0;
+
     while (ui->tableOptions->rowCount() > 0)
     {
         if(auxCounter==0)auxCounter++;
@@ -161,8 +162,10 @@ void choseWaveToExtract::fromTablesToFiles()
     {
         if(auxCounter==0)auxCounter++;
         else choises.append(",");
+        //qDebug() << "Val2: " << ui->tableChoises->item(0,0)->text();
         choises.append(ui->tableChoises->item(0,0)->text());
         ui->tableChoises->removeRow(0);
+
     }
     saveFile(_PATH_WAVE_OPTIONS,options);
     saveFile(_PATH_WAVE_CHOISES,choises);
@@ -196,13 +199,18 @@ void choseWaveToExtract::addByStep(int stepLength)
         ui->tableOptions->setCurrentCell(nextRow,0);
         ui->pbAdd->click();
         nextRow -= stepLength;
+        //qDebug() << "Row0: " << ui->tableChoises->item(0,0)->text();
     }
-
     // First Row
-    nextRow     = 0;
-    ui->tableOptions->setCurrentCell(nextRow,0);
+    ui->tableOptions->setCurrentCell(0,0);
     ui->pbAdd->click();
-    nextRow -= stepLength;
+
+    fromTablesToFiles();
+    refreshOptChoi();
+
+    //qDebug() << "Row0: " << ui->tableChoises->item(0,0)->text();
+
+    //refreshOptChoi();
 
     /*
     double tmpWave;
@@ -222,8 +230,8 @@ void choseWaveToExtract::addByStep(int stepLength)
         ui->pbAdd->click();
         tmpWave = actualWave + (daCalib.minSpecRes * ui->spinBoxStep->value());
     }
-    */
     refreshOptChoi();
+    */
 }
 
 void choseWaveToExtract::on_pbAdd_clicked()
