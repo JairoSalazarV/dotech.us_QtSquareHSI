@@ -6965,7 +6965,7 @@ void MainWindow::funcUpdateSpectralPixels(QString* pathSource)
         layout->addWidget(graphViewSmall);
         layout->setEnabled(false);
         ui->tabShowPixels->setLayout(layout);
-        graphViewSmall->move(20,50);
+        graphViewSmall->move(20,50+20);
     }
     else
     {
@@ -6986,9 +6986,9 @@ void MainWindow::funcUpdateSpectralPixels(QString* pathSource)
     ui->slideChangeImage->setMaximumWidth( tmpImg.width() );
     ui->labelCubeImageName->setText( "(1/" + QString::number(lstImages.size()) + ") " + lstImages.at(0).fileName() );
     ui->slideChangeImage->setEnabled(true);
-    ui->graphViewPlot->move(20,tmpImg.height()+115);
-    ui->labelCubeImageName->move(20,tmpImg.height()+55);
-    ui->slideChangeImage->move(20,tmpImg.height()+85);
+    ui->graphViewPlot->move(20,tmpImg.height()+115+20);
+    ui->labelCubeImageName->move(20,tmpImg.height()+55+20);
+    ui->slideChangeImage->move(20,tmpImg.height()+85+20);
 
     //---------------------------------------
     //Draw plot limits
@@ -7053,8 +7053,8 @@ void MainWindow::funcDrawSpectralPixelIntoSmall(int x, int y)
         QLineF line(x1,y1,x2,y2);
         ui->graphViewPlot->scene()->addLine(line,penLine);
         //Plot Ellipse
-        ui->graphViewPlot->scene()->addEllipse(x1,y1-3,5,5,penEllipse,brushEllipse);
-        ui->graphViewPlot->scene()->addEllipse(x2,y2-3,5,5,penEllipse,brushEllipse);
+        ui->graphViewPlot->scene()->addEllipse(x1,y1-3,3,3,penEllipse,brushEllipse);
+        ui->graphViewPlot->scene()->addEllipse(x2,y2-3,3,3,penEllipse,brushEllipse);
     }
 }
 
@@ -7067,6 +7067,7 @@ void MainWindow::funcMouseMoveReaction(QMouseEvent* e)
     y = (e->y()>=0)?e->y():0;
     x = (x<W)?x:W;
     y = (y<H)?y:H;
+    ui->labelCubeCoordinates->setText( "x,y(" + QString::number(x+1) + "," + QString::number(y+1) + ")" );
     funcDrawSpectralPixelIntoSmall(x,y);
 }
 
