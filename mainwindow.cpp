@@ -2123,6 +2123,7 @@ void MainWindow::on_pbSnapshot_clicked()
     //
     //Timer
     //
+    /*
     int triggeringTime;
     triggeringTime = ui->slideTriggerTime->value();
     if( triggeringTime > 0 )
@@ -2132,7 +2133,7 @@ void MainWindow::on_pbSnapshot_clicked()
         timerTxt->show();
         QtDelay(200);
         timerTxt->startMyTimer(triggeringTime);
-    }
+    }*/
 
     //QImage snapShot = obtainImageFile( _PATH_REMOTE_SNAPSHOT, "" );
     *globalEditImg = obtainImageFile( _PATH_REMOTE_SNAPSHOT, "" );
@@ -6467,6 +6468,20 @@ int MainWindow::createSubimageRemotelly(bool squareArea )
 
 int MainWindow::takeRemoteSnapshot( QString fileDestiny, bool squareArea )
 {
+
+    //
+    //Timer
+    //
+    int triggeringTime;
+    triggeringTime = ui->slideTriggerTime->value();
+    if( triggeringTime > 0 )
+    {
+        formTimerTxt* timerTxt = new formTimerTxt(this,"Remainning Time to Shoot...",triggeringTime);
+        timerTxt->setModal(true);
+        timerTxt->show();
+        QtDelay(200);
+        timerTxt->startMyTimer(triggeringTime);
+    }
 
     //
     // Get cam resolution
