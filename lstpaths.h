@@ -65,6 +65,7 @@
     #define _PATH_LAST_SLIDE_HYPCUBE_EXPORTED       "./settings/lastPaths/lastSlideHypCubeExported.hypcam"
     #define _PATH_LAST_SYNC_FOLDER                  "./settings/lastPaths/syncFolder.hypcam"    
     #define _PATH_LAST_VIDEO_OPENED                 "./settings/lastPaths/lastVideoOpened.hypcam"
+    #define _PATH_LAST_EXPORTED_HYPERCUBE           "./settings/lastPaths/lastExportedHypercube.hypcam"
 
     #define _PATH_NDVI_THRESHOLD                    "./settings/NDVI/threshold.hypcam"
     #define _PATH_NDVI_BRILLIANT                    "./settings/NDVI/brilliant.hypcam"

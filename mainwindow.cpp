@@ -3904,14 +3904,20 @@ void MainWindow::on_actionGenHypercube_triggered()
         return (void)false;
     }
 
+
     //----------------------------------------
     // Select hypercube destination
     //----------------------------------------
+    //Read Last Path
+    QString lastHypercubePath;
+    lastHypercubePath = readFileParam(_PATH_LAST_EXPORTED_HYPERCUBE);
+
+    //Select Exported Hypercube
     QString fileName;
     fileName = QFileDialog::getSaveFileName(
                                                 this,
                                                 tr("Save Hypercube as..."),
-                                                "./Hypercubes/",
+                                                lastHypercubePath,
                                                 tr("Documents (*.hypercube)")
                                             );
     if( fileName.isEmpty() )
@@ -3919,10 +3925,9 @@ void MainWindow::on_actionGenHypercube_triggered()
         return (void)NULL;
     }
     fileName.replace(".hypercube","");
+    lastHypercubePath = fileName;
     fileName.append(".hypercube");
-
-
-
+    saveFile(_PATH_LAST_EXPORTED_HYPERCUBE,lastHypercubePath);
 
     QTime timeStamp;
     timeStamp.start();
