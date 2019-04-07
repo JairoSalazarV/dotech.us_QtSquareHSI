@@ -6951,10 +6951,11 @@ void MainWindow::funcUpdateSpectralPixels(QString* pathSource)
 
                     }
 
+                    /*
                     tmpHypercube[r][c][l]   = round((double)tmpHypercube[r][c][l] *
                                                     ui->spinBoxAmplifyFactor->value() );
                     tmpHypercube[r][c][l]   = (tmpHypercube[r][c][l]>255)?255:tmpHypercube[r][c][l];
-
+                    */
                     tmpImg.setPixelColor(QPoint(c,r),qRgb(tmpHypercube[r][c][l],tmpHypercube[r][c][l],tmpHypercube[r][c][l]));
 
 
@@ -6970,6 +6971,28 @@ void MainWindow::funcUpdateSpectralPixels(QString* pathSource)
         }
     }
 
+
+    //---------------------------------------
+    //Amplify id Needed
+    //---------------------------------------
+    if( ui->spinBoxAmplifyFactor->value() > 1.0 )
+    {
+        for( l=0; l<L; l++ )
+        {
+            tmpImg = lstHypercubeImgs.at(l);
+            for( r=0; r<H; r++ )
+            {
+                for( c=0; c<W; c++ )
+                {
+                    tmpHypercube[r][c][l]   = round((double)tmpHypercube[r][c][l] *
+                                                    ui->spinBoxAmplifyFactor->value() );
+                    tmpHypercube[r][c][l]   = (tmpHypercube[r][c][l]>255)?255:tmpHypercube[r][c][l];
+                    tmpImg.setPixelColor(QPoint(c,r),qRgb(tmpHypercube[r][c][l],tmpHypercube[r][c][l],tmpHypercube[r][c][l]));
+                }
+            }
+            lstHypercubeImgs.replace(l,tmpImg);
+        }
+    }
     //qDebug() << "maxNormedVal: " << maxNormedVal;
 
 
