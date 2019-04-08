@@ -3977,14 +3977,14 @@ bool MainWindow::generatesHypcube(int numIterations, QString fileName){
     fBlue       = calculatesF(numIterations,_BLUE,&daCalib);
 
     //---------------------------------------------
-    //Demosaicing hypercube
+    //Demosaicing hypercube BEFORE
     //---------------------------------------------
-    if(false)
+    if(true)
     {
         if(false)
         {
             for( i=0; i<SQUARE_BICUBIC_ITERATIONS; i++ )
-            //for( i=0; i<5; i++ )
+            //for( i=0; i<2; i++ )
             {
                 fRed    = demosaiseF2D(fRed,hypL,hypH,hypW);
                 fGreen  = demosaiseF2D(fGreen,hypL,hypH,hypW);
@@ -3993,20 +3993,15 @@ bool MainWindow::generatesHypcube(int numIterations, QString fileName){
         }
         else
         {
-            if( SQUARE_BICUBIC_ITERATIONS > 0 )
+            //for( i=0; i<SQUARE_BICUBIC_ITERATIONS; i++ )
+            for( i=0; i<2; i++ )
             {
-                for( i=0; i<SQUARE_BICUBIC_ITERATIONS; i++ )
-                {
-                    fRed    = demosaiseF3D(fRed,hypL,hypH,hypW);
-                    fGreen  = demosaiseF3D(fGreen,hypL,hypH,hypW);
-                    fBlue   = demosaiseF3D(fBlue,hypL,hypH,hypW);
-                }
+                fRed    = demosaiseF3D(fRed,hypL,hypH,hypW);
+                fGreen  = demosaiseF3D(fGreen,hypL,hypH,hypW);
+                fBlue   = demosaiseF3D(fBlue,hypL,hypH,hypW);
             }
         }
     }
-
-
-
 
     //---------------------------------------------
     //Extracting spectral measure
@@ -4056,13 +4051,22 @@ bool MainWindow::generatesHypcube(int numIterations, QString fileName){
     fflush(stdout);
 
     //---------------------------------------------
-    //Denoise Hypercube
+    //Demosaicing hypercube AFTER
     //---------------------------------------------
     if(true)
     {
-        if( SQUARE_BICUBIC_ITERATIONS > 0 )
+        if(false)
         {
             for( i=0; i<SQUARE_BICUBIC_ITERATIONS; i++ )
+            //for( i=0; i<3; i++ )
+            {
+                F    = demosaiseF2D(F,hypL,hypH,hypW);
+            }
+        }
+        else
+        {
+            for( i=0; i<SQUARE_BICUBIC_ITERATIONS; i++ )
+            //for( i=0; i<5; i++ )
             {
                 F    = demosaiseF3D(F,hypL,hypH,hypW);
             }
@@ -4142,6 +4146,7 @@ bool MainWindow::generatesHypcube(int numIterations, QString fileName){
 
 double MainWindow::funcGetSpectralResponse(double r,double g,double b,double rLambda,double gLambda,double bLambda)
 {
+    /*
     double val = 1;
     if(rLambda>=gLambda && rLambda>=bLambda)
     {
@@ -4164,6 +4169,8 @@ double MainWindow::funcGetSpectralResponse(double r,double g,double b,double rLa
             }
         }
     }
+    */
+    double val = (r>g&&r>b)?r:(g>b)?g:b;
     return val;
     //return (r+g+b) / (rLambda+gLambda+bLambda);
     //return (r+g+b);
@@ -6975,7 +6982,7 @@ void MainWindow::funcUpdateSpectralPixels(QString* pathSource)
     //---------------------------------------
     //Amplify id Needed
     //---------------------------------------
-    if( ui->spinBoxAmplifyFactor->value() > 1.0 )
+    if( ui->spinBoxAmplifyFactor->value() > 0.0 )
     {
         for( l=0; l<L; l++ )
         {

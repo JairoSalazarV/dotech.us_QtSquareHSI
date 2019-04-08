@@ -1130,7 +1130,7 @@
        </rect>
       </property>
       <property name="minimum">
-       <double>1.000000000000000</double>
+       <double>0.050000000000000</double>
       </property>
       <property name="maximum">
        <double>255.000000000000000</double>
