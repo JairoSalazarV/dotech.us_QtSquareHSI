@@ -4881,17 +4881,29 @@ void MainWindow::on_actionShow_hypercube_triggered()
 {
     //Select images
     //..
+
+    //Read Last Path
+    QString lastHypercubePath;
+    lastHypercubePath = readFileParam(_PATH_LAST_EXPORTED_HYPERCUBE);
+
     QString originFileName;
     originFileName = QFileDialog::getOpenFileName(
                                                         this,
                                                         tr("Select hypercube..."),
-                                                        "./Hypercubes/",
+                                                        lastHypercubePath,
                                                         "(*.hypercube);;"
                                                      );
     qDebug() << originFileName;
     if( originFileName.isEmpty() )
     {
         return (void)NULL;
+    }
+    else
+    {
+        lastHypercubePath = originFileName;
+        lastHypercubePath.replace(".hypercube","");
+        lastHypercubePath.append(".hypercube");
+        saveFile(_PATH_LAST_EXPORTED_HYPERCUBE,lastHypercubePath);
     }
 
     //
