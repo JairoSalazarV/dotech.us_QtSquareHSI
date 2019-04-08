@@ -42,6 +42,8 @@ private slots:
 
     void iniOptsAndChois(bool allOptions);
 
+    void on_spinBoxStep_valueChanged(const QString &arg1);
+
 private:
     Ui::choseWaveToExtract *ui;
 

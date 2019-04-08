@@ -136,13 +136,25 @@ void choseWaveToExtract::insertRow(QString wave, QTableWidget *table )
 void choseWaveToExtract::switchSelected( QTableWidget *tableOrig, QTableWidget *tableDest)
 {
     int id;
-    QString waveSelected;
     id = tableOrig->currentRow();
-    waveSelected = tableOrig->item(id,0)->text();
-    tableOrig->removeRow(id);
-    insertRow(waveSelected,tableDest);
-    fromTablesToFiles();
-    refreshOptChoi();
+
+    if( id >= 0 )
+    {
+        QString waveSelected;
+        waveSelected = tableOrig->item(id,0)->text();
+        tableOrig->removeRow(id);
+        insertRow(waveSelected,tableDest);
+        fromTablesToFiles();
+        refreshOptChoi();
+        if( tableOrig->rowCount() >= 1 )
+        {
+            tableOrig->setCurrentCell(0,0);
+        }
+    }
+    else
+    {
+        qDebug() << "No row selected";
+    }
 }
 
 void choseWaveToExtract::fromTablesToFiles()
@@ -178,6 +190,7 @@ void choseWaveToExtract::on_pbRemoveAll_clicked()
 
 void choseWaveToExtract::on_pbAddAll_clicked()
 {
+
     if( ui->spinBoxStep->value() == 1 )
     {
         iniOptsAndChois(false);
@@ -245,13 +258,24 @@ void choseWaveToExtract::on_pbRemove_clicked()
 }
 
 void choseWaveToExtract::on_tableOptions_doubleClicked(const QModelIndex &index)
-{    
-    index.isValid();
-    ui->pbAdd->click();    
+{
+
+    if( index.isValid() )
+    {
+        ui->pbAdd->click();
+    }
 }
 
 void choseWaveToExtract::on_tableChoises_doubleClicked(const QModelIndex &index)
 {
-    index.isValid();
-    ui->pbRemove->click();
+
+    if( index.isValid() )
+    {
+        ui->pbRemove->click();
+    }
+}
+
+void choseWaveToExtract::on_spinBoxStep_valueChanged(const QString &arg1)
+{
+
 }
