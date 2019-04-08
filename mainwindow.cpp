@@ -4053,7 +4053,7 @@ bool MainWindow::generatesHypcube(int numIterations, QString fileName){
     //---------------------------------------------
     //Demosaicing hypercube AFTER
     //---------------------------------------------
-    if(true)
+    if(false)
     {
         if(false)
         {
