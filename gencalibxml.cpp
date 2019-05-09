@@ -725,10 +725,11 @@ void genCalibXML::on_pbGenCal_clicked()
         //Calculate MIN num of bands
         //..
         QVector2D spectralResolution;
-        spectralResolution = calcSpectralResolution();
+        spectralResolution  = calcSpectralResolution();
         QString maxNumBand, minSpecRes;
-        maxNumBand  = QString::number(spectralResolution.x());
-        minSpecRes  = QString::number(spectralResolution.y());
+        maxNumBand          = QString::number(spectralResolution.x());
+        minSpecRes          = QString::number((waveLim.y()-waveLim.x())/spectralResolution.x());
+
 
         //qDebug() << "Aquí10";
         //Calculates the sensivities and save into HDD
@@ -737,7 +738,7 @@ void genCalibXML::on_pbGenCal_clicked()
         lstDoubleAxisCalibration daCalibGenCal;        
         daCalibGenCal.LR            = getAllLR();
         daCalibGenCal.maxNumBands   = spectralResolution.x();
-        daCalibGenCal.minSpecRes    = spectralResolution.y();
+        daCalibGenCal.minSpecRes    = minSpecRes.toDouble();
         daCalibGenCal.minWavelength = waveLim.x();
         daCalibGenCal.maxWavelength = waveLim.y();
         daCalibGenCal.squareUsableX = auxSqUsableX;
@@ -751,6 +752,16 @@ void genCalibXML::on_pbGenCal_clicked()
         Sr = readFileParam( _PATH_RED_SENS_NORM );
         Sg = readFileParam( _PATH_GREEN_SENS_NORM );
         Sb = readFileParam( _PATH_BLUE_SENS_NORM );
+
+
+
+
+
+
+
+
+
+
 
 
         //It creates the XML file
@@ -941,7 +952,7 @@ void genCalibXML::calculateAndSaveSensitivities(lstDoubleAxisCalibration *daCali
             actWave     = daCalibGenCal->minWavelength;
             //qDebug() << "actWave: " << actWave;
             numWaves = 0;
-            while( actWave < daCalibGenCal->maxWavelength )
+            while( actWave <= daCalibGenCal->maxWavelength )
             {
 
                 //Calculates the projection
