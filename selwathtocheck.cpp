@@ -505,7 +505,7 @@ void selWathToCheck::drawAllCentoides(){
     QImage img( _PATH_DISPLAY_IMAGE );
     if( funcShowMsgYesNo("Alert","Draw halogen?") )
     {
-        drawCentroid("sourceHalogen",Qt::yellow,&img);
+        drawCentroid("sourceHalogen",Qt::magenta,&img);
     }
     else
     {
@@ -616,9 +616,9 @@ void selWathToCheck::drawCentroid(QString file, Qt::GlobalColor color, QImage *i
     }
 
     int x, y;
-    x = fileContain.split(",").at(0).toInt(0);
-    y = fileContain.split(",").at(1).toInt(0);
-    //qDebug() << "Pre-> x: " << x << " y: " << y;
+    x = fileContain.split(",").at(0).toInt();
+    y = fileContain.split(",").at(1).toInt();
+    qDebug() << "Pre-> x: " << x << " y: " << y;
     QGraphicsLineItem *horLine = new QGraphicsLineItem(
                                                             (qreal)(x-len),
                                                             (qreal)y,

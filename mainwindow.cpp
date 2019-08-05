@@ -4713,8 +4713,8 @@ void MainWindow::createsHColAndHrow(pixel **Hcol, int **Hrow, QImage *img, lstDo
             for(int col=1; col<=hypW; col++)
             {
                 //Obtain diffraction projection for the acutual wavelength
-                Pj.x = col;
-                Pj.y = row;
+                Pj.x = col + daCalib->squareUsableX;
+                Pj.y = row + daCalib->squareUsableY;
                 calcDiffProj(&Pj,daCalib);
                 //Creates a new item in the c-th Hcol
                 Hcol[idVoxel][0].x      = Pj.x;//Zero
