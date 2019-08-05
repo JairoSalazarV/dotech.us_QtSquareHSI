@@ -170,17 +170,20 @@ void selWathToCheck::showWavelengthSimulation()
     QImage tmpImg( _PATH_DISPLAY_IMAGE );
 
     //Horizontales
-    for(x=1;x<=daCalib->squareUsableW;x++)
+    int init, end;
+    init = daCalib->squareUsableX;
+    end = daCalib->squareUsableX + daCalib->squareUsableW;
+    for(x=init;x<=end;x++)
     {
         //Horizontal
         diffProj.x = x;
-        diffProj.y = 1;//Row 1
+        diffProj.y = daCalib->squareUsableY;//Row 1
         calcDiffProj( &diffProj, daCalib );              
         drawDiffProj( &diffProj );
         drawDiffProjIntoImage(&tmpImg,&diffProj);
 
         diffProj.x = x;
-        diffProj.y = daCalib->squareUsableH;//row h
+        diffProj.y = daCalib->squareUsableY + daCalib->squareUsableH;//row h
         calcDiffProj( &diffProj, daCalib );
         drawDiffProj( &diffProj );
         drawDiffProjIntoImage(&tmpImg,&diffProj);
@@ -189,17 +192,18 @@ void selWathToCheck::showWavelengthSimulation()
 
 
     //Verticales
-    //x = daCalib->squareUsableX;
-    for(y=1;y<=daCalib->squareUsableH;y++)
+    init = daCalib->squareUsableY;
+    end  = daCalib->squareUsableY + daCalib->squareUsableH;
+    for(y=init;y<=end;y++)
     {
         //Horizontal
-        diffProj.x = 1;//Column 1
+        diffProj.x = daCalib->squareUsableX;//Column 1
         diffProj.y = y;
         calcDiffProj( &diffProj, daCalib );
         drawDiffProj( &diffProj );
         drawDiffProjIntoImage(&tmpImg,&diffProj);
 
-        diffProj.x = daCalib->squareUsableW;
+        diffProj.x = daCalib->squareUsableX + daCalib->squareUsableW;
         diffProj.y = y;
         calcDiffProj( &diffProj, daCalib );
         drawDiffProj( &diffProj );
@@ -547,8 +551,8 @@ void selWathToCheck::drawAllCalculatedCentoides()
         return (void)NULL;
     }
     int sourceX, sourceY;
-    sourceX = fileContain.split(",").at(0).toInt() - daCalib->squareUsableX;
-    sourceY = fileContain.split(",").at(1).toInt() - daCalib->squareUsableY;
+    sourceX = fileContain.split(",").at(0).toInt();
+    sourceY = fileContain.split(",").at(1).toInt();
     //qDebug() << "daCalib->squareUsableX: " << daCalib->squareUsableX << " sourceX: " << sourceX;
     //qDebug() << "daCalib->squareUsableY: " << daCalib->squareUsableY << " sourceY: " << sourceY;
     //sourceX = sourceX - daCalib->squareUsableX;
@@ -559,18 +563,14 @@ void selWathToCheck::drawAllCalculatedCentoides()
     //---------------------------------------------
     diffProj.x          = sourceX;
     diffProj.y          = sourceY;
-    calcDiffProj( &diffProj, daCalib );
-    //qDebug() << "Calculated-> sourceX: " << diffProj.x << " sourceY: " << diffProj.y;
     QImage img( _PATH_DISPLAY_IMAGE );
     drawCentroid(diffProj.x,diffProj.y,Qt::magenta,&img);
 
+    //---------------------------------------------
+    //Draw calculated centroid
+    //---------------------------------------------
 
-    //---------------------------------------------
-    //Draw centroid calculated
-    //---------------------------------------------
     //Blue
-    diffProj.x          = sourceX;
-    diffProj.y          = sourceY;
     diffProj.wavelength = static_cast<float>(wavelengthRed);
     calcDiffProj( &diffProj, daCalib );
     drawCentroid(diffProj.rx,diffProj.ry,Qt::red,&img);
@@ -579,8 +579,6 @@ void selWathToCheck::drawAllCalculatedCentoides()
     drawCentroid(diffProj.dx,diffProj.dy,Qt::red,&img);
 
     //Green
-    diffProj.x          = sourceX;
-    diffProj.y          = sourceY;
     diffProj.wavelength = static_cast<float>(wavelengthGreen);
     calcDiffProj( &diffProj, daCalib );
     drawCentroid(diffProj.rx,diffProj.ry,Qt::green,&img);
@@ -589,20 +587,12 @@ void selWathToCheck::drawAllCalculatedCentoides()
     drawCentroid(diffProj.dx,diffProj.dy,Qt::green,&img);
 
     //Red
-    diffProj.x              = sourceX;
-    diffProj.y              = sourceY;
     diffProj.wavelength     = static_cast<float>(wavelengthBlue);
     calcDiffProj( &diffProj, daCalib );
     drawCentroid(diffProj.rx,diffProj.ry,Qt::blue,&img);
     drawCentroid(diffProj.ux,diffProj.uy,Qt::blue,&img);
     drawCentroid(diffProj.lx,diffProj.ly,Qt::blue,&img);
     drawCentroid(diffProj.dx,diffProj.dy,Qt::blue,&img);
-
-
-    /*
-    diffProj.wavelength =
-    calcDiffProj( &diffProj, daCalib );*/
-
 
 }
 

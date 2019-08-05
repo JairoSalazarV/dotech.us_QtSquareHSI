@@ -391,8 +391,6 @@ strAllLinReg genCalibXML::calcAllLinReg(lstCalibFileNames *centroids, int x1, in
     //Delta blue X
     //auxL = (double)abs(aux - centroids->blueLeft.split(",").at(0).toFloat(0));
     auxL = (double)fabs( aux - centroids->blueLeft.split(",").at(0).toFloat() ); //SourceX - blueX_L
-
-
     auxR = (double)fabs(aux - centroids->blueRight.split(",").at(0).toFloat()); //SourceX - blueX_R
     pointsX[0] = blueWavelength.toDouble();//Preset Blue Wavelength
     pointsY[0] = (auxL+auxR) / 2.0;//Distance to blue
@@ -414,7 +412,7 @@ strAllLinReg genCalibXML::calcAllLinReg(lstCalibFileNames *centroids, int x1, in
     //qDebug() << "pointsY[0]: " << pointsY[0] << "pointsY[1]: " << pointsY[1] << "pointsY[2]: " << pointsY[2];
 
 
-    linearRegresion waveXB = funcLinearRegression( pointsX, pointsY, 4 );
+    linearRegresion waveXB = funcLinearRegression( pointsX, pointsY, 3 );
     linRegRes.waveHorizA = waveXB.a;
     linRegRes.waveHorizB = waveXB.b;
 
@@ -445,7 +443,7 @@ strAllLinReg genCalibXML::calcAllLinReg(lstCalibFileNames *centroids, int x1, in
     //Delta source X
     pointsX[3]  = 0.0;
     pointsY[3]  = 0.0;
-    linearRegresion waveYB = funcLinearRegression( pointsX, pointsY, 4 );
+    linearRegresion waveYB = funcLinearRegression( pointsX, pointsY, 3 );
     linRegRes.waveVertA = waveYB.a;
     linRegRes.waveVertB = waveYB.b;
 
@@ -470,7 +468,7 @@ strAllLinReg genCalibXML::calcAllLinReg(lstCalibFileNames *centroids, int x1, in
     //Delta source X
     pointsY[3] = 0.0;
     pointsX[3] = 0.0;
-    linearRegresion deltaXB = funcLinearRegression( pointsX, pointsY, 4 );
+    linearRegresion deltaXB = funcLinearRegression( pointsX, pointsY, 3 );
     linRegRes.deltaHorizA = deltaXB.a;
     linRegRes.deltaHorizB = deltaXB.b;
 
@@ -502,7 +500,7 @@ strAllLinReg genCalibXML::calcAllLinReg(lstCalibFileNames *centroids, int x1, in
     //qDebug() << "pointsX[3]: " << pointsX[3] << "pointsY[3]: " << pointsY[3];
 
 
-    linearRegresion deltaYB = funcLinearRegression( pointsX, pointsY, 4 );
+    linearRegresion deltaYB = funcLinearRegression( pointsX, pointsY, 3 );
     linRegRes.deltaVertA = deltaYB.a;
     linRegRes.deltaVertB = deltaYB.b;
 
@@ -713,6 +711,20 @@ void genCalibXML::on_pbGenCal_clicked()
         minWavelength = QString::number(waveLim.x());
         maxWavelength = QString::number(waveLim.y());
 
+        //
+        //System Rotation
+        //
+        int x1, y1, x2, y2, co, ca;
+        double a, b, angle;
+        a       = linRegRes.vertA;
+        b       = linRegRes.vertB;
+        x1      = (int)floor( a + (b*camRes->height*(1.0-0.75)) );
+        x2      = (int)floor( a + (b*camRes->height) );
+        co      = (double)(x2 - x1);
+        ca      = (double)camRes->height;
+        angle   = atan2(co,ca);
+        //qDebug() << "co: " << co << " ca: " << ca << " angle: " << angle;
+
         //qDebug() << "Aquí8";
         //Square aperture as percentage
         //..
@@ -774,8 +786,9 @@ void genCalibXML::on_pbGenCal_clicked()
 
             newFileCon.append("    <origin>(0,0)=(left,up)</origin>\n");
 
-            newFileCon.append("    <W>"+ QString::number(camRes->width)                            + "</W>\n");
-            newFileCon.append("    <H>"+ QString::number(camRes->height)                           + "</H>\n");
+            newFileCon.append("    <W>"+ QString::number(camRes->width)                         + "</W>\n");
+            newFileCon.append("    <H>"+ QString::number(camRes->height)                        + "</H>\n");
+            newFileCon.append("    <radianRotAngle>"+ QString::number(angle)                    + "</radianRotAngle>\n");
 
             newFileCon.append("    <bigX>"+ QString::number( xB )                               + "</bigX>\n");
             newFileCon.append("    <bigY>"+ QString::number( yB )                               + "</bigY>\n");

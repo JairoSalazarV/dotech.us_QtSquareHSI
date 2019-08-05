@@ -111,6 +111,7 @@
         QString         bkgPath;
         int             W;
         int             H;
+        float           radianRotAngle;
         float           bigX;
         float           bigY;
         float           bigW;

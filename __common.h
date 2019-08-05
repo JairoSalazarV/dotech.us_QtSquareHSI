@@ -136,6 +136,8 @@
 
     void calcDiffProj(strDiffProj *diffProj, lstDoubleAxisCalibration *daCalib);
 
+    QPoint rotatePointFromReferencePoint(const double &radianAngle, const QPoint &origin, const QPoint &point );
+
     QString timeToQString(unsigned int totMilli);
 
     bool funGetSlideSettingsXML(QString fileName, strReqImg *reqImg );

@@ -213,9 +213,11 @@ bool funcGetCalibration(lstDoubleAxisCalibration *doubAxisCal){
                 doubAxisCal->bkgPath = xmlReader->readElementText();
 
             if( xmlReader->name()=="W" )
-                doubAxisCal->W = xmlReader->readElementText().toInt(0);
+                doubAxisCal->W = xmlReader->readElementText().toInt();
             if( xmlReader->name()=="H" )
-                doubAxisCal->H = xmlReader->readElementText().toInt(0);
+                doubAxisCal->H = xmlReader->readElementText().toInt();
+            if( xmlReader->name()=="radianRotAngle" )
+                doubAxisCal->radianRotAngle = xmlReader->readElementText().toFloat();
 
             if( xmlReader->name()=="bigX" )
                 doubAxisCal->bigX = xmlReader->readElementText().toFloat(0);
@@ -1619,54 +1621,58 @@ QList<QFileInfo> funcFilterFilelist(QList<QFileInfo> lstFiles, QString suffix)
     return lstResult;
 }
 
+QPoint rotatePointFromReferencePoint(const double &radianAngle, const QPoint &origin, const QPoint &point )
+{
+    QPoint newPoint;
+    double deltaX, deltaY;
+    double pi, lineLength;
+    pi = acos(-1);
+    deltaX = origin.x() - point.x();
+    deltaY = origin.y() - point.y();
+    lineLength = sqrt( pow(deltaX,2) + pow(deltaY,2) );
+    newPoint.setX( (cos(radianAngle)*lineLength) + point.x() );
+    newPoint.setY( (sin(radianAngle)*lineLength) + point.y() );
+
+
+    //qDebug() << "pi: "<<pi << " dX: " << deltaX << " dY: " << deltaY;
+    //qDebug() << "lineLength: "<< lineLength << " radianAngle: " << radianAngle;
+    //qDebug() << "newX: " << newPoint.x() << "newY: " << newPoint.y();
+
+    return newPoint;
+}
+
 void calcDiffProj(strDiffProj *diffProj, lstDoubleAxisCalibration *daCalib)
 {
+    QPoint o,r,l,u,d;
 
-    diffProj->x += 2;
-    diffProj->y -= 3;
+    //Calc Diffraction distance in pixels for the received wavbelength
+    int diffrDistX, diffrDistY;
+    diffrDistX = floor(daCalib->LR.waveHorizA + (daCalib->LR.waveHorizB * diffProj->wavelength));
+    diffrDistY = floor(daCalib->LR.waveVertA + (daCalib->LR.waveVertB * diffProj->wavelength));
 
-    //int offsetX, offsetY;
-    int origX, origY;
+    //Set centroides without rotation
+    o.setX(diffProj->x);
+    o.setY(diffProj->y);
+    r.setX(o.x() + diffrDistX); r.setY(o.y());
+    l.setX(o.x() - diffrDistX); l.setY(o.y());
+    u.setY(o.y() - diffrDistY); u.setX(o.x());
+    d.setY(o.y() + diffrDistY); d.setX(o.x());
 
-    origX   = diffProj->x + daCalib->squareUsableX;
-    origY   = diffProj->y + daCalib->squareUsableY;
-    //qDebug() << "origX: " << origX << " origY: " << origY;
+    //Rotate centroides
+    QPoint newR;
+    double deltaY;
+    newR    = rotatePointFromReferencePoint(daCalib->radianRotAngle,o,r);
+    deltaY  = r.y() - newR.y();
+    r.setY( r.y() + deltaY );
+    l.setY( l.y() - deltaY );
+    u.setX( u.x() + deltaY );
+    d.setX( d.x() - deltaY );
 
-
-    //offsetX = abs( daCalib->squareUsableX - origX );
-    //offsetY = abs( daCalib->squareUsableY - origY );
-
-    //It calculates the jump
-    int jumpX, jumpY;
-    jumpX = floor(daCalib->LR.waveHorizA + (daCalib->LR.waveHorizB * diffProj->wavelength));
-    jumpY = floor(daCalib->LR.waveVertA + (daCalib->LR.waveVertB * diffProj->wavelength));
-
-    //qDebug() << "origX: " << diffProj->x << " origY: " << diffProj->y;
-    //qDebug() << "jumpX: " << jumpX << " jumpY: " << jumpY;
-
-    //Right
-    diffProj->ry = floor(daCalib->LR.horizA + (daCalib->LR.horizB * (double)(origX + jumpX))) + diffProj->y;
-
-    //Left
-    diffProj->ly = floor(daCalib->LR.horizA + (daCalib->LR.horizB * (double)(origX - jumpX))) + diffProj->y;
-
-    //Up
-    diffProj->ux = floor( daCalib->LR.vertA + ( daCalib->LR.vertB * (double)(origY-jumpY)) ) + diffProj->x;
-
-    //Down
-    diffProj->dx = floor( daCalib->LR.vertA + ( daCalib->LR.vertB * (double)(origY+jumpY)) ) + diffProj->x;
-
-    //Fits the original "y"
-    diffProj->y  = floor(daCalib->LR.horizA + (daCalib->LR.horizB * (double)origX)) + diffProj->y;
-    diffProj->x  = floor(daCalib->LR.vertA + (daCalib->LR.vertB * (double)origY)) + diffProj->x;
-
-
-
-
-    diffProj->rx = diffProj->x + jumpX;
-    diffProj->lx = diffProj->x - jumpX;
-    diffProj->uy = diffProj->y - jumpY;
-    diffProj->dy = diffProj->y + jumpY;
+    //Return centroides
+    diffProj->rx = r.x();   diffProj->ry = r.y();
+    diffProj->lx = l.x();   diffProj->ly = l.y();
+    diffProj->ux = u.x();   diffProj->uy = u.y();
+    diffProj->dx = d.x();   diffProj->dy = d.y();
 
 }
 
