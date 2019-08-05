@@ -919,8 +919,10 @@ void genCalibXML::calculateAndSaveSensitivities(lstDoubleAxisCalibration *daCali
     QString sourceHalogen;
     QVector2D origin;
     sourceHalogen = readFileParam( _PATH_LIMIT_S_HALOGEN );
-    origin.setX( sourceHalogen.split(",").at(0).toInt(0) - daCalibGenCal->squareUsableX - offsetX );
-    origin.setY( sourceHalogen.split(",").at(1).toInt(0) - daCalibGenCal->squareUsableY - offsetY );
+    //origin.setX( sourceHalogen.split(",").at(0).toInt(0) - daCalibGenCal->squareUsableX - offsetX );
+    //origin.setY( sourceHalogen.split(",").at(1).toInt(0) - daCalibGenCal->squareUsableY - offsetY );
+    origin.setX( sourceHalogen.split(",").at(0).toInt() - offsetX );
+    origin.setY( sourceHalogen.split(",").at(1).toInt() - offsetY );
 
     //qDebug() << "origin.x: " << origin.x();//Appear 73
     //qDebug() << "origin.y: " << origin.y();//Appear 51
