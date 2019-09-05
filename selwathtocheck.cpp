@@ -618,7 +618,7 @@ void selWathToCheck::drawCentroid(QString file, Qt::GlobalColor color, QImage *i
     int x, y;
     x = fileContain.split(",").at(0).toInt();
     y = fileContain.split(",").at(1).toInt();
-    qDebug() << "Pre-> x: " << x << " y: " << y;
+    //qDebug() << "Pre-> x: " << x << " y: " << y;
     QGraphicsLineItem *horLine = new QGraphicsLineItem(
                                                             (qreal)(x-len),
                                                             (qreal)y,
