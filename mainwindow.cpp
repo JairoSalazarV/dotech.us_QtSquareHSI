@@ -143,6 +143,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
 
     ui->setupUi(this);
+    this->setWindowState(Qt::WindowMaximized);
+
 
     //=================================================================
     // Before Start, validate minimal successfull status
@@ -217,7 +219,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QString lastFileOpen    = readFileParam(_PATH_LAST_USED_IMG_FILENAME);
     globalEditImg           = new QImage(lastFileOpen);
     globalBackEditImg       = new QImage();
-    *globalBackEditImg      = *globalEditImg;
+    *globalBackEditImg      = *globalEditImg;    
 
     //*****************************************************************
     // Resize Graphics Tools
@@ -1553,6 +1555,8 @@ bool MainWindow::funcUpdateVideo( unsigned int msSleep, int sec2Stab ){
     ui->labelVideo->setFixedHeight( tmpImg.height() );
     ui->labelVideo->update();
 
+
+
     //Delay in order to refresh actions applied    
     this->update();
     return true;
@@ -2084,13 +2088,21 @@ void MainWindow::updatePreviewImage(QString* fileName)
 
 void MainWindow::updatePreviewImage(QImage* tmpImg)
 {
-    //
+    //---------------------------------------
+    //Calc thumb size
+    //---------------------------------------
+    int thumbW, thumbH;
+    thumbW = this->geometry().width() - 455;
+    thumbH = this->geometry().height() - 125;
+    //qDebug() << "thumbW: " << thumbW << "thumbH: " << thumbH;
+
+    //---------------------------------------
     //Display Snapshot
-    //
-    int maxW, maxH;
-    maxW = (_FRAME_THUMB_W<tmpImg->width())?_FRAME_THUMB_W:tmpImg->width();
-    maxH = (_FRAME_THUMB_H<tmpImg->height())?_FRAME_THUMB_H:tmpImg->height();
+    //---------------------------------------
+    int maxW, maxH;    
+    maxH = (thumbH<tmpImg->height())?thumbH:tmpImg->height();
     QImage tmpThumb = tmpImg->scaledToHeight(maxH);
+    maxW = (thumbW<tmpThumb.width())?thumbW:tmpThumb.width();
     tmpThumb = tmpThumb.scaledToWidth(maxW);
     ui->labelVideo->setPixmap( QPixmap::fromImage(tmpThumb) );
     ui->labelVideo->setFixedSize( tmpThumb.width(), tmpThumb.height() );
