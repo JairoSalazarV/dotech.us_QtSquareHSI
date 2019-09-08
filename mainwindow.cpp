@@ -3903,7 +3903,7 @@ void MainWindow::on_pbLANTestConn_clicked()
 }
 
 void MainWindow::on_actionGenHypercube_triggered()
-{
+{    
 
     //----------------------------------------
     // Validate lst of wavelengths selected
@@ -3969,6 +3969,7 @@ void MainWindow::on_actionGenHypercube_triggered()
 bool MainWindow::generatesHypcube(int numIterations, QString fileName){
 
     mouseCursorWait();
+    lstHypercubeImgs.clear();
 
     int i, l, aux, N;
     double *F, *fRed, *fGreen, *fBlue;
@@ -4107,9 +4108,14 @@ bool MainWindow::generatesHypcube(int numIterations, QString fileName){
     fileName.replace(".hypercube","");
     saveFile(fileName+".hypercube",hypercube);
 
-
+    hypercube.clear();
+    Sr.clear();
+    Sg.clear();
+    Sb.clear();
     delete[] F;
-
+    delete[] fRed;
+    delete[] fGreen;
+    delete[] fBlue;
 
 
     mouseCursorReset();
@@ -4587,9 +4593,12 @@ double *MainWindow::calculatesF(int numIterations, int sensor, lstDoubleAxisCali
     }
 
     //Free memo
+    for(int n=0; n<N; n++)delete[] Hcol[n];
+    for(int m=0; m<M; m++)delete[] Hrow[m];
     delete[] g;
     delete[] gTmp;
     delete[] fKPlusOne;
+    delete[] Hcol;
 
     //It finishes
     return f;
@@ -5086,7 +5095,7 @@ void MainWindow::extractsHyperCube(QString originFileName)
         tmpImg.fill(Qt::black);
         //hypercube.append(tmpImg);
     }
-
+    qstringHypercube.clear();
 }
 
 void MainWindow::on_actionBilinear_interpolation_triggered()
