@@ -11,6 +11,8 @@ slideHypcube::slideHypcube(QObject *parent) : QDialog(){
 
 int slideHypcube::loadHypercube(QWidget* parent)
 {
+
+
     //-------------------------------------------------
     //Get cube location
     //-------------------------------------------------
@@ -40,6 +42,30 @@ int slideHypcube::loadHypercube(QWidget* parent)
     }
 
     //-------------------------------------------------
+    //If is define
+    //-------------------------------------------------
+    int x, y;
+    //Free memo
+    if( HypCube != nullptr )
+    {
+        for( x=0; x<cubeParam.W; x++ )
+        {
+            if( HypCube[x] != nullptr )
+            {
+                for( y=0; y<cubeParam.H; y++ )
+                {
+                    if( HypCube[x][y] != nullptr )
+                    {
+                        delete[]  HypCube[x][y];
+                    }
+                }
+                delete[] HypCube[x];
+            }
+        }
+        delete[] HypCube;
+    }
+
+    //-------------------------------------------------
     //Put Cube into Memory
     //-------------------------------------------------
     std::cout << "W: " << cubeParam.W << std::endl;
@@ -47,8 +73,7 @@ int slideHypcube::loadHypercube(QWidget* parent)
     std::cout << "L: " << cubeParam.L << std::endl;
     std::cout << "initWave: " << cubeParam.initWavelength << std::endl;
     std::cout << "specRes: " << cubeParam.spectralRes << std::endl;
-    //Reserve Memory
-    int x, y;
+    //Reserve Memory    
     HypCube = (u_int8_t***)malloc( cubeParam.W * sizeof(u_int8_t**) );
     int percentage = 0;
     for( x=0; x<cubeParam.W; x++ )
@@ -121,10 +146,6 @@ int slideHypcube::loadHypercube(QWidget* parent)
         }
         emit signalProgBarValue(101,"");
     }
-
-
-
-
     cubeStatus = cubeLoaded;
 
     mouseCursorReset();

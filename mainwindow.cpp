@@ -3947,6 +3947,7 @@ void MainWindow::on_actionGenHypercube_triggered()
     tmpEMNumIte = readFileParam(_PATH_SETTINGS_EM_ITERATIONS).toInt(0);
     qDebug() << "tmpEMNumIte: " << tmpEMNumIte;
 
+
     if( generatesHypcube(tmpEMNumIte, fileName) )
     {
         //Extracts hypercube
@@ -3984,7 +3985,9 @@ bool MainWindow::generatesHypcube(int numIterations, QString fileName){
     hypL        = lstChoises.count();
     N           = hypW * hypH * hypL;//Voxels
 
-    F           = (double*)malloc(N*sizeof(double));
+    F           = (double*)malloc(N*sizeof(double));    
+    //calculatesF(numIterations,_RED,&daCalib);
+    //funcShowMsgYesNo("Hi","",this);
     fRed        = calculatesF(numIterations,_RED,&daCalib);
     fGreen      = calculatesF(numIterations,_GREEN,&daCalib);
     fBlue       = calculatesF(numIterations,_BLUE,&daCalib);
@@ -4599,6 +4602,7 @@ double *MainWindow::calculatesF(int numIterations, int sensor, lstDoubleAxisCali
     delete[] gTmp;
     delete[] fKPlusOne;
     delete[] Hcol;
+    delete[] Hrow;
 
     //It finishes
     return f;
@@ -4666,6 +4670,7 @@ double *MainWindow::createsF0(pixel **Hcol, double *g, int N)
                g[Hcol[n][2].index] +//Up
                g[Hcol[n][3].index] +//Left
                g[Hcol[n][4].index]; //Down
+        //f0=H^T * g;
         //qDebug() << "f[" << n << "]: " << f[n];
     }
     return f;
