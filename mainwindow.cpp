@@ -4108,7 +4108,7 @@ bool MainWindow::generatesHypcube(int numIterations, QString fileName){
     saveFile(fileName+".hypercube",hypercube);
 
 
-
+    delete[] F;
 
 
 
@@ -4585,6 +4585,11 @@ double *MainWindow::calculatesF(int numIterations, int sensor, lstDoubleAxisCali
         improveF( fKPlusOne, Hcol, f, gTmp, N );
         memcpy(f,fKPlusOne,(N*sizeof(double)));
     }
+
+    //Free memo
+    delete[] g;
+    delete[] gTmp;
+    delete[] fKPlusOne;
 
     //It finishes
     return f;
