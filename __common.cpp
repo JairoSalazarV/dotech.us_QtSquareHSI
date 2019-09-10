@@ -1647,6 +1647,10 @@ void calcDiffProj(strDiffProj *diffProj, lstDoubleAxisCalibration *daCalib)
 {
     QPoint o,r,l,u,d;
 
+    //qDebug() << "daCalib->LR.waveHorizA: " << daCalib->LR.waveHorizA << " daCalib->LR.waveHorizB" << daCalib->LR.waveHorizB;
+    //qDebug() << "daCalib->radianRotAngle: " << daCalib->radianRotAngle;
+    //exit(0);
+
     //Calc Diffraction distance in pixels for the received wavbelength
     int diffrDistX, diffrDistY;
     diffrDistX = floor(daCalib->LR.waveHorizA + (daCalib->LR.waveHorizB * diffProj->wavelength));
@@ -1659,6 +1663,8 @@ void calcDiffProj(strDiffProj *diffProj, lstDoubleAxisCalibration *daCalib)
     l.setX(o.x() - diffrDistX); l.setY(o.y());
     u.setY(o.y() - diffrDistY); u.setX(o.x());
     d.setY(o.y() + diffrDistY); d.setX(o.x());
+
+    //qDebug() << "daCalib->radianRotAngle: " << daCalib->radianRotAngle;
 
     //Rotate centroides
     QPoint newR;
@@ -1730,13 +1736,13 @@ extern void* funcAllocInteger3DMatrixMemo( int rows, int cols, int layers, int**
                 {
                     if( M[i][j] != NULL )
                     {
-                        free( M[i][j] ) ;
+                        delete[] M[i][j] ;
                     }
                 }
-                free( M[i] );
+                delete[] M[i];
             }
         }
-        free(M);
+        delete[] M;
     }
 
     //Allocate Matrix

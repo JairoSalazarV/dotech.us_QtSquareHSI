@@ -748,15 +748,16 @@ void genCalibXML::on_pbGenCal_clicked()
         //..
         QString Sr, Sg, Sb;
         lstDoubleAxisCalibration daCalibGenCal;        
-        daCalibGenCal.LR            = getAllLR();
-        daCalibGenCal.maxNumBands   = spectralResolution.x();
-        daCalibGenCal.minSpecRes    = minSpecRes.toDouble();
-        daCalibGenCal.minWavelength = waveLim.x();
-        daCalibGenCal.maxWavelength = waveLim.y();
-        daCalibGenCal.squareUsableX = auxSqUsableX;
-        daCalibGenCal.squareUsableY = auxSqUsableY;
-        daCalibGenCal.squareUsableW = auxSqUsableW;
-        daCalibGenCal.squareUsableH = auxSqUsableH;
+        daCalibGenCal.LR                = getAllLR();
+        daCalibGenCal.maxNumBands       = spectralResolution.x();
+        daCalibGenCal.minSpecRes        = minSpecRes.toDouble();
+        daCalibGenCal.minWavelength     = waveLim.x();
+        daCalibGenCal.maxWavelength     = waveLim.y();
+        daCalibGenCal.squareUsableX     = auxSqUsableX;
+        daCalibGenCal.squareUsableY     = auxSqUsableY;
+        daCalibGenCal.squareUsableW     = auxSqUsableW;
+        daCalibGenCal.squareUsableH     = auxSqUsableH;
+        daCalibGenCal.radianRotAngle    = angle;
         calculateAndSaveSensitivities(&daCalibGenCal);
         //Sr = readFileParam( _PATH_RED_SENSITIV );
         //Sg = readFileParam( _PATH_GREEN_SENSITIV );
@@ -959,7 +960,7 @@ void genCalibXML::calculateAndSaveSensitivities(lstDoubleAxisCalibration *daCali
     //Response is measured in the diffraction of
     //a halogen spotlight
     //-------------------------------------------------
-    range = 3;//Histogram stick height
+    range = 10;//Histogram stick height
     for( r=origin.y()-range; r<=origin.y()+range; r++ )
     {
         for( c=origin.x()-range; c<=origin.x()+range; c++ )
@@ -1187,6 +1188,7 @@ void genCalibXML::calculateAndSaveSensitivities(lstDoubleAxisCalibration *daCali
     saveFile(_PATH_HALOGEN_IRRADIATION,halogenIrradiance);
 
     imgMod.save(_PATH_AUX_IMG);
+    displayImageFullScreen(imgMod);
     //exit(3);
 
 }

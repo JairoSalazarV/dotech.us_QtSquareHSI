@@ -412,15 +412,17 @@ private slots:
 
     double *calculatesF(int iterations, int sensor, lstDoubleAxisCalibration *daCalib);
 
-    void improveF(double *fKPlusOne, pixel **Hcol, double *f, double *gTmp, int N );
+    void improveF(double *fKPlusOne, myColPixel** Hcol, double *f, double *gTmp, int N );
 
     void createsGTmp(double *gTmp, double *g, int **Hrow, double *f, int M);
 
-    double *createsF0(pixel **Hcol, double *g, int N);
+    double *createsF0(myColPixel** Hcol, double *g, int N);
 
     double *serializeImageToProccess(QImage img, int sensor);
 
-    void createsHColAndHrow(pixel **Hcol, int **Hrow, QImage *img, lstDoubleAxisCalibration *daCalib );
+    void deleteHColAndHrow(myColPixel **Hcol, int **Hrow, const int &N , const int &M);
+
+    void createsHColAndHrow(myColPixel **Hcol, int **Hrow, QImage *img, lstDoubleAxisCalibration *daCalib );
 
     void insertItemIntoRow(int **Hrow, int row, int col);
 

@@ -3992,17 +3992,16 @@ bool MainWindow::generatesHypcube(int numIterations, QString fileName){
     N           = hypW * hypH * hypL;//Voxels
 
     F           = (double*)malloc(N*sizeof(double));    
-    //calculatesF(numIterations,_RED,&daCalib);
-    //funcShowMsgYesNo("Hi","",this);
+    //calculatesF(numIterations,_RED,&daCalib);    
     fRed        = calculatesF(numIterations,_RED,&daCalib);
     fGreen      = calculatesF(numIterations,_GREEN,&daCalib);
     fBlue       = calculatesF(numIterations,_BLUE,&daCalib);
 
-    /*
+
     //---------------------------------------------
     //Demosaicing hypercube BEFORE
     //---------------------------------------------
-    if(false)
+    if(true)
     {
         if(false)
         {
@@ -4016,15 +4015,15 @@ bool MainWindow::generatesHypcube(int numIterations, QString fileName){
         }
         else
         {
-            //for( i=0; i<SQUARE_BICUBIC_ITERATIONS; i++ )
-            for( i=0; i<2; i++ )
+            for( i=0; i<SQUARE_BICUBIC_ITERATIONS; i++ )
+            //for( i=0; i<2; i++ )
             {
                 fRed    = demosaiseF3D(fRed,hypL,hypH,hypW);
                 fGreen  = demosaiseF3D(fGreen,hypL,hypH,hypW);
                 fBlue   = demosaiseF3D(fBlue,hypL,hypH,hypW);
             }
         }
-    }*/
+    }
 
     //---------------------------------------------
     //Extracting spectral measure
@@ -4049,7 +4048,7 @@ bool MainWindow::generatesHypcube(int numIterations, QString fileName){
     max = -1;
     pixByImage = daCalib.squareUsableW * daCalib.squareUsableH;    
     i=0;
-    double tmpVector[3];
+    //double tmpVector[3];
     for(l=0; l<hypL;l++)
     {
         for(j=0; j<pixByImage; j++)
@@ -4076,10 +4075,11 @@ bool MainWindow::generatesHypcube(int numIterations, QString fileName){
     //printf("min(%lf,%d) max(%lf,%d)\n",min,minPos,max,maxPos);
     //fflush(stdout);
 
-    /*
+
     //---------------------------------------------
     //Demosaicing hypercube AFTER
     //---------------------------------------------
+    /*
     if(true)
     {
         if(false)
@@ -4180,7 +4180,7 @@ double MainWindow::funcGetSpectralResponse(double r,double g,double b,double rLa
     double val;
     int method;
     val         = 0.0;
-    method      = 1; // 1:Max val | 2:Mejor Sensor
+    method      = 3; // 1:Max val | 2:Mejor Sensor
                      // 3:SumaDeSensores/SumaSensibilidades | 4: Suma
 
     if(method==1)
@@ -4578,7 +4578,7 @@ double *MainWindow::calculatesF(int numIterations, int sensor, lstDoubleAxisCali
     //Creates containers
     int hypW, hypH, hypL;
     QList<double> lstChoises;
-    pixel **Hcol;
+    //myColPixel **Hcol;
     int **Hrow;
 
     lstChoises  = getWavesChoised();
@@ -4589,12 +4589,11 @@ double *MainWindow::calculatesF(int numIterations, int sensor, lstDoubleAxisCali
 
     //Reserves Memory for H
     //..
-    Hcol        = (pixel**)malloc(N*sizeof(pixel*));
+    myColPixel** Hcol = (myColPixel**)malloc(N*sizeof(myColPixel*));
     for(int n=0; n<N; n++)
     {
-        Hcol[n] = (pixel*)malloc(5*sizeof(pixel));
+        Hcol[n] = (myColPixel*)malloc(5*sizeof(myColPixel));
     }
-
     Hrow        = (int**)malloc(M*sizeof(int*));
     for(int m=0; m<M; m++)
     {
@@ -4602,9 +4601,67 @@ double *MainWindow::calculatesF(int numIterations, int sensor, lstDoubleAxisCali
         Hrow[m][0]  = 0;
     }
 
+    //funcShowMsgYesNo("Hi_4_1","",this);
+    //deleteHColAndHrow( Hcol, Hrow, N, M );
+    //funcShowMsgYesNo("Hi_4_2","",this);
+    //exit(0);
+
+
+
     //It creates H
     //..
     createsHColAndHrow( Hcol, Hrow, &img, daCalib );
+
+
+    /*
+    //
+    // Muestra Projection
+    //
+    int numBoxelsInLambda, voxelI, tmpX, tmpY;
+    voxelI = 0;
+    numBoxelsInLambda = hypW * hypH;
+    for(int l=1; l<=hypL; l++)
+    {
+        QImage tmpImg = *globalEditImg;
+        for(int x=1; x<=hypW; x++)
+        {
+            for(int y=1; y<=hypH; y++)
+            {
+                tmpX=Hcol[voxelI][0].x;//Zero
+                tmpY=Hcol[voxelI][0].y;
+                tmpImg.setPixel(tmpX,tmpY,qRgb(255,0,0));
+                //qDebug() << "voxelI: " << voxelI << " x: " << tmpX << " y: " << tmpY
+                //         << " hypW: " << hypW << " hypH: " << hypH;
+
+                tmpX=Hcol[voxelI][1].x;//Right
+                tmpY=Hcol[voxelI][1].y;
+                tmpImg.setPixel(tmpX,tmpY,qRgb(255,0,0));
+
+                tmpX=Hcol[voxelI][2].x;//Up
+                tmpY=Hcol[voxelI][2].y;
+                tmpImg.setPixel(tmpX,tmpY,qRgb(255,0,0));
+
+                tmpX=Hcol[voxelI][3].x;//Left
+                tmpY=Hcol[voxelI][3].y;
+                tmpImg.setPixel(tmpX,tmpY,qRgb(255,0,0));
+
+                tmpX=Hcol[voxelI][4].x;//Down
+                tmpY=Hcol[voxelI][4].y;
+                tmpImg.setPixel(tmpX,tmpY,qRgb(255,0,0));
+
+                voxelI++;
+            }
+        }
+
+        displayImageFullScreen(tmpImg);
+        funcShowMsgYesNo("Hola","Sigui",this);
+        //exit(0);
+    }
+    */
+
+
+
+    //funcShowMsgYesNo("Hi2","",this);
 
     //It creates image to proccess
     //..
@@ -4621,15 +4678,14 @@ double *MainWindow::calculatesF(int numIterations, int sensor, lstDoubleAxisCali
         memcpy(f,fKPlusOne,(N*sizeof(double)));
         //memset(fKPlusOne,'\0',(N*sizeof(double)));
     }
+    //funcShowMsgYesNo("Hi3","",this);
 
     //Free memo
-    for(int n=0; n<N; n++)delete[] Hcol[n];
-    for(int m=0; m<M; m++)delete[] Hrow[m];
     delete[] g;
     delete[] gTmp;
-    delete[] fKPlusOne;
-    delete[] Hcol;
-    delete[] Hrow;
+    delete[] fKPlusOne;    
+    deleteHColAndHrow( Hcol, Hrow, N, M );
+    //funcShowMsgYesNo("Hi4","",this);
 
     //It finishes
     return f;
@@ -4638,7 +4694,7 @@ double *MainWindow::calculatesF(int numIterations, int sensor, lstDoubleAxisCali
 
 
 
-void MainWindow::improveF( double *fKPlusOne, pixel **Hcol, double *f, double *gTmp, int N )
+void MainWindow::improveF( double *fKPlusOne, myColPixel **Hcol, double *f, double *gTmp, int N )
 {
     int n;
     double avgMeasure;//average measure
@@ -4686,7 +4742,7 @@ void MainWindow::createsGTmp(double *gTmp, double *g, int **Hrow, double *f, int
 }
 
 
-double *MainWindow::createsF0(pixel **Hcol, double *g, int N)
+double *MainWindow::createsF0(myColPixel **Hcol, double *g, int N)
 {
     double *f;
     f = (double*)malloc(N*sizeof(double));
@@ -4748,7 +4804,22 @@ double *MainWindow::serializeImageToProccess(QImage img, int sensor)
     return g;
 }
 
-void MainWindow::createsHColAndHrow(pixel **Hcol, int **Hrow, QImage *img, lstDoubleAxisCalibration *daCalib )
+void MainWindow::deleteHColAndHrow(myColPixel** Hcol, int **Hrow, const int &colN, const int &rowM )
+{
+    int n, m;
+    for(n=colN-1; n>=0; n--)
+    {
+        delete[] Hcol[n];
+    }
+    for(m=rowM-1; m>=0; m--)
+    {
+        delete[] Hrow[m];
+    }
+    delete Hcol;
+    delete Hrow;
+}
+
+void MainWindow::createsHColAndHrow(myColPixel** Hcol, int **Hrow, QImage *img, lstDoubleAxisCalibration *daCalib )
 {
     //Prepares variables and constants
     //..
@@ -6939,7 +7010,7 @@ void MainWindow::funcUpdateSpectralPixels(QString* pathSource)
         {
             for( c=0; c<W; c++ )
             {
-                tmpHypercube[r][c][l]    = qRed(tmpImg.pixel(c,r));
+                tmpHypercube[r][c][l]    = pixelMaxValue( tmpImg.pixel(c,r) );
                 lstMaxVals[l] = ( tmpHypercube[r][c][l] > lstMaxVals[l] )?tmpHypercube[r][c][l]:lstMaxVals[l];
                 lstMaxVals[L] = ( tmpHypercube[r][c][l] > lstMaxVals[L] )?tmpHypercube[r][c][l]:lstMaxVals[L];
                 lstMinVals[l] = ( tmpHypercube[r][c][l] < lstMinVals[l] )?tmpHypercube[r][c][l]:lstMinVals[l];
@@ -6986,14 +7057,14 @@ void MainWindow::funcUpdateSpectralPixels(QString* pathSource)
             {
                 for( c=0; c<W; c++ )
                 {
-                    if( ui->RadioLoadHypcube_2->isChecked() && lstMaxVals[l] > 0 )
+                    if( ui->RadioLoadHypcube_2->isChecked() && lstMaxVals[l] > 0 )//BAND
                     {
                         auxBefore   = tmpHypercube[r][c][l];
                         tmpMinValL  = lstMinVals[l];
                         tmpMaxValL  = lstMaxVals[l];
                         tmpHypercube[r][c][l]   = round((((float)tmpHypercube[r][c][l] - tmpMinValL) / (tmpMaxValL-tmpMinValL))*255.0);
                     }
-                    if( ui->RadioLoadHypcube_3->isChecked() && lstMaxVals[L] > 0 )
+                    if( ui->RadioLoadHypcube_3->isChecked() && lstMaxVals[L] > 0 )//CUBE
                     {
 
                         tmpMinValL  = lstMinVals[L];

@@ -33,11 +33,11 @@
         int H;
     }trilinear;
 
-    typedef struct pixel{
+    typedef struct myColPixel{
         int x;
         int y;
         int index;
-    }pixel;
+    }myColPixel;
 
     typedef struct voxel{
         int x;
