@@ -694,12 +694,14 @@ void MainWindow::funcIniCamParam( structRaspcamSettings *raspcamSettings )
     //Timelapse Interval
     ui->spinBoxTimelapse->setValue( raspcamSettings->TimelapseInterval_ms );
 
+    //Delay Time
+    ui->spinBoxDelayTime->setValue( raspcamSettings->DelayTime );
+
     //Video Duration
-    ui->spinBoxVideoDuration->setValue( raspcamSettings->VideoDurationSecs );
+    //ui->spinBoxVideoDuration->setValue( raspcamSettings->VideoDurationSecs );
 
     //ISO
-    ui->slideISO->setValue( raspcamSettings->ISO );
-    ui->labelISO->setText( "ISO: " + QString::number(raspcamSettings->ISO) );
+    ui->spinBoxISO->setValue( raspcamSettings->ISO );
 
     //ExposureCompensation
     //ui->slideExpComp->setValue( raspcamSettings->ExposureCompensation );
@@ -719,8 +721,8 @@ void MainWindow::funcIniCamParam( structRaspcamSettings *raspcamSettings )
     //else ui->cbPreview->setChecked(false);
 
     //TRIGGER TIME
-    ui->slideTriggerTime->setValue(raspcamSettings->TriggeringTimeSecs);
-    ui->labelTriggerTime->setText("Trigger time: " + QString::number(raspcamSettings->TriggeringTimeSecs)+"secs");
+    ui->spinBoxTrigeringTime->setValue(raspcamSettings->TriggeringTimeSecs);
+    //ui->labelTriggerTime->setText("Trigger time: " + QString::number(raspcamSettings->TriggeringTimeSecs)+"secs");
 
     //DENOISE EFX
     if( raspcamSettings->Denoise )ui->cbDenoise->setChecked(true);
@@ -1455,7 +1457,7 @@ structRaspcamSettings MainWindow::funcFillSnapshotSettings( structRaspcamSetting
     //raspSett.ExposureCompensation     = ui->slideExpComp->value();
     //raspSett.Format                   = ( ui->rbFormat1->isChecked() )?1:2;
     //raspSett.Green                    = ui->slideGreen->value();
-    raspSett.ISO                        = ui->slideISO->value();
+    raspSett.ISO                        = ui->spinBoxISO->value();
     //raspSett.Red                      = ui->slideRed->value();
     //raspSett.Saturation               = ui->slideSaturation->value();
     //raspSett.Sharpness                = ui->slideSharpness->value();
@@ -1463,7 +1465,7 @@ structRaspcamSettings MainWindow::funcFillSnapshotSettings( structRaspcamSetting
     raspSett.SquareShutterSpeedMs       = ui->spinBoxSquareShuterSpeed->value();
     raspSett.Denoise                    = (ui->cbDenoise->isChecked())?1:0;
     raspSett.ColorBalance               = (ui->cbColorBalance->isChecked())?1:0;
-    raspSett.TriggeringTimeSecs         = ui->slideTriggerTime->value();
+    raspSett.TriggeringTimeSecs         = ui->spinBoxTrigeringTime->value();
 
     return raspSett;
 }
@@ -1762,13 +1764,14 @@ bool MainWindow::saveRaspCamSettings( QString tmpName ){
     newFileCon.append("    <Exposure>"+ ui->cbExposure->currentText() +"</Exposure>\n");
     newFileCon.append("    <Denoise>"+ denoiseFlag +"</Denoise>\n");
     newFileCon.append("    <ColorBalance>"+ colbalFlag +"</ColorBalance>\n");
-    newFileCon.append("    <TriggeringTimeSecs>"+ QString::number( ui->slideTriggerTime->value() ) +"</TriggeringTimeSecs>\n");
+    newFileCon.append("    <TriggeringTimeSecs>"+ QString::number( ui->spinBoxTrigeringTime->value() ) +"</TriggeringTimeSecs>\n");
     newFileCon.append("    <ShutterSpeedMs>"+ QString::number( ui->spinBoxShuterSpeed->value() ) +"</ShutterSpeedMs>\n");
     newFileCon.append("    <SquareShutterSpeedMs>"+ QString::number( ui->spinBoxSquareShuterSpeed->value() ) +"</SquareShutterSpeedMs>\n");
     newFileCon.append("    <TimelapseDurationSecs>"+ QString::number( ui->spinBoxTimelapseDuration->value() ) +"</TimelapseDurationSecs>\n");
     newFileCon.append("    <TimelapseInterval_ms>"+ QString::number( ui->spinBoxTimelapse->value() ) +"</TimelapseInterval_ms>\n");
-    newFileCon.append("    <VideoDurationSecs>"+ QString::number( ui->spinBoxVideoDuration->value() ) +"</VideoDurationSecs>\n");
-    newFileCon.append("    <ISO>"+ QString::number( ui->slideISO->value() ) +"</ISO>\n");
+    //newFileCon.append("    <VideoDurationSecs>"+ QString::number( ui->spinBoxVideoDuration->value() ) +"</VideoDurationSecs>\n");
+    newFileCon.append("    <DelayTime>"+ QString::number( ui->spinBoxDelayTime->value() ) +"</DelayTime>\n");
+    newFileCon.append("    <ISO>"+ QString::number( ui->spinBoxISO->value() ) +"</ISO>\n");
     newFileCon.append("    <CameraMp>"+ QString::number( tmpResInMp ) +"</CameraMp>\n");
     newFileCon.append("    <Flipped>"+ flipped +"</Flipped>\n");
     newFileCon.append("    <horizontalFlipped>"+ horizontalFlipped +"</horizontalFlipped>\n");
@@ -1840,7 +1843,7 @@ bool MainWindow::funcSetCam( structRaspcamSettings *raspcamSettings ){
 
         raspcamSettings->ShutterSpeedMs = ui->spinBoxShuterSpeed->value();
 
-        raspcamSettings->ISO = ui->slideISO->value();
+        raspcamSettings->ISO = ui->spinBoxISO->value();
 
         //raspcamSettings->ExposureCompensation = ui->slideExpComp->value();
 
@@ -2123,6 +2126,12 @@ void MainWindow::on_pbSnapshot_clicked()
 
     mouseCursorReset();
     */
+
+    if( camSelected->isConnected == false )
+    {
+        funcShowMsgERROR("Camera Offline",this);
+        return (void)false;
+    }
 
     mouseCursorWait();
 
@@ -3410,10 +3419,7 @@ void MainWindow::on_actionDoubAxisDiff_triggered()
 }
 
 
-void MainWindow::on_slideTriggerTime_valueChanged(int value)
-{
-    ui->labelTriggerTime->setText( "Trigger at: " + QString::number(value) + " secs" );
-}
+
 
 void MainWindow::on_actionRotateImg_triggered()
 {
@@ -3992,10 +3998,11 @@ bool MainWindow::generatesHypcube(int numIterations, QString fileName){
     fGreen      = calculatesF(numIterations,_GREEN,&daCalib);
     fBlue       = calculatesF(numIterations,_BLUE,&daCalib);
 
+    /*
     //---------------------------------------------
     //Demosaicing hypercube BEFORE
     //---------------------------------------------
-    if(true)
+    if(false)
     {
         if(false)
         {
@@ -4017,7 +4024,7 @@ bool MainWindow::generatesHypcube(int numIterations, QString fileName){
                 fBlue   = demosaiseF3D(fBlue,hypL,hypH,hypW);
             }
         }
-    }
+    }*/
 
     //---------------------------------------------
     //Extracting spectral measure
@@ -4063,18 +4070,21 @@ bool MainWindow::generatesHypcube(int numIterations, QString fileName){
             i++;
         }
     }
-    printf("min(%lf,%d) max(%lf,%d)\n",min,minPos,max,maxPos);
-    fflush(stdout);
 
+    qDebug() << "min: " << min << " minPos: " << minPos << " max: " << max << " maxPos: " << maxPos;
+
+    //printf("min(%lf,%d) max(%lf,%d)\n",min,minPos,max,maxPos);
+    //fflush(stdout);
+
+    /*
     //---------------------------------------------
     //Demosaicing hypercube AFTER
     //---------------------------------------------
-    if(false)
+    if(true)
     {
         if(false)
         {
             for( i=0; i<SQUARE_BICUBIC_ITERATIONS; i++ )
-            //for( i=0; i<3; i++ )
             {
                 F    = demosaiseF2D(F,hypL,hypH,hypW);
             }
@@ -4082,12 +4092,11 @@ bool MainWindow::generatesHypcube(int numIterations, QString fileName){
         else
         {
             for( i=0; i<SQUARE_BICUBIC_ITERATIONS; i++ )
-            //for( i=0; i<5; i++ )
             {
                 F    = demosaiseF3D(F,hypL,hypH,hypW);
             }
         }
-    }
+    }*/
 
     //---------------------------------------------
     //Save hypercube
@@ -4167,34 +4176,52 @@ bool MainWindow::generatesHypcube(int numIterations, QString fileName){
 
 double MainWindow::funcGetSpectralResponse(double r,double g,double b,double rLambda,double gLambda,double bLambda)
 {
-    /*
-    double val = 1;
-    if(rLambda>=gLambda && rLambda>=bLambda)
+
+    double val;
+    int method;
+    val         = 0.0;
+    method      = 1; // 1:Max val | 2:Mejor Sensor
+                     // 3:SumaDeSensores/SumaSensibilidades | 4: Suma
+
+    if(method==1)
     {
-        //val = r * (1+ ((1-rLambda)*3.0));
-        val = r;
+        val = (r>g&&r>b)?r:(g>b)?g:b;
+        //qDebug() <<  "Max: val: " << val;
     }
-    else
+    if(method==2)
     {
-        if(gLambda>=rLambda && gLambda>=bLambda)
+        if(rLambda>=gLambda && rLambda>=bLambda)
         {
-            //val = g * (1+ ((1-gLambda)*3.0));
-            val = g;
+            //val = r * (1+ ((1-rLambda)*3.0));
+            val = r;
         }
         else
         {
-            if(bLambda>=rLambda && bLambda>=gLambda)
+            if(gLambda>=rLambda && gLambda>=bLambda)
             {
-                //val = b * (1+ ((1-bLambda)*3.0));
-                val = b;
+                //val = g * (1+ ((1-gLambda)*3.0));
+                val = g;
+            }
+            else
+            {
+                if(bLambda>=rLambda && bLambda>=gLambda)
+                {
+                    //val = b * (1+ ((1-bLambda)*3.0));
+                    val = b;
+                }
             }
         }
     }
-    */
-    double val = (r>g&&r>b)?r:(g>b)?g:b;
+    if(method==3)
+    {
+        val = (r+g+b) / (rLambda+gLambda+bLambda);
+    }
+    if(method==4)
+    {
+        val = (r+g+b);
+    }
+
     return val;
-    //return (r+g+b) / (rLambda+gLambda+bLambda);
-    //return (r+g+b);
 }
 
 
@@ -4376,8 +4403,6 @@ double *MainWindow::demosaiseF3D(double *f, int L, int H, int W)
         delete[] aux[l];
     }
     delete[] aux;
-
-
 
     //Finishes
     return f;
@@ -4586,6 +4611,7 @@ double *MainWindow::calculatesF(int numIterations, int sensor, lstDoubleAxisCali
     double *g, *gTmp, *f, *fKPlusOne;
     gTmp        = (double*)malloc(M*sizeof(double));
     fKPlusOne   = (double*)malloc(N*sizeof(double));
+    //memset(fKPlusOne,'\0',(N*sizeof(double)));
     g           = serializeImageToProccess( img, sensor );//g
     f           = createsF0(Hcol, g, N);//f0
     for( i=0; i<numIterations; i++ )
@@ -4593,6 +4619,7 @@ double *MainWindow::calculatesF(int numIterations, int sensor, lstDoubleAxisCali
         createsGTmp( gTmp, g, Hrow, f, M );//(Hf)m
         improveF( fKPlusOne, Hcol, f, gTmp, N );
         memcpy(f,fKPlusOne,(N*sizeof(double)));
+        //memset(fKPlusOne,'\0',(N*sizeof(double)));
     }
 
     //Free memo
@@ -4978,12 +5005,12 @@ void MainWindow::extractsHyperCube(QString originFileName)
     QString dateTime;
     int W, H, L, l;
     dateTime = hypItems.at(0);  hypItems.removeAt(0);
-    W = hypItems.at(0).toInt(0);         hypItems.removeAt(0);
-    H = hypItems.at(0).toInt(0);         hypItems.removeAt(0);
-    L = hypItems.at(0).toInt(0);         hypItems.removeAt(0);
+    W = hypItems.at(0).toInt();         hypItems.removeAt(0);
+    H = hypItems.at(0).toInt();         hypItems.removeAt(0);
+    L = hypItems.at(0).toInt();         hypItems.removeAt(0);
     for(l=0;l<L;l++)
     {
-        waves.append( hypItems.at(0).toDouble(0) );
+        waves.append( hypItems.at(0).toDouble() );
         hypItems.removeAt(0);
     }
 
@@ -4991,13 +5018,9 @@ void MainWindow::extractsHyperCube(QString originFileName)
     //..
     funcClearDirFolder(_PATH_TMP_HYPCUBES);
     QString tmpFileName;
-    //QList<QImage> hypercube;
     QImage tmpImg(W,H,QImage::Format_RGB32);
     int tmpVal;
     int col, row;
-    double tmp;
-    //max = vectorMaxQListQString(hypItems);
-    //qDebug() << "To norm max: " << max;
 
     //Calculate the max cal for each wavelength
     double max[L+1];
@@ -5011,13 +5034,13 @@ void MainWindow::extractsHyperCube(QString originFileName)
         {
             for( col=0; col<W; col++ )
             {
-                if(hypItems.at(i).toDouble(0)>max[l])
+                if(hypItems.at(i).toDouble()>max[l])
                 {
-                    max[l] = hypItems.at(i).toDouble(0);
+                    max[l] = hypItems.at(i).toDouble();
                 }
-                if(hypItems.at(i).toDouble(0)>max[L])
+                if(hypItems.at(i).toDouble()>max[L])
                 {
-                    max[L] = hypItems.at(i).toDouble(0);
+                    max[L] = hypItems.at(i).toDouble();
                 }
                 i++;
             }
@@ -5025,81 +5048,28 @@ void MainWindow::extractsHyperCube(QString originFileName)
     }
 
     //Normalize and export image
-    //int tmpMax;
     i=0;
     for( l=0; l<L; l++ )
     {
-        //tmpMax = 0;
-        //qDebug() << "max[l]: " << max[l];
-
         for( row=0; row<H; row++ )
         {
             for( col=0; col<W; col++ )
             {
-                tmpVal     = hypItems.at(i).toDouble();
-                //tmpVal = tmp;
-                /*
-                if(false)//Normalize in reference to the Waveband
-                {
-                    tmpVal  = (tmp<=0.0)?0:round( (tmp/max[l]) * 255.0 );   
-                    if(tmp==max[L])
-                    {
-                        qDebug() << "tmpVal=" << tmpVal << " " << tmp << " " << "max[L] = " << max[L];
-                    }
-                }
-                else
-                {
-                    if(false)//Normalize in reference to the Hypercube
-                    {
-                        tmpVal  = (tmp<=0.0)?0:round( (tmp/max[L]) * 255.0 );
-                    }
-                    else
-                    {
-                        tmpVal = tmp;
-                    }
-
-                }
-                */
-
-                //tmpImg.setPixelColor(QPoint(col,row),qGray(tmpVal,tmpVal,tmpVal));
+                //tmpVal     = hypItems.at(i).toDouble();
+                //qDebug() <<"Raw: " << hypItems.at(i) <<  " int: " <<  << " double: " << hypItems.at(i).toDouble();
+                tmpVal     = static_cast<int>(round(hypItems.at(i).toDouble()));
                 tmpImg.setPixelColor(QPoint(col,row),qRgb(tmpVal,tmpVal,tmpVal));
-
-                //if(tmpVal>tmpMax)
-                //{
-                //    tmpMax=tmpVal;
-                //}
-
                 i++;
             }
         }
-
-        //qDebug() << "tmpMax: " << tmpMax;
-        /*
-        if( SQUARE_BICUBIC_ITERATIONS > 1 )
-        {
-            tmpFileName =   _PATH_TMP_HYPCUBES +
-                            QString::number(waves.at(l)) +
-                            "."+
-                            QString::number(SQUARE_BICUBIC_ITERATIONS) +
-                            "Pasadas" +
-                            ".png";
-        }
-        else
-        {
-            tmpFileName = _PATH_TMP_HYPCUBES +
-                          QString::number(waves.at(l)) +
-                          ".png";
-        }
-        */
-
         tmpFileName = _PATH_TMP_HYPCUBES +
                       QString::number(waves.at(l)) +
                       ".png";
-
         tmpImg.save(tmpFileName);
         tmpImg.fill(Qt::black);
-        //hypercube.append(tmpImg);
     }
+
+    hypItems.clear();
     qstringHypercube.clear();
 }
 
@@ -6374,9 +6344,9 @@ void MainWindow::processFrame(QVideoFrame actualFrame)
     if( img.save( _PATH_VIDEO_FRAMES + QString::number(numFrames) + _FRAME_EXTENSION ) )
     {
         //qDebug() << "numFrames saved: " << numFrames;
-        int videoDuration = ui->slideTriggerTime->value();//seconds
-        qint64 expectedFrames = round(videoDuration * 10 * 1.25);
-        ui->progBar->setValue( round( ((float)numFrames/(float)expectedFrames) * 100.0 ) );
+        //int videoDuration = ui->spinBoxVideoDuration->value();//seconds
+        //qint64 expectedFrames = round(videoDuration * 10 * 1.25);
+        //ui->progBar->setValue( round( ((float)numFrames/(float)expectedFrames) * 100.0 ) );
         ui->progBar->update();
     }
     else
@@ -6521,21 +6491,32 @@ int MainWindow::createSubimageRemotelly(bool squareArea )
     return status;
 }
 
-int MainWindow::takeRemoteSnapshot( QString fileDestiny, bool squareArea )
+void MainWindow::funcMediaAcquisitionTime(const int &delaySeconds, const QString &Message, const QColor &Color)
 {
-
-    //
-    //Timer
-    //
-    int triggeringTime;
-    triggeringTime = ui->slideTriggerTime->value();
-    if( triggeringTime > 0 )
+    if( delaySeconds > 0 )
     {
-        formTimerTxt* timerTxt = new formTimerTxt(this,"Remainning Time to Shoot...",triggeringTime);
+        formTimerTxt* timerTxt = new formTimerTxt(this,Message,delaySeconds,Color);
         timerTxt->setModal(true);
         timerTxt->show();
         QtDelay(200);
-        timerTxt->startMyTimer(triggeringTime);
+        timerTxt->startMyTimer(delaySeconds);
+    }
+}
+
+int MainWindow::takeRemoteSnapshot( QString fileDestiny, bool squareArea )
+{
+    if( camSelected->isConnected == false )
+    {
+        funcShowMsgERROR("Camera Offline",this);
+        return _ERROR;
+    }
+
+    //
+    //Time Before Take Media
+    //
+    if(!squareArea)
+    {
+        funcMediaAcquisitionTime(ui->spinBoxDelayTime->value(),"Delaying...",QColor("#333333"));//Qt::black
     }
 
     //
@@ -6553,7 +6534,7 @@ int MainWindow::takeRemoteSnapshot( QString fileDestiny, bool squareArea )
     //Save lastest settings
     if( saveRaspCamSettings( _PATH_LAST_SNAPPATH ) == false ){
         funcShowMsg("ERROR","Saving last snap-settings");
-        return -1;
+        return _ERROR;
     }
 
 
@@ -6582,11 +6563,15 @@ int MainWindow::takeRemoteSnapshot( QString fileDestiny, bool squareArea )
     //Take Remote Photo
     //--------------------------------------
     bool executedCommand;
-    funcRemoteTerminalCommand(tmpCommand.toStdString(),camSelected,0,false,&executedCommand);
+    funcRemoteTerminalCommand(tmpCommand.toStdString(),camSelected,0,false,&executedCommand);    
     if( !executedCommand )
     {
         funcShowMsgERROR_Timeout("Applying Remote Snapshot Command",this);
-        return -1;
+        return _ERROR;
+    }
+    else
+    {
+        funcMediaAcquisitionTime(ui->spinBoxTrigeringTime->value(),"Stabilizing...",QColor("#FF6600"));//Qt::black
     }
 
     /*
@@ -6662,11 +6647,18 @@ int MainWindow::takeRemoteSnapshot( QString fileDestiny, bool squareArea )
     delete[] reqImg;
     */
 
-    return 1;
+    return _OK;
 }
 
 void MainWindow::on_pbSnapshotSquare_clicked()
 {
+
+    if( camSelected->isConnected == false )
+    {
+        funcShowMsgERROR("Camera Offline",this);
+        return (void)false;
+    }
+
     functionTakeComposedSquarePicture();
 
     /*
@@ -6804,11 +6796,20 @@ void MainWindow::on_pbSaveImage_clicked()
 
 void MainWindow::on_pbOneShotSnapshot_clicked()
 {
+
+    if( camSelected->isConnected == false )
+    {
+        funcShowMsgERROR("Camera Offline",this);
+        return (void)false;
+    }
+
     mouseCursorWait();    
 
-    if( !takeRemoteSnapshot(_PATH_REMOTE_SNAPSHOT,false) )
+    if( takeRemoteSnapshot(_PATH_REMOTE_SNAPSHOT,false) == _ERROR )
     {
         qDebug() << "ERROR: Taking Diffration Area";
+        funcResetStatusBar();
+        mouseCursorReset();
         return (void)NULL;
     }
     else
@@ -6817,10 +6818,13 @@ void MainWindow::on_pbOneShotSnapshot_clicked()
         if( diffImage.isNull() )
         {
             qDebug() << "ERROR: Obtaining Diffration Area";
+            funcResetStatusBar();
+            mouseCursorReset();
             return (void)NULL;
         }
         else
         {
+            funcResetStatusBar();
             //
             //Crop original image to release the usable area
             //
@@ -7693,7 +7697,7 @@ void MainWindow::on_pbTimeLapse_clicked()
     qDebug() << "tmpCommand: " << tmpCommand;
     funcRemoteTerminalCommand(tmpCommand.toStdString(),camSelected,0,false,&ok);
     progBarUpdateLabel("Timelapsing...",0);
-    progBarTimer((ui->slideTriggerTime->value()+1)*1000);    
+    progBarTimer((ui->spinBoxTrigeringTime->value()+1)*1000);
 
     //--------------------------------------
     //Obtain Remote Folder
@@ -7727,7 +7731,7 @@ QString MainWindow::genRemoteVideoCommand(QString remoteVideo,bool ROI)
 {
     QString tmpCommand;
     tmpCommand.append("raspivid -n -t ");
-    tmpCommand.append( QString::number( ui->spinBoxVideoDuration->value() * 1000 ) );
+    //tmpCommand.append( QString::number( ui->spinBoxVideoDuration->value() * 1000 ) );
     //tmpCommand.append( " -vf -b 50000000 -fps " );
     tmpCommand.append( " -b 50000000 -fps " );
     tmpCommand.append( QString::number(_VIDEO_FRAME_RATE) );
@@ -7825,8 +7829,8 @@ QString MainWindow::genRemoteVideoCommand(QString remoteVideo,bool ROI)
     //.................................
     //ISO
     //.................................
-    if( ui->slideISO->value() > 0 ){
-        tmpCommand.append(" -ISO " + QString::number(ui->slideISO->value()) );
+    if( ui->spinBoxISO->value() > 0 ){
+        tmpCommand.append(" -ISO " + QString::number(ui->spinBoxISO->value()) );
     }
 
     //.................................
@@ -7967,8 +7971,8 @@ QString MainWindow::genTimelapseCommand(QString folder,bool setROI)
     //.................................
     //ISO
     //.................................
-    if( ui->slideISO->value() > 0 ){
-        tmpCommand.append(" -ISO " + QString::number(ui->slideISO->value()) );
+    if( ui->spinBoxISO->value() > 0 ){
+        tmpCommand.append(" -ISO " + QString::number(ui->spinBoxISO->value()) );
     }
 
     //.................................
@@ -7999,7 +8003,7 @@ QString MainWindow::genSubareaRaspistillCommand( QString remoteFilename, QString
     tmpCommand.clear();
     tmpCommand.append("raspistill -o ");
     tmpCommand.append(remoteFilename);
-    tmpCommand.append(" -t " + QString::number(ui->slideTriggerTime->value()*1000));
+    tmpCommand.append(" -t " + QString::number(ui->spinBoxTrigeringTime->value()*1000));
     tmpCommand.append(" -n -q 100 -gc");
 
     //.................................
@@ -8087,8 +8091,8 @@ QString MainWindow::genSubareaRaspistillCommand( QString remoteFilename, QString
     //.................................
     //ISO
     //.................................
-    if( ui->slideISO->value() > 0 ){
-        tmpCommand.append(" -ISO " + QString::number(ui->slideISO->value()) );
+    if( ui->spinBoxISO->value() > 0 ){
+        tmpCommand.append(" -ISO " + QString::number(ui->spinBoxISO->value()) );
     }
 
     //.................................
@@ -8466,7 +8470,7 @@ void MainWindow::on_actionVideo_triggered()
 
     //Others
     reqImg->idMsg           = (unsigned char)12;
-    reqImg->video.t         = ui->slideTriggerTime->value();
+    //reqImg->video.t         = ui->spinBoxVideoDuration->value();
     reqImg->video.ss        = (int16_t)round(ui->spinBoxShuterSpeed->value());
     reqImg->video.awb       = (int16_t)ui->cbAWB->currentIndex();
     reqImg->video.ex        = (int16_t)ui->cbExposure->currentIndex();
@@ -8507,7 +8511,7 @@ void MainWindow::on_actionVideo_triggered()
         // STATUS BAR
         //
         progBarUpdateLabel("Recording video",0);
-        progBarTimer( (ui->slideTriggerTime->value() + 1) * 1000 );
+        //progBarTimer( (ui->spinBoxVideoDuration->value() + 1) * 1000 );
 
         //Delete if file exists
         funcDeleteFile( _PATH_VIDEO_RECEIVED_H264 );
@@ -8573,7 +8577,7 @@ void MainWindow::on_actionTimelapse_triggered()
     qDebug() << "tmpCommand: " << tmpCommand;
     funcRemoteTerminalCommand(tmpCommand.toStdString(),camSelected,0,false,&ok);
     progBarUpdateLabel("Timelapsing...",0);
-    progBarTimer((ui->slideTriggerTime->value()+1)*1000);
+    progBarTimer((ui->spinBoxTrigeringTime->value()+1)*1000);
 
     //--------------------------------------
     //Get Number of Frames
@@ -8710,7 +8714,7 @@ void MainWindow::on_actionSlideDiffraction_triggered()
     bool ok;
     funcRemoteTerminalCommand(tmpCommand.toStdString(),camSelected,0,false,&ok);
     progBarUpdateLabel(_MSG_PROGBAR_STABILIZING,0);
-    progBarTimer((ui->slideTriggerTime->value()+1)*1000);    
+    progBarTimer((ui->spinBoxTrigeringTime->value()+1)*1000);
 
     //......................................
     //Get Remote File
@@ -9197,7 +9201,7 @@ void MainWindow::funcStartRemoteTimelapse( bool setROI )
     //Take Timelapse
     //--------------------------------------
     int triggeringTime;
-    triggeringTime = ui->slideTriggerTime->value();
+    triggeringTime = ui->spinBoxTrigeringTime->value();
     tmpCommand = genTimelapseCommand(remoteFile,setROI);
     qDebug() << "tmpCommand: " << tmpCommand;
     funcRemoteTerminalCommand(tmpCommand.toStdString(),camSelected,triggeringTime,false,&commandExecuted);
@@ -9443,7 +9447,7 @@ void MainWindow::funcMainCall_RecordVideo(QString* videoID, bool defaultPath, bo
     funcRemoteTerminalCommand(
                                 getRemVidCommand.toStdString(),
                                 camSelected,
-                                ui->slideTriggerTime->value(),
+                                ui->spinBoxTrigeringTime->value(),
                                 false,
                                 &commandExecuted
                             );
@@ -9457,10 +9461,10 @@ void MainWindow::funcMainCall_RecordVideo(QString* videoID, bool defaultPath, bo
     //Display Timer
     //-----------------------------------------------------
     //Before to Start Recording
-    funcDisplayTimer("Countdown to Recording...",ui->slideTriggerTime->value(),Qt::black);
+    funcDisplayTimer("Countdown to Recording...",ui->spinBoxTrigeringTime->value(),Qt::black);
 
     //During Recording
-    funcDisplayTimer("Recording...",ui->spinBoxVideoDuration->value(),Qt::red);
+    //funcDisplayTimer("Recording...",ui->spinBoxVideoDuration->value(),Qt::red);
 }
 
 void MainWindow::funcMainCall_GetSnapshot()
@@ -9546,7 +9550,7 @@ void MainWindow::funcMainCall_GetSnapshot()
     //Start Timer
     //-----------------------------------------------------
     int triggeringTime;
-    triggeringTime = ui->slideTriggerTime->value();
+    triggeringTime = ui->spinBoxTrigeringTime->value();
     if( triggeringTime > 0 )
     {
         formTimerTxt* timerTxt = new formTimerTxt(this,"Remainning Time to Shoot...",triggeringTime);

@@ -809,51 +809,53 @@ bool funcGetRaspParamFromXML( structRaspcamSettings *raspcamSettings, QString fi
 
 
             if( xmlReader->name()=="Brightness" )
-                raspcamSettings->Brightness = xmlReader->readElementText().toInt(0);
+                raspcamSettings->Brightness = xmlReader->readElementText().toInt();
             if( xmlReader->name()=="Sharpness" )
-                raspcamSettings->Sharpness = xmlReader->readElementText().toInt(0);
+                raspcamSettings->Sharpness = xmlReader->readElementText().toInt();
             if( xmlReader->name()=="Contrast" )
-                raspcamSettings->Contrast = xmlReader->readElementText().toInt(0);
+                raspcamSettings->Contrast = xmlReader->readElementText().toInt();
             if( xmlReader->name()=="Saturation" )
-                raspcamSettings->Saturation = xmlReader->readElementText().toInt(0);
+                raspcamSettings->Saturation = xmlReader->readElementText().toInt();
             if( xmlReader->name()=="ShutterSpeedMs" )
-                raspcamSettings->ShutterSpeedMs = xmlReader->readElementText().toInt(0);
+                raspcamSettings->ShutterSpeedMs = xmlReader->readElementText().toInt();
             if( xmlReader->name()=="SquareShutterSpeedMs" )
-                raspcamSettings->SquareShutterSpeedMs = xmlReader->readElementText().toInt(0);
+                raspcamSettings->SquareShutterSpeedMs = xmlReader->readElementText().toInt();
             if( xmlReader->name()=="TimelapseDurationSecs" )
-                raspcamSettings->TimelapseDurationSecs = xmlReader->readElementText().toInt(0);
+                raspcamSettings->TimelapseDurationSecs = xmlReader->readElementText().toInt();
             if( xmlReader->name()=="TimelapseInterval_ms" )
-                raspcamSettings->TimelapseInterval_ms = xmlReader->readElementText().toInt(0);
+                raspcamSettings->TimelapseInterval_ms = xmlReader->readElementText().toInt();
             if( xmlReader->name()=="ISO" )
-                raspcamSettings->ISO = xmlReader->readElementText().toInt(0);
+                raspcamSettings->ISO = xmlReader->readElementText().toInt();
             if( xmlReader->name()=="ExposureCompensation" )
-                raspcamSettings->ExposureCompensation = xmlReader->readElementText().toInt(0);
+                raspcamSettings->ExposureCompensation = xmlReader->readElementText().toInt();
             if( xmlReader->name()=="Format" )
-                raspcamSettings->Format = xmlReader->readElementText().toInt(0);
+                raspcamSettings->Format = xmlReader->readElementText().toInt();
             if( xmlReader->name()=="Red" )
-                raspcamSettings->Red = xmlReader->readElementText().toInt(0);
+                raspcamSettings->Red = xmlReader->readElementText().toInt();
             if( xmlReader->name()=="Green" )
-                raspcamSettings->Green = xmlReader->readElementText().toInt(0);
+                raspcamSettings->Green = xmlReader->readElementText().toInt();
             if( xmlReader->name()=="Denoise" )
-                raspcamSettings->Denoise = xmlReader->readElementText().toInt(0);
+                raspcamSettings->Denoise = xmlReader->readElementText().toInt();
             if( xmlReader->name()=="FullPhoto" )
-                raspcamSettings->FullPhoto = xmlReader->readElementText().toInt(0);
+                raspcamSettings->FullPhoto = xmlReader->readElementText().toInt();
             if( xmlReader->name()=="ColorBalance" )
-                raspcamSettings->ColorBalance = xmlReader->readElementText().toInt(0);
+                raspcamSettings->ColorBalance = xmlReader->readElementText().toInt();
             if( xmlReader->name()=="Preview" )
-                raspcamSettings->Preview = xmlReader->readElementText().toInt(0);
+                raspcamSettings->Preview = xmlReader->readElementText().toInt();
             if( xmlReader->name()=="OneShot" )
-                raspcamSettings->OneShot = xmlReader->readElementText().toInt(0);
+                raspcamSettings->OneShot = xmlReader->readElementText().toInt();
             if( xmlReader->name()=="TriggeringTimeSecs" )
-                raspcamSettings->TriggeringTimeSecs = xmlReader->readElementText().toInt(0);
+                raspcamSettings->TriggeringTimeSecs = xmlReader->readElementText().toInt();
             if( xmlReader->name()=="VideoDurationSecs" )
-                raspcamSettings->VideoDurationSecs = xmlReader->readElementText().toInt(0);
+                raspcamSettings->VideoDurationSecs = xmlReader->readElementText().toInt();
+            if( xmlReader->name()=="DelayTime" )
+                raspcamSettings->DelayTime = xmlReader->readElementText().toInt();
             if( xmlReader->name()=="CameraMp" )
-                raspcamSettings->CameraMp = xmlReader->readElementText().toInt(0);
+                raspcamSettings->CameraMp = xmlReader->readElementText().toInt();
             if( xmlReader->name()=="Flipped" )
-                raspcamSettings->Flipped = xmlReader->readElementText().toInt(0);
+                raspcamSettings->Flipped = xmlReader->readElementText().toInt();
             if( xmlReader->name()=="horizontalFlipped" )
-                raspcamSettings->horizontalFlipped = xmlReader->readElementText().toInt(0);
+                raspcamSettings->horizontalFlipped = xmlReader->readElementText().toInt();
         }
     }
     if(xmlReader->hasError()) {
@@ -3491,11 +3493,12 @@ QList<double> getNormedFunction( QString fileName )
     irradiation = contain.split(",");
     int i;
     double max;
-    max = irradiation.at(0).toDouble(0);
+    max = irradiation.at(0).toDouble();
     irradiation.removeAt(0);
     for(i=0;i<irradiation.count();i++)
     {
-        function.append((irradiation.at(i).toDouble(0) / max)*0.5 );
+        //function.append((irradiation.at(i).toDouble() / max)*0.5 );
+        function.append((irradiation.at(i).toDouble() / max) );
         //printf("%.4f,",function.at(i));
     }
     return function;

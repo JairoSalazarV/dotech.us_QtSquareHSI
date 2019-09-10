@@ -1007,6 +1007,7 @@ void genCalibXML::calculateAndSaveSensitivities(lstDoubleAxisCalibration *daCali
                 response[1][numWaves] += (double)qGreen(tmpPix);
                 response[2][numWaves] += (double)qBlue(tmpPix);
                 //qDebug() << "Down \t r: " << qRed(tmpPix)<< "\tg: " << qGreen(tmpPix)<< "\tb: " << qBlue(tmpPix);
+                //exit(0);
                 //qDebug() << "";
 
                 //Draw into the real image
@@ -1111,12 +1112,12 @@ void genCalibXML::calculateAndSaveSensitivities(lstDoubleAxisCalibration *daCali
         //.......................................................
 
         //Sensitivity Normalization
-        //qDebug() << "sensitiv[1][i]: " << sensitiv[1][i];
-        //qDebug() << "sensitivityMaxGreen: " << sensitivityMaxGreen;
         sensNorm[0][i]      = sensitiv[0][i] / sensitivityMaxRed;
         sensNorm[1][i]      = sensitiv[1][i] / sensitivityMaxGreen;
         sensNorm[2][i]      = sensitiv[2][i] / sensitivityMaxBlue;
-
+        //qDebug() << "sensitiv[1][i]: " << sensitiv[2][i];
+        //qDebug() << "sensitivityMaxGreen: " << sensitivityMaxRed;
+        //if(i==2)exit(0);
 
 
         if( sensNorm[0][i] > 1.0 ){qDebug() << "C) Normalized Red Sensitivity exceded: " << sensNorm[0][i];exit(0);}
@@ -1124,43 +1125,50 @@ void genCalibXML::calculateAndSaveSensitivities(lstDoubleAxisCalibration *daCali
         if( sensNorm[2][i] > 1.0 ){qDebug() << "C) Normalized Blue Sensitivity exceded: " << sensNorm[2][i];exit(0);}
 
 
-        if(i==0)
+        if(i>0)
         {
-            redResponse         = QString::number(response[0][i]);
-            greenResponse       = QString::number(response[1][i]);
-            blueResponse        = QString::number(response[2][i]);
+            redResponse.append(",");
+            greenResponse.append(",");
+            blueResponse.append(",");
 
-            redSensivility      = QString::number(sensitiv[0][i]);
-            greenSensivility    = QString::number(sensitiv[1][i]);
-            blueSensivility     = QString::number(sensitiv[2][i]);
+            redSensivility.append(",");
+            greenSensivility.append(",");
+            blueSensivility.append(",");
 
-            sensitivities       = QString::number(sensitiv[0][i]+sensitiv[1][i]+sensitiv[2][i]);
+            sensitivities.append(",");
 
-            redSenNorm          = QString::number(sensNorm[0][i]);
-            greenSenNorm        = QString::number(sensNorm[1][i]);
-            blueSenNorm         = QString::number(sensNorm[2][i]);
+            redSenNorm.append(",");
+            greenSenNorm.append(",");
+            blueSenNorm.append(",");
 
-            halogenIrradiance   = QString::number(halogenFunction.at(idWave+i));
+            halogenIrradiance.append(",");
         }
-        else
-        {
-            redResponse.append(","+QString::number(response[0][i]));
-            greenResponse.append(","+QString::number(response[1][i]));
-            blueResponse.append(","+QString::number(response[2][i]));
 
-            redSensivility.append(","+QString::number(sensitiv[0][i]));
-            greenSensivility.append(","+QString::number(sensitiv[1][i]));
-            blueSensivility.append(","+QString::number(sensitiv[2][i]));
+        redResponse.append(QString::number(response[0][i]));
+        greenResponse.append(QString::number(response[1][i]));
+        blueResponse.append(QString::number(response[2][i]));
 
-            sensitivities.append(","+QString::number(sensitiv[0][i]+sensitiv[1][i]+sensitiv[2][i]));
+        redSensivility.append(QString::number(sensitiv[0][i]));
+        greenSensivility.append(QString::number(sensitiv[1][i]));
+        blueSensivility.append(QString::number(sensitiv[2][i]));
 
-            redSenNorm.append(","+QString::number(sensNorm[0][i]));
-            greenSenNorm.append(","+QString::number(sensNorm[1][i]));
-            blueSenNorm.append(","+QString::number(sensNorm[2][i]));
+        sensitivities.append(QString::number(sensitiv[0][i]+sensitiv[1][i]+sensitiv[2][i]));
 
-            halogenIrradiance.append(","+QString::number(halogenFunction.at(idWave+i)));
-        }
+        redSenNorm.append(QString::number(sensNorm[0][i]));
+        greenSenNorm.append(QString::number(sensNorm[1][i]));
+        blueSenNorm.append(QString::number(sensNorm[2][i]));
+
+        halogenIrradiance.append(","+QString::number(halogenFunction.at(idWave+i)));
+
     }
+
+    //qDebug() << "response[2][0]: " << response[2][0];
+    //qDebug() << "response[2][1]: " << response[2][1];
+    //qDebug() << "response[2][2]: " << response[2][2];
+    //qDebug() << "response[2][3]: " << response[2][3];
+    //qDebug() << "blueResponse: " << blueResponse;
+    //exit(0);
+
     //Save backup
     saveFile(_PATH_RED_RESPONSE,redResponse);
     saveFile(_PATH_GREEN_RESPONSE,greenResponse);

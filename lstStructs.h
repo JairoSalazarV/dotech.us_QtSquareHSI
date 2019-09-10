@@ -398,6 +398,7 @@
         int           TimelapseInterval_ms;   // 100-5000 milliseconds
         int           TimelapseDurationSecs;  // 2-86400 seconds
         int           VideoDurationSecs;      // 2-86400 seconds
+        int           DelayTime;              // 0-500 seconds
         u_int8_t      Format;                 // 1->raspicam::RASPICAM_FORMAT_GRAY | 2->raspicam::RASPICAM_FORMAT_YUV420
         u_int8_t      Red;                    // 0 to 8 set the value for the RED component of white balance
         u_int8_t      Green;                  // 0 to 8 set the value for the GREEN component of white balance

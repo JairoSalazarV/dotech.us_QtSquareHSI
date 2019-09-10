@@ -348,7 +348,7 @@ private slots:
     void on_actionDoubAxisDiff_triggered();
 
 
-    void on_slideTriggerTime_valueChanged(int value);
+    //void on_slideTriggerTime_valueChanged(int value);
 
     void on_actionRotateImg_triggered();
 
@@ -494,6 +494,8 @@ private slots:
     int createSubimageRemotelly(bool squareArea);
 
     int takeRemoteSnapshot(QString fileDestiny, bool squareArea);
+
+    void funcMediaAcquisitionTime(const int &delaySeconds, const QString &Message, const QColor &Color);
 
     void on_pbSnapshotSquare_clicked();
 
