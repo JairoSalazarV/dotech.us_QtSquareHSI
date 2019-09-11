@@ -1292,6 +1292,7 @@
       <addaction name="actionMultiImageAverage"/>
       <addaction name="actionMultiImageMinimum"/>
       <addaction name="actionMultiImageMaximum"/>
+      <addaction name="actionSquare_aperture"/>
      </widget>
      <addaction name="menuMerge"/>
     </widget>
@@ -2118,6 +2119,11 @@
   <action name="actionApply_Region_of_Interes">
    <property name="text">
     <string>Apply Region of Interest</string>
+   </property>
+  </action>
+  <action name="actionSquare_aperture">
+   <property name="text">
+    <string>Square aperture</string>
    </property>
   </action>
  </widget>

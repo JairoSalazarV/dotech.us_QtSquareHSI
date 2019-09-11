@@ -81,7 +81,12 @@ public slots:
 
     QImage obtainImageFile( std::string fileToObtain, QString txtBar );
 
+    int funcMergeSquareAperture(QImage *imgDiff, QImage *imgAperture);
 
+    void updateDisplayImage(QImage* tmpImg);
+    void updateDisplayImage(QString fileName);
+
+    void updateGlobalImgEdith(QImage* newImage);
 
 private slots:
 
@@ -187,8 +192,7 @@ private slots:
 
     //QString getnameForRecImg();
 
-    void updateDisplayImage(QImage* tmpImg);
-    void updateDisplayImage(QString fileName);
+
 
     void updatePreviewImage(QString* fileName);
     void updatePreviewImage(QImage* tmpImg);
@@ -702,6 +706,8 @@ private slots:
     void on_actionAbout_this_triggered();
 
     void on_pbHyperRefresh_clicked();
+
+    void on_actionSquare_aperture_triggered();    
 
 private:
     Ui::MainWindow *ui;

@@ -18,6 +18,7 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
+    formmergeroiandaperture.cpp \
         mainwindow.cpp \
     __common.cpp \
     hypCamAPI.cpp \
@@ -56,6 +57,7 @@ SOURCES += main.cpp\
 
 HEADERS  += mainwindow.h \
     __common.h \
+    formmergeroiandaperture.h \
     lstStructs.h \
     hypCamAPI.h \
     graphicsview.h \
@@ -97,6 +99,7 @@ HEADERS  += mainwindow.h \
     formslideplotsettings.h
 
 FORMS    += mainwindow.ui \
+    formmergeroiandaperture.ui \
     selcolor.ui \
     gencalibxml.ui \
     rotationfrm.ui \

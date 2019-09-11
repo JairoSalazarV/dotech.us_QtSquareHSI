@@ -97,6 +97,8 @@
 
 #include <QDesktopServices>
 
+#include <formmergeroiandaperture.h>
+
 structSettings *lstSettings = (structSettings*)malloc(sizeof(structSettings));
 
 structCamSelected *camSelected = (structCamSelected*)malloc(sizeof(structCamSelected));
@@ -7044,7 +7046,7 @@ void MainWindow::funcUpdateSpectralPixels(QString* pathSource)
     //---------------------------------------
     int auxBefore;
     int maxNormedVal = 0;
-    float tmpMinValL, tmpMaxValL;
+    float tmpMinValL=0.0, tmpMaxValL=0.0;
     if(
             ui->RadioLoadHypcube_2->isChecked() ||
             ui->RadioLoadHypcube_3->isChecked() ||
@@ -7093,8 +7095,27 @@ void MainWindow::funcUpdateSpectralPixels(QString* pathSource)
                 }
             }
             lstHypercubeImgs.replace(l,tmpImg);
+        }        
+    }
+    else
+    {
+        tmpMinValL=255.0;
+        tmpMaxValL=0.0;
+        for( l=0; l<L; l++ )
+        {
+            for( r=0; r<H; r++ )
+            {
+                for( c=0; c<W; c++ )
+                {
+                    tmpMaxValL = (tmpMaxValL>=tmpHypercube[r][c][l])?tmpMaxValL:tmpHypercube[r][c][l];
+                    tmpMinValL = (tmpMinValL<=tmpHypercube[r][c][l])?tmpMinValL:tmpHypercube[r][c][l];
+                }
+            }
         }
     }
+
+    qDebug() << "tmpMaxValL: " << tmpMaxValL << " tmpMinValL: " << tmpMinValL;
+
 
 
     //---------------------------------------
@@ -7118,7 +7139,7 @@ void MainWindow::funcUpdateSpectralPixels(QString* pathSource)
             lstHypercubeImgs.replace(l,tmpImg);
         }
     }
-    //qDebug() << "maxNormedVal: " << maxNormedVal;
+    qDebug() << "maxNormedVal: " << maxNormedVal;
 
 
     //---------------------------------------
@@ -12398,69 +12419,11 @@ void MainWindow::functionTakeComposedSquarePicture()
                 }
                 else
                 {
-                    //-------------------------------------------
-                    //Merge image
-                    //-------------------------------------------
-
-                    squareAperture *aperture        = (squareAperture*)malloc(sizeof(squareAperture));
-                    squareAperture *squareApertArea = (squareAperture*)malloc(sizeof(squareAperture));
-                    memset(aperture,'\0',sizeof(squareAperture));
-                    memset(squareApertArea,'\0',sizeof(squareApertArea));
 
                     //
-                    //Crop original image to release the usable area
+                    //Merge Areas
                     //
-                    //Get Region of Interest
-                    if( !rectangleInPixelsFromSquareXML( _PATH_REGION_OF_INTERES, aperture ) )
-                    {
-                        funcShowMsg("ERROR","Loading Usable Area in Pixels: _PATH_SQUARE_USABLE");
-                        return (void)false;
-                    }
-                    //Get usable area coordinates
-                    if( !rectangleInPixelsFromSquareXML( _PATH_SQUARE_APERTURE, _PATH_REGION_OF_INTERES, squareApertArea ) )
-                    {
-                        funcShowMsg("ERROR","Loading Usable Area in Pixels: _PATH_SQUARE_USABLE");
-                        return (void)false;
-                    }
-                    //Move coordinates in reference to "Region of Interest"
-                    //squareApertArea->rectX -= aperture->rectX;
-                    //squareApertArea->rectY -= aperture->rectY;
-
-                    //
-                    // Crop taken images
-                    //
-                    diffImage       = diffImage.copy(QRect( aperture->rectX, aperture->rectY, aperture->rectW, aperture->rectH ));
-                    apertureImage   = apertureImage.copy(QRect( aperture->rectX, aperture->rectY, aperture->rectW, aperture->rectH ));
-
-                    //
-                    //Copy square aperture into diffraction image
-                    //
-                    for( int y=squareApertArea->rectY; y<=(squareApertArea->rectY+squareApertArea->rectH); y++ )
-                    {
-                        for( int x=squareApertArea->rectX; x<=(squareApertArea->rectX+squareApertArea->rectW); x++ )
-                        {
-                            diffImage.setPixel( x, y, apertureImage.pixel( x, y ) );
-                        }
-                    }
-
-                    //
-                    //Cut Resultant Image
-                    //
-                    //diffImage       = diffImage.copy(QRect( aperture->rectX, aperture->rectY, aperture->rectW, aperture->rectH ));
-                    //apertureImage   = apertureImage.copy(QRect( squareApertArea->rectX, squareApertArea->rectY, squareApertArea->rectW, squareApertArea->rectH ));
-
-                    /*
-                    //
-                    //Get square aperture coordinates
-                    //
-                    memset(aperture,'\0',sizeof(squareAperture));
-                    if( !rectangleInPixelsFromSquareXML( _PATH_SQUARE_APERTURE, _PATH_REGION_OF_INTERES, aperture ) )
-                    {
-                        funcShowMsg("ERROR","Loading Rectangle in Pixels: _PATH_SQUARE_APERTURE");
-                        return (void)false;
-                    }
-                    funcPrintRectangle( "Square Aperture", aperture );
-                    */
+                    funcMergeSquareAperture(&diffImage,&apertureImage);//Result is saved in diffImage
 
                     //
                     //Save cropped image
@@ -12468,10 +12431,6 @@ void MainWindow::functionTakeComposedSquarePicture()
                     *globalEditImg = diffImage;
                     saveFile(_PATH_LAST_USED_IMG_FILENAME,_PATH_DISPLAY_IMAGE);
                     updateDisplayImage(globalEditImg);
-
-
-                    //diffImage.save(_PATH_DISPLAY_IMAGE);
-                    //updateDisplayImage(&diffImage);
                 }
             }
         }
@@ -12479,6 +12438,53 @@ void MainWindow::functionTakeComposedSquarePicture()
 
     //progBarUpdateLabel("",0);
     mouseCursorReset();
+}
+
+int MainWindow::funcMergeSquareAperture(QImage* diffImage, QImage* apertureImage)
+{
+    //-------------------------------------------
+    //Merge image
+    //-------------------------------------------
+    squareAperture *aperture        = (squareAperture*)malloc(sizeof(squareAperture));
+    squareAperture *squareApertArea = (squareAperture*)malloc(sizeof(squareAperture));
+    memset(aperture,'\0',sizeof(squareAperture));
+    memset(squareApertArea,'\0',sizeof(squareApertArea));
+
+    //
+    //Crop original image to release the usable area
+    //
+    //Get Region of Interest
+    if( !rectangleInPixelsFromSquareXML( _PATH_REGION_OF_INTERES, aperture ) )
+    {
+        funcShowMsg("ERROR","Loading Usable Area in Pixels: _PATH_SQUARE_USABLE");
+        return _ERROR;
+    }
+    //Get usable area coordinates
+    if( !rectangleInPixelsFromSquareXML( _PATH_SQUARE_APERTURE, _PATH_REGION_OF_INTERES, squareApertArea ) )
+    {
+        funcShowMsg("ERROR","Loading Usable Area in Pixels: _PATH_SQUARE_USABLE");
+        return _ERROR;
+    }
+
+    //
+    // Crop taken images
+    //
+    *diffImage       = diffImage->copy(QRect( aperture->rectX, aperture->rectY, aperture->rectW, aperture->rectH ));
+    *apertureImage   = apertureImage->copy(QRect( aperture->rectX, aperture->rectY, aperture->rectW, aperture->rectH ));
+
+    //
+    //Copy square aperture into diffraction image
+    //
+    for( int y=squareApertArea->rectY; y<=(squareApertArea->rectY+squareApertArea->rectH); y++ )
+    {
+        for( int x=squareApertArea->rectX; x<=(squareApertArea->rectX+squareApertArea->rectW); x++ )
+        {
+            diffImage->setPixel( x, y, apertureImage->pixel( x, y ) );
+        }
+    }
+
+    return _OK;
+
 }
 
 void MainWindow::on_actionAbout_this_triggered()
@@ -12492,4 +12498,42 @@ void MainWindow::on_pbHyperRefresh_clicked()
     funcUpdateSpectralPixels(&exportedHypcbes);
 
     ui->slideChangeImage->valueChanged( ui->slideChangeImage->value() );
+}
+
+void MainWindow::on_actionSquare_aperture_triggered()
+{
+
+    QString tmpPath;
+    if( funcLetUserSelectFile( &tmpPath, "Select ROI image", this ) != _OK )
+    {
+        funcShowMsgERROR_Timeout("Select ROI Source");
+        return (void)false;
+    }
+    QImage imgDiff(tmpPath);
+
+    tmpPath.clear();
+    if( funcLetUserSelectFile( &tmpPath, "Select APERTURE image", this ) != _OK )
+    {
+        funcShowMsgERROR_Timeout("Select APERTURE Source");
+        return (void)false;
+    }
+    QImage imgAperture(tmpPath);
+
+    //
+    //Merge Areas
+    //
+    funcMergeSquareAperture(&imgDiff,&imgAperture);//Result is saved in diffImage
+
+    //
+    //Save cropped image
+    //
+    *globalEditImg = imgDiff;
+    saveFile(_PATH_LAST_USED_IMG_FILENAME,_PATH_DISPLAY_IMAGE);
+    updateDisplayImage(globalEditImg);
+
+}
+
+void MainWindow::updateGlobalImgEdith(QImage* newImage)
+{
+    *globalEditImg = *newImage;
 }
