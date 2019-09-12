@@ -4896,17 +4896,20 @@ void MainWindow::createsHColAndHrow(myColPixel** Hcol, int **Hrow, QImage *img, 
     //Fill Hcol
     //..
     idVoxel = 0;
+    int shiftX, shiftY;
     for(int len=1; len<=hypL; len++)
     {
         Pj.wavelength = lstChoises.at(len-1);
         for(int row=1; row<=hypH; row++)
         {
+            shiftX = static_cast<int>(daCalib->LR.vertA+(daCalib->LR.vertB*(row + daCalib->squareUsableY)));//Verticales
             for(int col=1; col<=hypW; col++)
             {
-                //Obtain diffraction projection for the acutual wavelength
-                Pj.x = col + daCalib->squareUsableX;
-                Pj.y = row + daCalib->squareUsableY;
+                //Ger projection
+                Pj.x = col + shiftX;//Verticales
+                Pj.y = row + static_cast<int>(daCalib->LR.horizA+(daCalib->LR.horizB*(Pj.x)));//Horizontales
                 calcDiffProj(&Pj,daCalib);
+
                 //Creates a new item in the c-th Hcol
                 Hcol[idVoxel][0].x      = Pj.x;//Zero
                 Hcol[idVoxel][0].y      = Pj.y;
@@ -4937,7 +4940,7 @@ void MainWindow::createsHColAndHrow(myColPixel** Hcol, int **Hrow, QImage *img, 
 
                 idVoxel++;
 
-
+                /*
                 if(len==1)
                 {
                     newImg.setPixelColor(Pj.x,Pj.y,Qt::red);
@@ -4945,14 +4948,15 @@ void MainWindow::createsHColAndHrow(myColPixel** Hcol, int **Hrow, QImage *img, 
                     newImg.setPixelColor(Pj.ux,Pj.uy,Qt::red);
                     newImg.setPixelColor(Pj.lx,Pj.ly,Qt::red);
                     newImg.setPixelColor(Pj.dx,Pj.dy,Qt::red);
-                }
+                }*/
             }
         }
 
+        /*
         if(len==1)
         {
             displayImageFullScreen(newImg);
-        }
+        }*/
     }
 }
 
