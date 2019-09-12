@@ -1625,20 +1625,39 @@ QList<QFileInfo> funcFilterFilelist(QList<QFileInfo> lstFiles, QString suffix)
 
 QPoint rotatePointFromReferencePoint(const double &radianAngle, const QPoint &origin, const QPoint &point )
 {
+    if(radianAngle==0.0)return point;
+
     QPoint newPoint;
     double deltaX, deltaY;
-    double pi, lineLength;
-    pi = acos(-1);
+    double lineLength;
     deltaX = origin.x() - point.x();
     deltaY = origin.y() - point.y();
     lineLength = sqrt( pow(deltaX,2) + pow(deltaY,2) );
-    newPoint.setX( (cos(radianAngle)*lineLength) + point.x() );
-    newPoint.setY( (sin(radianAngle)*lineLength) + point.y() );
 
+    int newX, newY;
+    newX = static_cast<int>(cos(radianAngle)*lineLength);
+    newX = newX + origin.x();
+    newY = static_cast<int>(sin(radianAngle)*lineLength);
+    newY = newY + origin.y();
 
-    //qDebug() << "pi: "<<pi << " dX: " << deltaX << " dY: " << deltaY;
-    //qDebug() << "lineLength: "<< lineLength << " radianAngle: " << radianAngle;
-    //qDebug() << "newX: " << newPoint.x() << "newY: " << newPoint.y();
+    newPoint.setX( newX );
+    newPoint.setY( newY );
+
+    //qDebug() << "radianAngle: " << radianAngle;
+
+    //qDebug() << "radianAngle: " << radianAngle;
+
+    /*
+    qDebug() << "sin(radianAngle): " << sin(radianAngle);
+    qDebug() << "cos(radianAngle): " << cos(radianAngle);
+    qDebug() << "radianAngle: " << radianAngle;
+    qDebug() << "dX: " << deltaX << " dY: " << deltaY;
+    qDebug() << "lineLength: "<< lineLength << " radianAngle: " << radianAngle;
+    qDebug() << "pointX: " << point.x() << "pointY: " << point.y();
+    qDebug() << "originX: " << origin.x() << "originY: " << origin.y();
+    qDebug() << "newX: " << newPoint.x() << "newY: " << newPoint.y();
+    exit(0);
+    */
 
     return newPoint;
 }
@@ -1647,40 +1666,33 @@ void calcDiffProj(strDiffProj *diffProj, lstDoubleAxisCalibration *daCalib)
 {
     QPoint o,r,l,u,d;
 
-    //qDebug() << "daCalib->LR.waveHorizA: " << daCalib->LR.waveHorizA << " daCalib->LR.waveHorizB" << daCalib->LR.waveHorizB;
-    //qDebug() << "daCalib->radianRotAngle: " << daCalib->radianRotAngle;
-    //exit(0);
-
     //Calc Diffraction distance in pixels for the received wavbelength
     int diffrDistX, diffrDistY;
-    diffrDistX = floor(daCalib->LR.waveHorizA + (daCalib->LR.waveHorizB * diffProj->wavelength));
-    diffrDistY = floor(daCalib->LR.waveVertA + (daCalib->LR.waveVertB * diffProj->wavelength));
+    diffrDistX = round(daCalib->LR.waveHorizA + (daCalib->LR.waveHorizB * diffProj->wavelength));
+    diffrDistY = round(daCalib->LR.waveVertA + (daCalib->LR.waveVertB * diffProj->wavelength));
 
     //Set centroides without rotation
     o.setX(diffProj->x);
     o.setY(diffProj->y);
     r.setX(o.x() + diffrDistX); r.setY(o.y());
-    l.setX(o.x() - diffrDistX); l.setY(o.y());
-    u.setY(o.y() - diffrDistY); u.setX(o.x());
-    d.setY(o.y() + diffrDistY); d.setX(o.x());
-
-    //qDebug() << "daCalib->radianRotAngle: " << daCalib->radianRotAngle;
 
     //Rotate centroides
-    QPoint newR;
-    double deltaY;
-    newR    = rotatePointFromReferencePoint(daCalib->radianRotAngle,o,r);
-    deltaY  = r.y() - newR.y();
-    r.setY( r.y() + deltaY );
-    l.setY( l.y() - deltaY );
-    u.setX( u.x() + deltaY );
-    d.setX( d.x() - deltaY );
+    double pi, originalAngle;
+    pi=3.1416;
+    originalAngle = daCalib->radianRotAngle*(-1);    
+    r    = rotatePointFromReferencePoint(originalAngle,o,r);
+    l    = rotatePointFromReferencePoint(originalAngle+(pi*0.5),o,r);
+    u    = rotatePointFromReferencePoint(originalAngle+(pi),o,r);
+    d    = rotatePointFromReferencePoint(originalAngle+(pi*1.5),o,r);
 
     //Return centroides
-    diffProj->rx = r.x();   diffProj->ry = r.y();
-    diffProj->lx = l.x();   diffProj->ly = l.y();
-    diffProj->ux = u.x();   diffProj->uy = u.y();
-    diffProj->dx = d.x();   diffProj->dy = d.y();
+    diffProj->rx        = r.x();   diffProj->ry         = r.y();
+    diffProj->lx        = l.x();   diffProj->ly         = l.y();
+    diffProj->ux        = u.x();   diffProj->uy         = u.y();
+    diffProj->dx        = d.x();   diffProj->dy         = d.y();
+
+    //qDebug() << "diffProj->x: " << diffProj->x << " diffProj->y: " << diffProj->y;
+    //qDebug() << "diffProj->rotatedX: " << diffProj->rotatedX << " diffProj->rotatedY: " << diffProj->rotatedY;
 
 }
 

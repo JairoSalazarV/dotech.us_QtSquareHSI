@@ -416,6 +416,8 @@ private slots:
 
     double *calculatesF(int iterations, int sensor, lstDoubleAxisCalibration *daCalib);
 
+    int validateHcolAndHrow(myColPixel** Hcol, int **Hrow, QImage *img, lstDoubleAxisCalibration *daCalib );
+
     void improveF(double *fKPlusOne, myColPixel** Hcol, double *f, double *gTmp, int N );
 
     void createsGTmp(double *gTmp, double *g, int **Hrow, double *f, int M);

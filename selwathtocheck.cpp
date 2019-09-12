@@ -170,45 +170,56 @@ void selWathToCheck::showWavelengthSimulation()
     QImage tmpImg( _PATH_DISPLAY_IMAGE );
 
     //Horizontales
-    int init, end;
-    init = daCalib->squareUsableX;
-    end = daCalib->squareUsableX + daCalib->squareUsableW;
-    for(x=init;x<=end;x++)
-    {
-        //Horizontal
-        diffProj.x = x;
-        diffProj.y = daCalib->squareUsableY;//Row 1
-        calcDiffProj( &diffProj, daCalib );              
-        drawDiffProj( &diffProj );
-        drawDiffProjIntoImage(&tmpImg,&diffProj);
-
-        diffProj.x = x;
-        diffProj.y = daCalib->squareUsableY + daCalib->squareUsableH;//row h
-        calcDiffProj( &diffProj, daCalib );
-        drawDiffProj( &diffProj );
-        drawDiffProjIntoImage(&tmpImg,&diffProj);
-
-    }
-
+    int vertInit, vertEnd, horizInit, horizEnd;
+    vertInit    = daCalib->squareUsableY;
+    vertEnd     = daCalib->squareUsableY + daCalib->squareUsableH;
 
     //Verticales
-    init = daCalib->squareUsableY;
-    end  = daCalib->squareUsableY + daCalib->squareUsableH;
-    for(y=init;y<=end;y++)
+    vertInit = daCalib->squareUsableY;
+    vertEnd  = daCalib->squareUsableY + daCalib->squareUsableH;
+    for(y=vertInit;y<=vertEnd;y++)
+    {
+        //Verticales
+        diffProj.x = static_cast<int>(daCalib->LR.vertA+(daCalib->LR.vertB*y));
+        diffProj.y = y;
+        calcDiffProj( &diffProj, daCalib );
+        drawDiffProj( &diffProj );
+    }
+
+    //Horizontal
+    horizInit   = diffProj.x;
+    horizEnd    = diffProj.x + daCalib->squareUsableW;
+    for(x=horizInit;x<=horizEnd;x++)
     {
         //Horizontal
-        diffProj.x = daCalib->squareUsableX;//Column 1
+        diffProj.x = x;
+        diffProj.y = static_cast<int>(daCalib->LR.horizA+(daCalib->LR.horizB*x)) + daCalib->squareUsableH;
+        calcDiffProj( &diffProj, daCalib );
+        drawDiffProj( &diffProj );
+    }
+
+    //Horizontal
+    horizInit   = daCalib->squareUsableX;
+    horizEnd    = daCalib->squareUsableX + daCalib->squareUsableW;
+    for(x=horizInit;x<=horizEnd;x++)
+    {
+        //Verticales
+        diffProj.x = x;
+        diffProj.y = static_cast<int>(daCalib->LR.horizA+(daCalib->LR.horizB*x));
+        calcDiffProj( &diffProj, daCalib );
+        drawDiffProj( &diffProj );
+    }
+
+    //Vertical
+    vertInit = diffProj.y;
+    vertEnd  = diffProj.y + daCalib->squareUsableH;
+    for(y=vertInit;y<=vertEnd;y++)
+    {
+        //Verticales
+        diffProj.x = static_cast<int>(daCalib->LR.vertA+(daCalib->LR.vertB*y)) + daCalib->squareUsableW;;
         diffProj.y = y;
         calcDiffProj( &diffProj, daCalib );
         drawDiffProj( &diffProj );
-        drawDiffProjIntoImage(&tmpImg,&diffProj);
-
-        diffProj.x = daCalib->squareUsableX + daCalib->squareUsableW;
-        diffProj.y = y;
-        calcDiffProj( &diffProj, daCalib );
-        drawDiffProj( &diffProj );
-        drawDiffProjIntoImage(&tmpImg,&diffProj);
-
     }
 
     tmpImg.save(_PATH_AUX_IMG);
@@ -579,6 +590,7 @@ void selWathToCheck::drawAllCalculatedCentoides()
     drawCentroid(diffProj.dx,diffProj.dy,Qt::red,&img);
 
     //Green
+    //qDebug() << "wavelengthGreen: " << wavelengthGreen;
     diffProj.wavelength = static_cast<float>(wavelengthGreen);
     calcDiffProj( &diffProj, daCalib );
     drawCentroid(diffProj.rx,diffProj.ry,Qt::green,&img);

@@ -3999,7 +3999,6 @@ bool MainWindow::generatesHypcube(int numIterations, QString fileName){
     fGreen      = calculatesF(numIterations,_GREEN,&daCalib);
     fBlue       = calculatesF(numIterations,_BLUE,&daCalib);
 
-
     //---------------------------------------------
     //Demosaicing hypercube BEFORE
     //---------------------------------------------
@@ -4613,6 +4612,14 @@ double *MainWindow::calculatesF(int numIterations, int sensor, lstDoubleAxisCali
     //It creates H
     //..
     createsHColAndHrow( Hcol, Hrow, &img, daCalib );
+    /*
+    if( validateHcolAndHrow(Hcol, Hrow, &img, daCalib) != _OK )
+    {
+        funcShowMsgERROR("Creating H",this);
+        return static_cast<double*>(nullptr);
+    }*/
+    //exit(0);
+
 
 
     /*
@@ -4696,6 +4703,8 @@ double *MainWindow::calculatesF(int numIterations, int sensor, lstDoubleAxisCali
 
 
 
+
+
 void MainWindow::improveF( double *fKPlusOne, myColPixel **Hcol, double *f, double *gTmp, int N )
 {
     int n;
@@ -4733,14 +4742,19 @@ void MainWindow::createsGTmp(double *gTmp, double *g, int **Hrow, double *f, int
         //if( Hrow[m][0] > 0 )
         if( Hrow[m][0] != 0 )
         {
+            //qDebug() << "Hrow[m][0]: " << Hrow[m][0] << " m: " << m;
             for( n=1; n<=Hrow[m][0]; n++ )
             {
                 gTmp[m] += f[Hrow[m][n]];
+                //qDebug() << "Hrow[m][n=" << n << "]: " << Hrow[m][n];
             }
             //gTmp[m] = ( g[m] > 0 && gTmp[m] > 0 )?(g[m]/gTmp[m]):0;
+            //qDebug() << "gTmp[m]: " << gTmp[m];
             gTmp[m] = ( g[m] != 0 && gTmp[m] != 0 )?(g[m]/gTmp[m]):0;
+            //exit(0);
         }
     }
+    //exit(0);
 }
 
 
@@ -4821,6 +4835,48 @@ void MainWindow::deleteHColAndHrow(myColPixel** Hcol, int **Hrow, const int &col
     delete Hrow;
 }
 
+int MainWindow::validateHcolAndHrow(myColPixel** Hcol, int **Hrow, QImage *img, lstDoubleAxisCalibration *daCalib )
+{
+    //Prepares variables and constants
+    //..
+    int hypW, hypH, hypL, idVoxel;
+    QList<double> lstChoises;
+    lstChoises  = getWavesChoised();
+    strDiffProj Pj;
+    hypW        = daCalib->squareUsableW;
+    hypH        = daCalib->squareUsableH;
+    hypL        = lstChoises.count();
+
+    //qDebug() << "hypW: " << hypW << " hypH: " << hypH << " hypL: " << hypL;
+
+    for(int len=1; len<=hypL; len++)
+    {
+        for(int row=1; row<=hypH; row++)
+        {
+            for(int col=1; col<=hypW; col++)
+            {
+                Pj.x = col + daCalib->squareUsableX;
+                Pj.y = row + daCalib->squareUsableY;
+                calcDiffProj(&Pj,daCalib);
+                img->setPixelColor(Pj.x,Pj.y,Qt::red);
+                img->setPixelColor(Pj.rx,Pj.ry,Qt::red);
+                img->setPixelColor(Pj.ux,Pj.uy,Qt::red);
+                img->setPixelColor(Pj.lx,Pj.ly,Qt::red);
+                img->setPixelColor(Pj.dx,Pj.dy,Qt::red);
+
+                //qDebug() <<"x: " << Pj.x << " y: " << Pj.y;
+            }
+        }
+        if(len==1)
+        {
+            displayImageFullScreen(*img);
+        }
+    }
+    //displayImageFullScreen(*img);
+
+    return _OK;
+}
+
 void MainWindow::createsHColAndHrow(myColPixel** Hcol, int **Hrow, QImage *img, lstDoubleAxisCalibration *daCalib )
 {
     //Prepares variables and constants
@@ -4832,6 +4888,10 @@ void MainWindow::createsHColAndHrow(myColPixel** Hcol, int **Hrow, QImage *img, 
     hypW        = daCalib->squareUsableW;
     hypH        = daCalib->squareUsableH;
     hypL        = lstChoises.count();
+
+
+    QImage newImg;
+    newImg = *img;
 
     //Fill Hcol
     //..
@@ -4876,7 +4936,22 @@ void MainWindow::createsHColAndHrow(myColPixel** Hcol, int **Hrow, QImage *img, 
                 insertItemIntoRow(Hrow,Hcol[idVoxel][4].index,idVoxel);
 
                 idVoxel++;
+
+
+                if(len==1)
+                {
+                    newImg.setPixelColor(Pj.x,Pj.y,Qt::red);
+                    newImg.setPixelColor(Pj.rx,Pj.ry,Qt::red);
+                    newImg.setPixelColor(Pj.ux,Pj.uy,Qt::red);
+                    newImg.setPixelColor(Pj.lx,Pj.ly,Qt::red);
+                    newImg.setPixelColor(Pj.dx,Pj.dy,Qt::red);
+                }
             }
+        }
+
+        if(len==1)
+        {
+            displayImageFullScreen(newImg);
         }
     }
 }
