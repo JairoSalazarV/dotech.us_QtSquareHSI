@@ -184,6 +184,7 @@ void selWathToCheck::showWavelengthSimulation()
         diffProj.y = y;
         calcDiffProj( &diffProj, daCalib );
         drawDiffProj( &diffProj );
+        drawDiffProjIntoImage(&tmpImg,&diffProj);
     }
 
     //Horizontal
@@ -196,6 +197,7 @@ void selWathToCheck::showWavelengthSimulation()
         diffProj.y = static_cast<int>(daCalib->LR.horizA+(daCalib->LR.horizB*x)) + daCalib->squareUsableH;
         calcDiffProj( &diffProj, daCalib );
         drawDiffProj( &diffProj );
+        drawDiffProjIntoImage(&tmpImg,&diffProj);
     }
 
     //Horizontal
@@ -208,6 +210,7 @@ void selWathToCheck::showWavelengthSimulation()
         diffProj.y = static_cast<int>(daCalib->LR.horizA+(daCalib->LR.horizB*x));
         calcDiffProj( &diffProj, daCalib );
         drawDiffProj( &diffProj );
+        drawDiffProjIntoImage(&tmpImg,&diffProj);
     }
 
     //Vertical
@@ -220,6 +223,7 @@ void selWathToCheck::showWavelengthSimulation()
         diffProj.y = y;
         calcDiffProj( &diffProj, daCalib );
         drawDiffProj( &diffProj );
+        drawDiffProjIntoImage(&tmpImg,&diffProj);
     }
 
     tmpImg.save(_PATH_AUX_IMG);
