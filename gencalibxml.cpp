@@ -922,13 +922,8 @@ void genCalibXML::calculateAndSaveSensitivities(lstDoubleAxisCalibration *daCali
     QString sourceHalogen;
     QVector2D origin;
     sourceHalogen = readFileParam( _PATH_LIMIT_S_HALOGEN );
-    //origin.setX( sourceHalogen.split(",").at(0).toInt(0) - daCalibGenCal->squareUsableX - offsetX );
-    //origin.setY( sourceHalogen.split(",").at(1).toInt(0) - daCalibGenCal->squareUsableY - offsetY );
     origin.setX( sourceHalogen.split(",").at(0).toInt() - offsetX );
     origin.setY( sourceHalogen.split(",").at(1).toInt() - offsetY );
-
-    //qDebug() << "origin.x: " << origin.x();//Appear 73
-    //qDebug() << "origin.y: " << origin.y();//Appear 51
 
     //Account all sensitivities
     //..
@@ -941,33 +936,20 @@ void genCalibXML::calculateAndSaveSensitivities(lstDoubleAxisCalibration *daCali
     numWaves = daCalibGenCal->maxNumBands;
 
     double** response = (double**)malloc(4*sizeof(double*));
+    double** sensitiv = (double**)malloc(4*sizeof(double*));
+    double** sensNorm = (double**)malloc(4*sizeof(double*));
     for(int i=0; i<4; i++)
     {
         response[i] = (double*)malloc(numWaves*sizeof(double));
-    }
-    double** sensitiv = (double**)malloc(3*sizeof(double*));
-    double** sensNorm = (double**)malloc(3*sizeof(double*));
-    for(int i=0; i<3; i++)
-    {
         sensitiv[i] = (double*)malloc(numWaves*sizeof(double));
         sensNorm[i] = (double*)malloc(numWaves*sizeof(double));
     }
-
-
-    memset(response[0],0.0,(daCalibGenCal->maxNumBands*sizeof(double)));
-    memset(response[1],0.0,(daCalibGenCal->maxNumBands*sizeof(double)));
-    memset(response[2],0.0,(daCalibGenCal->maxNumBands*sizeof(double)));
-    memset(response[3],0.0,(daCalibGenCal->maxNumBands*sizeof(double)));
-
-    memset(sensitiv[0],0.0,(daCalibGenCal->maxNumBands*sizeof(double)));
-    memset(sensitiv[1],0.0,(daCalibGenCal->maxNumBands*sizeof(double)));
-    memset(sensitiv[2],0.0,(daCalibGenCal->maxNumBands*sizeof(double)));
-    //memset(sensitiv[3],'\0',(daCalibGenCal->maxNumBands*sizeof(double)));
-
-    memset(sensNorm[0],0.0,(daCalibGenCal->maxNumBands*sizeof(double)));
-    memset(sensNorm[1],0.0,(daCalibGenCal->maxNumBands*sizeof(double)));
-    memset(sensNorm[2],0.0,(daCalibGenCal->maxNumBands*sizeof(double)));
-
+    for(int i=0; i<4; i++)
+    {
+        memset(response[i],'\0',numWaves*sizeof(double));
+        memset(sensitiv[i],'\0',numWaves*sizeof(double));
+        memset(sensNorm[i],'\0',numWaves*sizeof(double));
+    }
 
     //-------------------------------------------------
     //Response is measured in the diffraction of
@@ -999,76 +981,47 @@ void genCalibXML::calculateAndSaveSensitivities(lstDoubleAxisCalibration *daCali
                 response[0][numWaves] += static_cast<double>( qRed(tmpPix) );
                 response[1][numWaves] += static_cast<double>( qGreen(tmpPix) );
                 response[2][numWaves] += static_cast<double>( qBlue(tmpPix) );
-                //if(numWaves==0)qDebug() << "right \t r: " << qRed(tmpPix)<< "\tg: " << qGreen(tmpPix)<< "\tb: " << qBlue(tmpPix);
-                //if(numWaves==0)qDebug() << "response[2][0]:"<<response[2][numWaves];
 
                 //Up
                 tmpPix = img.pixel( diffProj.ux, diffProj.uy );//Up
                 response[0][numWaves] += static_cast<double>( qRed(tmpPix) );
                 response[1][numWaves] += static_cast<double>( qGreen(tmpPix) );
                 response[2][numWaves] += static_cast<double>( qBlue(tmpPix) );
-                //if(numWaves==0)qDebug() << "Up \t r: " << qRed(tmpPix)<< "\tg: " << qGreen(tmpPix)<< "\tb: " << qBlue(tmpPix);
-                //if(numWaves==0)qDebug() << "response[2][0]:"<<response[2][numWaves];
 
                 //Left
                 tmpPix = img.pixel( diffProj.lx, diffProj.ly );//Left
                 response[0][numWaves] += static_cast<double>( qRed(tmpPix) );
                 response[1][numWaves] += static_cast<double>( qGreen(tmpPix) );
                 response[2][numWaves] += static_cast<double>( qBlue(tmpPix) );
-                //if(numWaves==0)qDebug() << "Left \t r: " << qRed(tmpPix)<< "\tg: " << qGreen(tmpPix)<< "\tb: " << qBlue(tmpPix);
-                //if(numWaves==0)qDebug() << "response[2][0]:"<<response[2][numWaves];
 
                 //Down
                 tmpPix = img.pixel( diffProj.dx, diffProj.dy );//Down
                 response[0][numWaves] += static_cast<double>( qRed(tmpPix) );
                 response[1][numWaves] += static_cast<double>( qGreen(tmpPix) );
                 response[2][numWaves] += static_cast<double>( qBlue(tmpPix) );
-                //if(numWaves==0)qDebug() << "Down \t r: " << qRed(tmpPix)<< "\tg: " << qGreen(tmpPix)<< "\tb: " << qBlue(tmpPix);
-                //if(numWaves==0)qDebug() << "response[2][0]:"<<response[2][numWaves];
-                //exit(0);
-                //qDebug() << "";
 
                 //Draw into the real image
                 //..
                 tmpX = diffProj.x; tmpY = diffProj.y;
                 imgMod.setPixelColor(tmpX,tmpY,Qt::magenta);
-                //if(numWaves==0)qDebug() << "AMIN response[2][0]:"<<response[2][0];
 
                 tmpX = diffProj.rx; tmpY = diffProj.ry;
                 imgMod.setPixelColor(tmpX,tmpY,Qt::red);
-                //if(numWaves==0)qDebug() << "BMIN response[2][0]:"<<response[2][0];
 
                 tmpX = diffProj.ux; tmpY = diffProj.uy;
                 imgMod.setPixelColor(tmpX,tmpY,Qt::green);
-                //if(numWaves==0)qDebug() << "CMIN response[2][0]:"<<response[2][0];
 
                 tmpX = diffProj.lx; tmpY = diffProj.ly;
                 imgMod.setPixelColor(tmpX,tmpY,Qt::blue);
-                //if(numWaves==0)qDebug() << "DMIN response[2][0]:"<<response[2][0];
 
                 tmpX = diffProj.dx; tmpY = diffProj.dy;
                 imgMod.setPixelColor(tmpX,tmpY,Qt::yellow);
 
-                //if(numWaves==0)qDebug() << "MIN response[2][0]:"<<response[2][0];
                 actWave += daCalibGenCal->minSpecRes;
                 numWaves++;
-
-                //qDebug() << "1.- r:" << r <<  " c: " << c << " origin.x()+range: " << origin.x()+range;
-                //qDebug() << "1.-  MIN response[2][0]:"<<response[2][0];
-
             }
-
-            //qDebug() << "2.- r:" << r <<  " c: " << c << " origin.x()+range: " << origin.x()+range;
-            //qDebug() << "2.-  MIN response[2][0]:"<<response[2][0];
-            //exit(0);
         }
     }
-
-
-
-    //qDebug() << " R: " << response[0][0]
-             //<< " G: " << response[1][0]
-             //<< " B: " << response[2][0];
 
     //Get halogen function
     //..
@@ -1090,7 +1043,6 @@ void genCalibXML::calculateAndSaveSensitivities(lstDoubleAxisCalibration *daCali
     int i, repeated, idWave;
     idWave = static_cast<int>(round(daCalibGenCal->minWavelength));
     repeated = (1+(range*2))*(1+(range*2))*4;//(Square sample W) x (Square sample H) x (number of diffractions)
-    //qDebug() << "numWaves: " << numWaves << " repeated: " << repeated;
     for(i=0; i<numWaves; i++)
     {
         //-------------------------------------------
@@ -1116,22 +1068,9 @@ void genCalibXML::calculateAndSaveSensitivities(lstDoubleAxisCalibration *daCali
         sensitiv[1][i]      = response[1][i] / halogenFunction.at(idWave+i);
         sensitiv[2][i]      = response[2][i] / halogenFunction.at(idWave+i);
 
-        //sensitiv[0][i]      = response[0][i];
-        //sensitiv[1][i]      = response[1][i];
-        //sensitiv[2][i]      = response[2][i];
-
         sensitivityMaxRed   = (sensitiv[0][i]>sensitivityMaxRed)?sensitiv[0][i]:sensitivityMaxRed;
         sensitivityMaxGreen = (sensitiv[1][i]>sensitivityMaxGreen)?sensitiv[1][i]:sensitivityMaxGreen;
         sensitivityMaxBlue  = (sensitiv[2][i]>sensitivityMaxBlue)?sensitiv[2][i]:sensitivityMaxBlue;
-        //sensitiv[3][i]      = sensitiv[0][i] + sensitiv[1][i] + sensitiv[2][i];
-        //if( sensitiv[0][i] > 1.0 ){qDebug() << "Red Sensitivity exceded";exit(0);}
-        //if( sensitiv[1][i] > 1.0 ){qDebug() << "Green Sensitivity exceded";exit(0);}
-        //if( sensitiv[2][i] > 1.0 ){qDebug() << "Blue Sensitivity exceded";exit(0);}
-
-        //Sensitivity Normalization
-        //sensNorm[0][i]      = sensitiv[0][i] / sensitiv[3][i];
-        //sensNorm[1][i]      = sensitiv[1][i] / sensitiv[3][i];
-        //sensNorm[2][i]      = sensitiv[2][i] / sensitiv[3][i];
 
     }
 
@@ -1151,28 +1090,10 @@ void genCalibXML::calculateAndSaveSensitivities(lstDoubleAxisCalibration *daCali
     }
 
     //-------------------------------------------
-    //Guarantee first and last components
-    //-------------------------------------------
-    /*
-    response[0][0] = response[0][1];        response[0][numWaves-1] = response[0][numWaves-2];
-    response[1][0] = response[1][1];        response[1][numWaves-1] = response[1][numWaves-2];
-    response[2][0] = response[2][1];        response[2][numWaves-1] = response[2][numWaves-2];
-    response[3][0] = response[3][1];        response[3][numWaves-1] = response[3][numWaves-2];
-    sensitiv[0][0] = sensitiv[0][1];        sensitiv[0][numWaves-1] = sensitiv[0][numWaves-2];
-    sensitiv[1][0] = sensitiv[1][1];        sensitiv[1][numWaves-1] = sensitiv[1][numWaves-2];
-    sensitiv[2][0] = sensitiv[2][1];        sensitiv[2][numWaves-1] = sensitiv[2][numWaves-2];
-    sensNorm[0][0] = sensNorm[0][1];        sensNorm[0][numWaves-1] = sensNorm[0][numWaves-2];
-    sensNorm[1][0] = sensNorm[1][1];        sensNorm[1][numWaves-1] = sensNorm[1][numWaves-2];
-    sensNorm[2][0] = sensNorm[2][1];        sensNorm[2][numWaves-1] = sensNorm[2][numWaves-2];
-    */
-
-
-    //-------------------------------------------
     //Save Normed Sensitivities
     //-------------------------------------------
     for(i=0; i<numWaves; i++)
     {
-        //qDebug() << "EE1: sensNorm[0][numWaves-1]:" << sensNorm[0][numWaves-1] << " numWaves: " << numWaves-1;
         if(i>0)
         {
             redResponse.append(",");
@@ -1192,7 +1113,6 @@ void genCalibXML::calculateAndSaveSensitivities(lstDoubleAxisCalibration *daCali
             halogenIrradiance.append(",");
         }
 
-        //qDebug() << "EE2: sensNorm[0][numWaves-1]:" << sensNorm[0][numWaves-1] << " numWaves: " << numWaves-1;
         redResponse.append(QString::number(response[0][i]));
         greenResponse.append(QString::number(response[1][i]));
         blueResponse.append(QString::number(response[2][i]));
@@ -1201,10 +1121,7 @@ void genCalibXML::calculateAndSaveSensitivities(lstDoubleAxisCalibration *daCali
         greenSensivility.append(QString::number(sensitiv[1][i]));
         blueSensivility.append(QString::number(sensitiv[2][i]));
 
-        //qDebug() << "EE3: sensNorm[0][numWaves-1]:" << sensNorm[0][numWaves-1] << " numWaves: " << numWaves-1;
         sensitivities.append(QString::number(sensitiv[0][i]+sensitiv[1][i]+sensitiv[2][i]));
-
-        //qDebug() << "EE4: sensNorm[0][numWaves-1]:" << sensNorm[0][numWaves-1] << " numWaves: " << numWaves-1;
         redSenNorm.append(QString::number(sensNorm[0][i]));
         greenSenNorm.append(QString::number(sensNorm[1][i]));
         blueSenNorm.append(QString::number(sensNorm[2][i]));
@@ -1213,30 +1130,24 @@ void genCalibXML::calculateAndSaveSensitivities(lstDoubleAxisCalibration *daCali
 
     }
 
-    //-------------------------------------------
-    //Free memo
-    //-------------------------------------------
-    for(int i=0; i<4; i++)
+    //-------------------------------
+    //Free Memo
+    //-------------------------------
+    /*
+    for(i=0; i<4; i++)
     {
         delete[] response[i];
-    }
-    for(int i=0; i<3; i++)
-    {
         delete[] sensitiv[i];
         delete[] sensNorm[i];
     }
     delete[] response;
     delete[] sensitiv;
     delete[] sensNorm;
+    */
 
-    //qDebug() << "response[2][0]: " << response[2][0];
-    //qDebug() << "response[2][1]: " << response[2][1];
-    //qDebug() << "response[2][2]: " << response[2][2];
-    //qDebug() << "response[2][3]: " << response[2][3];
-    //qDebug() << "blueResponse: " << blueResponse;
-    //exit(0);
-
+    //-------------------------------
     //Save backup
+    //-------------------------------
     saveFile(_PATH_RED_RESPONSE,redResponse);
     saveFile(_PATH_GREEN_RESPONSE,greenResponse);
     saveFile(_PATH_BLUE_RESPONSE,blueResponse);
@@ -1246,8 +1157,6 @@ void genCalibXML::calculateAndSaveSensitivities(lstDoubleAxisCalibration *daCali
     saveFile(_PATH_BLUE_SENSITIV,blueSensivility);
 
     saveFile(_PATH_RGB_SENSIVILITIES,sensitivities);
-
-    qDebug() << redSenNorm;
     saveFile(_PATH_RED_SENS_NORM,redSenNorm);
     saveFile(_PATH_GREEN_SENS_NORM,greenSenNorm);
     saveFile(_PATH_BLUE_SENS_NORM,blueSenNorm);
@@ -1256,7 +1165,6 @@ void genCalibXML::calculateAndSaveSensitivities(lstDoubleAxisCalibration *daCali
 
     imgMod.save(_PATH_AUX_IMG);
     displayImageFullScreen(imgMod);
-    //exit(3);
 
 }
 
