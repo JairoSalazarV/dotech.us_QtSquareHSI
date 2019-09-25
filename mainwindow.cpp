@@ -12703,14 +12703,12 @@ void MainWindow::on_actionExtract_Aperture_triggered()
                                     new QString(_PATH_LAST_IMG_SAVED),
                                     new QString(_PATH_LAST_IMG_SAVED),
                                     this
-                                 ) != _OK
+                                 ) == _OK
     ){
-        mouseCursorReset();
-        displayImageFullScreen(sA);
-        return (void)false;
+        sA.save(savingPath);
     }
-    sA.save(savingPath);
     mouseCursorReset();
+    displayImageFullScreen(sA);
 }
 
 int MainWindow::funcInternCalcDiff(strDiffProj* diffProj, lstDoubleAxisCalibration *daCalib)
