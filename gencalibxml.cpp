@@ -393,17 +393,20 @@ strAllLinReg genCalibXML::calcAllLinReg(lstCalibFileNames *centroids, int x1, in
     auxL = (double)fabs( aux - centroids->blueLeft.split(",").at(0).toFloat() ); //SourceX - blueX_L
     auxR = (double)fabs(aux - centroids->blueRight.split(",").at(0).toFloat()); //SourceX - blueX_R
     pointsX[0] = blueWavelength.toDouble();//Preset Blue Wavelength
-    pointsY[0] = (auxL+auxR) / 2.0;//Distance to blue
+    pointsY[0] = (auxL>=auxR)?auxL:auxR;//BLUE
+    //pointsY[0] = (auxL+auxR) / 2.0;//Distance to blue
     //Delta green X
     auxL = (double)fabs(aux - centroids->greenLeft.split(",").at(0).toFloat());
     auxR = (double)fabs(aux - centroids->greenRight.split(",").at(0).toFloat());
     pointsX[1] = greenWavelength.toDouble();//Preset Green Wavelength
-    pointsY[1] = (auxL+auxR) / 2.0;//Distance to Green
+    pointsY[1] = (auxL>=auxR)?auxL:auxR;//GREEN
+    //pointsY[1] = (auxL+auxR) / 2.0;//Distance to Green
     //Delta red X
     auxL = (double)fabs(aux - centroids->redLeft.split(",").at(0).toFloat());
     auxR = (double)fabs(aux - centroids->redRight.split(",").at(0).toFloat());
     pointsX[2] = redWavelength.toDouble();//Preset Red Wavelength
-    pointsY[2] = (auxL+auxR) / 2.0;//Distance to Red
+    pointsY[2] = (auxL>=auxR)?auxL:auxR;//RED
+    //pointsY[2] = (auxL+auxR) / 2.0;//Distance to Red
     //Delta source X
     pointsX[3] = 0.0;//Wave Origin
     pointsY[3] = 0.0;//Distance to Source

@@ -96,6 +96,18 @@ double vectorMax(double *vector, int len)
     return max;
 }
 
+double vectorMin(double *vector, int len)
+{
+    int i;
+    double min;
+    min = std::numeric_limits<int>::max();
+    for(i=0;i<len;i++)
+    {
+        min = (min>vector[i])?vector[i]:min;
+    }
+    return min;
+}
+
 double vectorMaxQListQString(QList<QString> lst)
 {
     int i;

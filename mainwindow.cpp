@@ -12573,10 +12573,14 @@ void MainWindow::on_actionAbout_this_triggered()
 
 void MainWindow::on_pbHyperRefresh_clicked()
 {
+    mouseCursorWait();
+
     QString exportedHypcbes(_PATH_TMP_HYPCUBES);
     funcUpdateSpectralPixels(&exportedHypcbes);
 
     ui->slideChangeImage->valueChanged( ui->slideChangeImage->value() );
+
+    mouseCursorReset();
 }
 
 void MainWindow::on_actionSquare_aperture_triggered()
@@ -12615,4 +12619,105 @@ void MainWindow::on_actionSquare_aperture_triggered()
 void MainWindow::updateGlobalImgEdith(QImage* newImage)
 {
     *globalEditImg = *newImage;
+}
+
+void MainWindow::on_actionExtract_Aperture_triggered()
+{
+    mouseCursorWait();
+
+    //Get Calibration
+    lstDoubleAxisCalibration daCalib;
+    funcGetCalibration(&daCalib);
+
+    //Get lower wavelength
+    strDiffProj diffProj;
+    diffProj.wavelength = daCalib.minWavelength;
+
+    //Display the areas usable an the correspondign reflected area for selected wavelenght
+    QImage origImg( _PATH_DISPLAY_IMAGE );
+
+    //New size
+    double lstX[4];
+    double lstY[4];
+    int newW, newH;
+    //----------Left-Up
+    diffProj.x  = 1;
+    diffProj.y  = 1;
+    funcInternCalcDiff(&diffProj, &daCalib);
+    lstX[0]     = diffProj.x;
+    lstY[0]     = diffProj.y;
+    //----------Right-Up
+    diffProj.x  = daCalib.squareUsableW;
+    diffProj.y  = 1;
+    funcInternCalcDiff(&diffProj, &daCalib);
+    lstX[1]     = diffProj.x;
+    lstY[1]     = diffProj.y;
+    //----------Left-Down
+    diffProj.x  = 1;
+    diffProj.y  = daCalib.squareUsableH;
+    funcInternCalcDiff(&diffProj, &daCalib);
+    lstX[2]     = diffProj.x;
+    lstY[2]     = diffProj.y;
+    //----------Right-Down
+    diffProj.x  = daCalib.squareUsableW;
+    diffProj.y  = daCalib.squareUsableH;
+    funcInternCalcDiff(&diffProj, &daCalib);
+    lstX[3]     = diffProj.x;
+    lstY[3]     = diffProj.y;
+    //----------Min and Max
+    int minX, maxX, minY, maxY;
+    minX = static_cast<int>(vectorMin(lstX,4));
+    minY = static_cast<int>(vectorMin(lstY,4));
+    maxX = static_cast<int>(vectorMax(lstX,4));
+    maxY = static_cast<int>(vectorMax(lstY,4));
+    newW        = maxX - minX + 1;
+    newH        = maxY - minY + 1;
+    QImage sA(newW,newH,QImage::Format_RGB32);
+    sA.fill(Qt::black);
+    sA.fill(Qt::TransparentMode);
+
+    //Verticales
+    int x, y, saX, saY;
+    for(y=1; y<=daCalib.squareUsableH; y++)
+    {
+        for(x=1; x<=daCalib.squareUsableW; x++)
+        {
+            diffProj.x = x;
+            diffProj.y = y;
+            funcInternCalcDiff(&diffProj, &daCalib);
+            saX = diffProj.x - minX;
+            saY = diffProj.y - minY;
+            sA.setPixel(saX,saY,origImg.pixel(diffProj.x,diffProj.y));
+            origImg.setPixel(diffProj.x,diffProj.y,qRgb(255,0,0));
+        }
+    }
+
+    //Save if required
+    QString savingPath;
+    QString fileName;
+    if(
+            funcLetUserDefineFile(
+                                    &savingPath,
+                                    "Save as...",
+                                    ".png",
+                                    new QString(_PATH_LAST_IMG_SAVED),
+                                    new QString(_PATH_LAST_IMG_SAVED),
+                                    this
+                                 ) != _OK
+    ){
+        mouseCursorReset();
+        displayImageFullScreen(sA);
+        return (void)false;
+    }
+    sA.save(savingPath);
+    mouseCursorReset();
+}
+
+int MainWindow::funcInternCalcDiff(strDiffProj* diffProj, lstDoubleAxisCalibration *daCalib)
+{
+    int shiftX      = static_cast<int>(daCalib->LR.vertA+(daCalib->LR.vertB*(diffProj->y + daCalib->squareUsableY)));//Verticales
+    diffProj->x     = diffProj->x + shiftX;//Verticales
+    diffProj->y     = diffProj->y + static_cast<int>(daCalib->LR.horizA+(daCalib->LR.horizB*(diffProj->x)));//Horizontales
+    calcDiffProj(diffProj,daCalib);
+    return _OK;
 }

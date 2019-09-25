@@ -711,6 +711,10 @@ private slots:
 
     void on_actionSquare_aperture_triggered();    
 
+    void on_actionExtract_Aperture_triggered();
+
+    int funcInternCalcDiff(strDiffProj *diffProj, lstDoubleAxisCalibration *daCalib);
+
 private:
     Ui::MainWindow *ui;
     //QLabel *status;

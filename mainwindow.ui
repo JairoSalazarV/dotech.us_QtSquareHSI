@@ -1301,6 +1301,7 @@
     <addaction name="separator"/>
     <addaction name="actionMerge_into_RGB"/>
     <addaction name="separator"/>
+    <addaction name="actionExtract_Aperture"/>
    </widget>
    <widget class="QMenu" name="menuCamera">
     <property name="title">
@@ -2124,6 +2125,11 @@
   <action name="actionSquare_aperture">
    <property name="text">
     <string>Square aperture</string>
+   </property>
+  </action>
+  <action name="actionExtract_Aperture">
+   <property name="text">
+    <string>Extract Aperture</string>
    </property>
   </action>
  </widget>

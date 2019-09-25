@@ -34,6 +34,8 @@
     double vectorMax(double *vector, int len);
     double vectorMaxQListQString(QList<QString> lst);
 
+    double vectorMin(double *vector, int len);
+
     QImage bilinearInterpolationQImage(QImage img);
 
     //void funcSourcePixToDiffPix(strDiffPix *diffPix, lstDoubleAxisCalibration *calSett );
