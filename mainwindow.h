@@ -414,7 +414,7 @@ private slots:
 
     double calcTrilinearInterpolation(double ***cube, trilinear *node);
 
-    double *calculatesF(int iterations, int sensor, lstDoubleAxisCalibration *daCalib);
+    double *calculatesF(int iterations, int sensor, lstDoubleAxisCalibration *daCalib, const double &percIni=0, const double &percEnd=100);
 
     int validateHcolAndHrow(myColPixel** Hcol, int **Hrow, QImage *img, lstDoubleAxisCalibration *daCalib );
 
@@ -428,9 +428,11 @@ private slots:
 
     void deleteHColAndHrow(myColPixel **Hcol, int **Hrow, const int &N , const int &M);
 
-    void createsHColAndHrow(myColPixel **Hcol, int **Hrow, QImage *img, lstDoubleAxisCalibration *daCalib );
+    void createsHColAndHrow(myColPixel **Hcol, int **Hrow, QImage *img, lstDoubleAxisCalibration *daCalib , const double &percIni=0, const double &percEnd=100);
 
     void insertItemIntoRow(int **Hrow, int row, int col);
+
+    void funcUpdateProgBar(const double &percIni, const double &percEnd, const double &len, const double &hypL);
 
     QList<double> getWavesChoised();
 

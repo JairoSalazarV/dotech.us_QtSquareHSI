@@ -3995,9 +3995,16 @@ bool MainWindow::generatesHypcube(int numIterations, QString fileName){
 
     F           = (double*)malloc(N*sizeof(double));    
     //calculatesF(numIterations,_RED,&daCalib);    
-    fRed        = calculatesF(numIterations,_RED,&daCalib);
-    fGreen      = calculatesF(numIterations,_GREEN,&daCalib);
-    fBlue       = calculatesF(numIterations,_BLUE,&daCalib);
+
+    ui->progBar->setVisible(true);
+    ui->progBar->setValue(0);
+    ui->progBar->update();
+
+    fRed        = calculatesF(numIterations,_RED,&daCalib,0,30);
+    fGreen      = calculatesF(numIterations,_GREEN,&daCalib,30,60);
+    fBlue       = calculatesF(numIterations,_BLUE,&daCalib,60,90);
+
+
 
     //---------------------------------------------
     //Demosaicing hypercube BEFORE
@@ -4039,7 +4046,7 @@ bool MainWindow::generatesHypcube(int numIterations, QString fileName){
         aux = ((floor(lstChoises.at(l)) - floor(daCalib.minWavelength) )==0)?0:floor( (floor(lstChoises.at(l)) - floor(daCalib.minWavelength) ) / (double)daCalib.minSpecRes );
         Sr.append( daCalib.Sr.at(aux) );
         Sg.append( daCalib.Sg.at(aux) );
-        Sb.append( daCalib.Sb.at(aux) );
+        Sb.append( daCalib.Sb.at(aux) );        
     }
     //qDebug() << "Hola13";
     int j, pixByImage;
@@ -4052,6 +4059,8 @@ bool MainWindow::generatesHypcube(int numIterations, QString fileName){
     //double tmpVector[3];
     for(l=0; l<hypL;l++)
     {
+
+        funcUpdateProgBar( 90, 100, l, hypL );
         for(j=0; j<pixByImage; j++)
         {
             //F[i]    = (fRed[i]+fGreen[i]+fBlue[i]) / (Sr.at(l)+Sg.at(l)+Sb.at(l));
@@ -4070,6 +4079,10 @@ bool MainWindow::generatesHypcube(int numIterations, QString fileName){
             i++;
         }
     }
+
+    ui->progBar->setVisible(false);
+    ui->progBar->setValue(0);
+    ui->progBar->update();
 
     qDebug() << "min: " << min << " minPos: " << minPos << " max: " << max << " maxPos: " << maxPos;
 
@@ -4566,13 +4579,20 @@ double MainWindow::calcTrilinearInterpolation(double ***cube, trilinear *node)
 }
 
 
-double *MainWindow::calculatesF(int numIterations, int sensor, lstDoubleAxisCalibration *daCalib)
-{
+double *MainWindow::calculatesF(
+        int numIterations,
+        int sensor,
+        lstDoubleAxisCalibration *daCalib,
+        const double &percIni,
+        const double &percEnd
+){
     //Get original image
     //..
     int i, N, M;
     QImage img( _PATH_DISPLAY_IMAGE );
     M = img.width() * img.height();
+    double tmpPerc;
+    tmpPerc = percIni;
 
     //Creates and fills H
     // ..
@@ -4611,7 +4631,8 @@ double *MainWindow::calculatesF(int numIterations, int sensor, lstDoubleAxisCali
 
     //It creates H
     //..
-    createsHColAndHrow( Hcol, Hrow, &img, daCalib );
+    tmpPerc = percIni+((percEnd-percIni)*0.3);
+    createsHColAndHrow( Hcol, Hrow, &img, daCalib, percIni, tmpPerc );
     /*
     if( validateHcolAndHrow(Hcol, Hrow, &img, daCalib) != _OK )
     {
@@ -4686,6 +4707,8 @@ double *MainWindow::calculatesF(int numIterations, int sensor, lstDoubleAxisCali
         improveF( fKPlusOne, Hcol, f, gTmp, N );
         memcpy(f,fKPlusOne,(N*sizeof(double)));
         //memset(fKPlusOne,'\0',(N*sizeof(double)));
+        funcUpdateProgBar( tmpPerc, percEnd, i, numIterations );
+        //qDebug() << "ui->progBar: " << ui->progBar->value();
     }
     //funcShowMsgYesNo("Hi3","",this);
 
@@ -4877,10 +4900,16 @@ int MainWindow::validateHcolAndHrow(myColPixel** Hcol, int **Hrow, QImage *img, 
     return _OK;
 }
 
-void MainWindow::createsHColAndHrow(myColPixel** Hcol, int **Hrow, QImage *img, lstDoubleAxisCalibration *daCalib )
-{
+void MainWindow::createsHColAndHrow(
+        myColPixel** Hcol,
+        int **Hrow, QImage *img,
+        lstDoubleAxisCalibration *daCalib,
+        const double &percIni,
+        const double &percEnd
+){
     //Prepares variables and constants
     //..
+    double tmpPerc;
     int hypW, hypH, hypL, idVoxel;
     QList<double> lstChoises;
     strDiffProj Pj;
@@ -4888,7 +4917,7 @@ void MainWindow::createsHColAndHrow(myColPixel** Hcol, int **Hrow, QImage *img, 
     hypW        = daCalib->squareUsableW;
     hypH        = daCalib->squareUsableH;
     hypL        = lstChoises.count();
-
+    tmpPerc     = ui->progBar->value();
 
     QImage newImg;
     newImg = *img;
@@ -4899,6 +4928,8 @@ void MainWindow::createsHColAndHrow(myColPixel** Hcol, int **Hrow, QImage *img, 
     int shiftX, shiftY;
     for(int len=1; len<=hypL; len++)
     {
+        funcUpdateProgBar( percIni, percEnd, len, hypL );
+
         Pj.wavelength = lstChoises.at(len-1);
         for(int row=1; row<=hypH; row++)
         {
@@ -4958,6 +4989,14 @@ void MainWindow::createsHColAndHrow(myColPixel** Hcol, int **Hrow, QImage *img, 
             displayImageFullScreen(newImg);
         }*/
     }
+}
+
+void MainWindow::funcUpdateProgBar( const double &percIni, const double &percEnd, const double &len, const double &hypL)
+{
+    double actPerc;
+    actPerc = percIni + ( (percEnd-percIni) * (len/hypL) );
+    ui->progBar->setValue(static_cast<int>(actPerc));
+    ui->progBar->update();
 }
 
 void MainWindow::insertItemIntoRow(int **Hrow, int row, int col)
@@ -12672,9 +12711,12 @@ void MainWindow::on_actionExtract_Aperture_triggered()
     maxY = static_cast<int>(vectorMax(lstY,4));
     newW        = maxX - minX + 1;
     newH        = maxY - minY + 1;
-    QImage sA(newW,newH,QImage::Format_RGB32);
-    sA.fill(Qt::black);
-    sA.fill(Qt::TransparentMode);
+    //QImage sA(newW,newH,QImage::Format_ARGB32);
+    QImage sA(daCalib.squareUsableW,daCalib.squareUsableH,QImage::Format_ARGB32);
+    for(int i=0; i<sA.width(); i++)
+        for(int j=0; j<sA.height(); j++)
+            sA.setPixel(i,j,qRgba(255,0,0,0));
+
 
     //Verticales
     int x, y, saX, saY;
@@ -12687,8 +12729,9 @@ void MainWindow::on_actionExtract_Aperture_triggered()
             funcInternCalcDiff(&diffProj, &daCalib);
             saX = diffProj.x - minX;
             saY = diffProj.y - minY;
-            sA.setPixel(saX,saY,origImg.pixel(diffProj.x,diffProj.y));
-            origImg.setPixel(diffProj.x,diffProj.y,qRgb(255,0,0));
+            //sA.setPixel(saX,saY,origImg.pixel(diffProj.x,diffProj.y));
+            sA.setPixel(x-1,y-1,origImg.pixel(diffProj.x,diffProj.y));
+            //origImg.setPixel(diffProj.x,diffProj.y,qRgb(255,0,0));
         }
     }
 
