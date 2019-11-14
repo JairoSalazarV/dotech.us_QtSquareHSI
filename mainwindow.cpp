@@ -1,4 +1,4 @@
-// /home/jairo/Descargas/linuxdeployqt-continuous-x86_64.AppImage /home/jairo/Documentos/DESARROLLOS/dotech.us_RELEASES/QtSquareHSI/HypCam -appimage
+// /home/jairo/Documentos/APPIMAGE/linuxdeployqt-continuous-x86_64.AppImage /home/jairo/Documentos/DESARROLLOS/dotech.us_RELEASES/QtSquareHSI/HypCam -appimage
 
 
 
@@ -3924,7 +3924,6 @@ void MainWindow::on_actionGenHypercube_triggered()
         return (void)false;
     }
 
-
     //----------------------------------------
     // Select hypercube destination
     //----------------------------------------
@@ -4735,7 +4734,8 @@ void MainWindow::improveF( double *fKPlusOne, myColPixel **Hcol, double *f, doub
     double relevance;//How relevant it is respect to all voxels overlaped
                      //Error between g and g^ (g = original image)
     double numProj;//It is integer but is used double to evit many cast operations
-    numProj = 5.0;
+    numProj = 1.0;//Ralf(2012) says #Projectios=5 | Takayuki (1993) says #Projectios=5
+                  // I tested both and works better #Projectios=1
     for( n=0; n<N; n++ )
     {
         //fKPlusOne[n]    = 0.0;
